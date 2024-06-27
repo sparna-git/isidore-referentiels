@@ -1,0 +1,20 @@
+outputDir: output
+workDir: work
+logFile: isidore-referentiels.log
+vocabularies:
+  - ref: rameau
+    downloadPage:  https://pef.bnf.fr/link/539d6d59-c2e3-4e17-b24c-d8a83ca11944#
+    urls: https://pef.bnf.fr/link/539d6d59-c2e3-4e17-b24c-d8a83ca11944#
+  - ref: lcsh
+    downloadPage: https://id.loc.gov/download/
+    urls: https://id.loc.gov/download/authorities/subjects.skosrdf.ttl.gz
+  - ref: bne
+    downloadPage: https://www.bne.es/es/iniciativas-proyectos/datos-enlazados-bne
+    urls: http://datos.bne.es/datadump/materias.nt.bz2
+  - ref: pactols
+    # Create a list of urls
+    downloadPage:
+      - https://github.com/frantiq/PACTOLS
+      - https://github.com/frantiq/PACTOLS/tree/master/pactols-latest-version/pactols_sujets_all
+    urls: 
+      - https://github.com/frantiq/PACTOLS/blob/master/pactols-latest-version/pactols_sujets_all/pactols_sujets_all.rdf
