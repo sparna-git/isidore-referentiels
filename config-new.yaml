@@ -1,0 +1,48 @@
+outputDir: output
+workDir: work
+logFile: isidore-referentiels.log
+vocabularies:
+  # 1 : utiliser "id" à la place de "ref"
+  - id: rameau
+    downloadPage: 
+      # toutes les downloadPage + urls doivent toujours être des listes
+      - https://transfert.bnf.fr/link/38c12c30-a86b-42fe-99e4-b0bc0740e30f
+    urls: 
+      - https://pef.bnf.fr/link/539d6d59-c2e3-4e17-b24c-d8a83ca11944#
+    # issue 5 et 6 : on veut pouvoir lire un fichier local
+    # 3 possibilités :
+    # soit on a seulement le paramètre "urls" et pas "files"
+    # soit on a seulement le paramètre "files" et pas "urls"
+    # soit on a en même temps les paramètres "files" + "urls"
+    files:
+      - data/rameau_local.tar.gz
+    sparql:
+      # issue 3 : chemin vers des fichiers contenant des requêtes SPARQL à executer sur le graphe
+      - rameau/rameau-update-1.ru
+      - rameau/rameau-update-2.ru
+    # issue 2 : supprimer des URIs unitairement
+    delete-uris:
+      - https://data.bnf.fr/concept/123456
+      - https://data.bnf.fr/concept/456789
+
+  - id: lcsh
+    downloadPage: 
+      - https://id.loc.gov/download/
+    urls: 
+      - https://id.loc.gov/download/authorities/subjects.skosrdf.ttl.gz
+
+  - id: bne
+    downloadPage: 
+      - https://www.bne.es/es/iniciativas-proyectos/datos-enlazados-bne
+    urls: 
+      - http://datos.bne.es/datadump/materias.nt.bz2
+    # issue 7 : appliquer une regex pour supprimer les espaces dans les sauts de ligne
+    deleteWhitespacesInUri : true
+
+  - id: pactols
+    # Create a list of urls
+    downloadPage:
+      - https://github.com/frantiq/PACTOLS
+      - https://github.com/frantiq/PACTOLS/tree/master/pactols-latest-version/pactols_sujets_all
+    urls: 
+      - https://github.com/frantiq/PACTOLS/blob/master/pactols-latest-version/pactols_sujets_all/pactols_sujets_all.rdf
