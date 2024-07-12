@@ -1,7 +1,6 @@
 import logging
 from isidore_referentiels.download import donwloadReference as donwloadReference
 from isidore_referentiels import writeFiles as writeFiles
-from isidore_referentiels.load_graph import isidore_graph as Ig
 from rdflib import Graph, Dataset
 
 
