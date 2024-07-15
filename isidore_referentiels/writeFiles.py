@@ -30,6 +30,8 @@ class file_decompress:
         data = gzip.GzipFile(fileobj=dataBytes)
 
         try:
+            print(f"RDF parsing for: {self.file_name}")
+            self.logger.info(f"RDF parsing for: {self.file_name}")
             self.graph.parse(data)       
         except Exception as e:
             # Catch Error when load in Graph
@@ -54,6 +56,8 @@ class file_decompress:
             decomp = decompressor.decompress(chunk)
             if decomp:
                 try:
+                    print(f"RDF parsing for: {self.file_name}")
+                    self.logger.info(f"RDF parsing for: {self.file_name}")
                     self.graph.parse(decomp,format="nt")
                 except Exception as e:
                     # Catch Error when load in Graph
@@ -117,8 +121,8 @@ class file_decompress:
             # Section of statistic 
             print(f"Number of triples loaded in Graph: {len(self.graph)}")
             self.logger.info(f"Number of triples loaded in Graph: {len(self.graph)}")
-            print(f"Number of concepts in Graph: {self.graph.subjects.__sizeof__()}")
-            self.logger.info(f"Number of concepts in Graph: {self.graph.subjects.__sizeof__()}")
+            print(f"Number of subjects in Graph: {self.graph.subjects.__sizeof__()}")
+            self.logger.info(f"Number of subjects in Graph: {self.graph.subjects.__sizeof__()}")
             
             # Serialize graph in turtle file output
             print(f"Write in file {outputDirectory}")
