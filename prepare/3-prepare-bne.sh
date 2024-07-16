@@ -17,6 +17,8 @@ bzip2 -d $BNE_DIR/materias.nt.bz2
 
 ## 3. filter
 echo "BNE Pre-process..."
+sed -i 's/< /</g' $BNE_DIR/materias.nt
+
 echo "Nothing to do !"
 
 ## 4. copy to final destination
