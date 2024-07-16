@@ -46,3 +46,5 @@ vocabularies:
     urls: 
       - https://github.com/frantiq/PACTOLS
       - https://github.com/frantiq/PACTOLS/tree/master/pactols-latest-version/pactols_sujets_al
+    sparql:
+      - sparql/pactols/clean-anthroponymes-and-oeuvres.ru
