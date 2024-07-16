@@ -13,5 +13,5 @@ Lancer les commandes suivantes:
 ```
 poetry update
 poetry install
-poetry run isidore_referentiels
+poetry run isidore_referentiels config.yaml
 ```
