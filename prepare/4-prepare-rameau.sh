@@ -18,7 +18,10 @@ tar -xvzf $RAMEAU_DIR/databnf_rameau_xml.tar.gz --directory $RAMEAU_DIR/databnf_
 
 ## 3. filter
 echo "RAMEAU Pre-process..."
-echo "Nothing to do !"
+# find rameau/databnf_rameau_n3 -name "*.n3" \
+# -exec sed -i 's/= /<http:\/\/www.w3.org\/2002\/07\/owl#sameAs> /g' {} \;
+# find rameau/databnf_rameau_n3 -name "*.n3" \
+# -exec sed -i 's/<:\/\//</g' {} \;
 
 ## 4. copy to final destination
 echo "RAMEAU copy to data dir..."
