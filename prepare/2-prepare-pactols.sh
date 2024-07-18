@@ -6,6 +6,7 @@
 ## 1. Download
 echo "Pactols Download..."
 export PACTOLS_DIR=$WORK_DIR/pactols
+rm -rf $PACTOLS_DIR
 mkdir -p $PACTOLS_DIR
 export URL=https://github.com/frantiq/PACTOLS/raw/master/pactols-latest-version/pactols_sujets_all/pactols_sujets_all.rdf
 wget --no-check-certificate $URL 
