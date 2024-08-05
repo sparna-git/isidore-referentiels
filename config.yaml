@@ -9,11 +9,11 @@ vocabularies:
     data: 
       - data/rameau
     pre_processing: []          
-    sparql: []
+    sparql:
       # issue 3 : chemin vers des fichiers contenant des requêtes SPARQL à executer sur le graphe
-      #- sparql\rameau\clean-aligned-with-geonames.ru
-      #- sparql\rameau\clean-combined-concepts.ru
-      #- sparql\rameau\clean-dict-concepts.ru
+      - sparql\rameau\clean-aligned-with-geonames.ru
+      - sparql\rameau\clean-combined-concepts.ru
+      - sparql\rameau\clean-dict-concepts.ru
     # issue 2 : supprimer des URIs unitairement
     delete-uris:
       - https://data.bnf.fr/concept/123456
