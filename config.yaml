@@ -1,5 +1,5 @@
-outputDir: output
-workDir: work
+outputDir: output #Output File
+workDir: work #Directy of Work
 logFile: isidore-referentiels.log
 vocabularies:
   
@@ -8,28 +8,51 @@ vocabularies:
       - https://pef.bnf.fr/link/539d6d59-c2e3-4e17-b24c-d8a83ca11944#
     data: 
       - data/rameau
-    sparql:
+    pre_processing: []          
+    sparql: []
       # issue 3 : chemin vers des fichiers contenant des requêtes SPARQL à executer sur le graphe
-      - rameau/rameau-update-1.ru
-      - rameau/rameau-update-2.ru
+      #- sparql\rameau\clean-aligned-with-geonames.ru
+      #- sparql\rameau\clean-combined-concepts.ru
+      #- sparql\rameau\clean-dict-concepts.ru
     # issue 2 : supprimer des URIs unitairement
     delete-uris:
       - https://data.bnf.fr/concept/123456
       - https://data.bnf.fr/concept/456789
+    filter:
+      - wikidata
+    compare: []
 
   - id: lcsh
     downloadPage: 
       - https://id.loc.gov/download/     
     data: 
       - data/lcsh
+    sparql: []
+    delete-uris: []
+    filter:
+      - wikidata
+    compare: []
 
   - id: bne
     downloadPage:
       - https://www.bne.es/es/iniciativas-proyectos/datos-enlazados-bne
+    data:
+      - data/bne
+    sparql: []
+    delete-uris: []
+    filter: 
+      - wikidata
+    compare:
+      - rameau
 
   - id: pactols
     downloadPage:
       - https://github.com/frantiq/PACTOLS
       - https://github.com/frantiq/PACTOLS/tree/master/pactols-latest-version/pactols_sujets_al
+    data:
+      - data/pactols
     sparql:
       - sparql/pactols/clean-anthroponymes-and-oeuvres.ru
+    delete-uris: []
+    filter: []
+    compare: []
