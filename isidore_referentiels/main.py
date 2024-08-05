@@ -33,8 +33,8 @@ def main():
         - Write output file in TURTLE
     """
     
-    logger.info("============================ Preprocessing resources ============================")
-    print("============================ Preprocessing resources ============================")
+    logger.info("============================ Preprocessing Resources ============================")
+    print("============================ Preprocessing Resources ============================")
     start_preprocessing = time.time()
     preprocessing = update_resources(WorkDir,OutputDir)
     preprocessing.read_resources(Vocabularies)
@@ -43,7 +43,7 @@ def main():
     logger.info(f"End preprocessing all resources {time_preprocessing}")
 
     """
-        Fase 2 - Filter all reference    
+        Phase 2 - Filter all reference    
     """
     print("Compare Sources")
     logger.info("============================ Filter References ============================")
