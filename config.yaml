@@ -10,28 +10,25 @@ vocabularies:
       - data/rameau
     pre_processing: []          
     sparql:
-      # issue 3 : chemin vers des fichiers contenant des requêtes SPARQL à executer sur le graphe
+      - sparql\rameau\keep-only_isPartOf.ru
+      - sparql\rameau\clean-domaines.ru
       - sparql\rameau\clean-aligned-with-geonames.ru
       - sparql\rameau\clean-combined-concepts.ru
       - sparql\rameau\clean-dict-concepts.ru
-    # issue 2 : supprimer des URIs unitairement
     delete-uris:
       - https://data.bnf.fr/concept/123456
       - https://data.bnf.fr/concept/456789
-    filter:
-      - wikidata
-    compare: []
+
 
   - id: lcsh
     downloadPage: 
       - https://id.loc.gov/download/     
     data: 
       - data/lcsh
-    sparql: []
+    sparql:
+      - sparql\lcsh\clean-combined-concepts.ru
     delete-uris: []
-    filter:
-      - wikidata
-    compare: []
+
 
   - id: bne
     downloadPage:
@@ -40,10 +37,7 @@ vocabularies:
       - data/bne
     sparql: []
     delete-uris: []
-    filter: 
-      - wikidata
-    compare:
-      - rameau
+
 
   - id: pactols
     downloadPage:
@@ -54,5 +48,3 @@ vocabularies:
     sparql:
       - sparql/pactols/clean-anthroponymes-and-oeuvres.ru
     delete-uris: []
-    filter: []
-    compare: []
