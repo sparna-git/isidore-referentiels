@@ -35,7 +35,8 @@ vocabularies:
       - https://www.bne.es/es/iniciativas-proyectos/datos-enlazados-bne
     data:
       - data/bne
-    sparql: []
+    sparql:
+      - sparql\bne\clean-combined-concepts.ru
     delete-uris: []
 
 
