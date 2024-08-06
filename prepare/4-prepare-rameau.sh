@@ -26,7 +26,7 @@ tar -xvzf $RAMEAU_DIR/databnf_rameau_nt.tar.gz --directory $RAMEAU_DIR/databnf_r
 ## 3. filter
 echo "RAMEAU Pre-process..."
 # echo "Merging all files..."
-# riot --output=NTriples $RAMEAU_DIR/databnf_rameau/* > $RAMEAU_DIR/rameau_full.nt
+riot --output=NTriples $RAMEAU_DIR/databnf_rameau/* > $RAMEAU_DIR/rameau_full.nt
 
 # find rameau/databnf_rameau_n3 -name "*.n3" \
 # -exec sed -i 's/= /<http:\/\/www.w3.org\/2002\/07\/owl#sameAs> /g' {} \;
@@ -37,3 +37,4 @@ echo "RAMEAU Pre-process..."
 echo "RAMEAU copy to data dir..."
 mkdir -p $RAMEAU_DIR/rameau
 cp -r $RAMEAU_DIR/databnf_rameau $DATA_DIR/rameau
+cp $RAMEAU_DIR/rameau_full.nt $DATA_DIR/rameau
