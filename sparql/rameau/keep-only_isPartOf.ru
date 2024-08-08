@@ -11,11 +11,11 @@ WHERE {
 			?s <http://purl.org/dc/terms/isPartOf> ?domaine .
 			VALUES ?domaine {
 				# noms communs
-				<https://data.bnf.fr/vocabulary/rameau/r166>
+				<http://data.bnf.fr/vocabulary/rameau/r166>
 				# personnages fictifs
-				<https://data.bnf.fr/vocabulary/rameau/r160>
+				<http://data.bnf.fr/vocabulary/rameau/r160>
 				# subdivisions chrono
-				<https://data.bnf.fr/vocabulary/rameau/r168>
+				<http://data.bnf.fr/vocabulary/rameau/r168>
 			}
 		}
 
@@ -28,11 +28,11 @@ WHERE {
 			?o <http://purl.org/dc/terms/isPartOf> ?domaine .
 			VALUES ?domaine {
 				# noms communs
-				<https://data.bnf.fr/vocabulary/rameau/r166>
+				<http://data.bnf.fr/vocabulary/rameau/r166>
 				# personnages fictifs
-				<https://data.bnf.fr/vocabulary/rameau/r160>
+				<http://data.bnf.fr/vocabulary/rameau/r160>
 				# subdivisions chrono
-				<https://data.bnf.fr/vocabulary/rameau/r168>
+				<http://data.bnf.fr/vocabulary/rameau/r168>
 			}
 		}
 

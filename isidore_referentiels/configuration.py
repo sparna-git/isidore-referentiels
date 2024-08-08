@@ -3,6 +3,7 @@
 import yaml
 import os
 import logging
+import shutil
 
 class readConfiguration:
 
@@ -28,10 +29,10 @@ class readConfiguration:
     def createDirectory(self,directory) -> str:
 
         pathDirectory = "./"+directory        
-        try:
-            
+        try:            
             if os.path.exists(pathDirectory):
-                os.removedirs(pathDirectory)
+                #os.removedirs(pathDirectory)
+                shutil.rmtree(pathDirectory)
 
             newDirectory = os.mkdir(pathDirectory)
             if newDirectory:
@@ -43,15 +44,12 @@ class readConfiguration:
         vocabularies = []
         get_data_source = self.readConfigYAML()
 
-        workDir = get_data_source["workDir"]
-        outputDir = get_data_source["outputDir"]
-
         # Directories
         strMessageWorkDir = self.createDirectory(get_data_source["workDir"])        
         strMessageOutputDir = self.createDirectory(get_data_source["outputDir"])
         
         #Log
-        self.logging_instance(get_data_source["logFile"],workDir)
+        self.logging_instance(get_data_source["logFile"],get_data_source["workDir"])
         self.logger.info(f"Generate Log file: {get_data_source["logFile"]} ")
 
         self.logger.debug(strMessageWorkDir)
