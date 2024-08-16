@@ -21,7 +21,7 @@ def main():
     """
     readConfig = readConfiguration(getconfigurationFile)
     # read the configuration file
-    OutputDir,WorkDir,logger,Vocabularies, vocabularyObj = readConfig.readSource()
+    OutputDir,WorkDir,logger,Vocabularies, wikidataFilter, vocabulariesObj = readConfig.readSource()
     
     """
     Update References with Sparql Query
@@ -31,18 +31,23 @@ def main():
         - Write output file in TURTLE
     """
     
-    logger.info("============================ Preprocessing Resources ============================")
+    # logger.info("============================ Preprocessing Resources ============================")
     print("============================ Preprocessing Resources ============================")
-    preprocessing = update_resources(WorkDir,OutputDir)
-    preprocessing.read_resources(Vocabularies)
+    #preprocessing = update_resources(WorkDir,OutputDir)
+    #preprocessing.read_resources(Vocabularies)
     
-
     """
         Phase 2 - Filter all reference    
     """
-    logger.info("============================ Filter References ============================")
-    filter = filterWikidata(OutputDir, WorkDir)
-    filter.filter_source()
+    if wikidataFilter:
+        logger.info("============================ Wikidata References ============================")
+        filter = filterWikidata(OutputDir, WorkDir, vocabulariesObj)
+        filter.filter_wikidata() # Create wikidata files
+        # Remove Wikidata URI in all referentiels
+        filter.wikidata_uris() # Evaluate and remove 
+
+    print("End process")
+    logger.info("End process")
 
 if __name__ == "__main__":
 

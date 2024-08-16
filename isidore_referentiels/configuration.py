@@ -60,10 +60,11 @@ class readConfiguration:
             
             # Get Vocabularies
             vocabularies.append((readYaml["id"],
-                                    readYaml["data"], # Path Resource 
-                                    readYaml["sparql"], # Path Sparql
-                                    readYaml["delete-uris"] # IRI
+                                 readYaml["data"], # Path Resource 
+                                 readYaml["sparql"], # Path Sparql
+                                 readYaml["delete-uris"], # IRI
+                                 readYaml["wikidata-oper"]
                                     )
                                     )            
 
-        return get_data_source["outputDir"],get_data_source["workDir"],self.logger,vocabularies, get_data_source["vocabularies"]
+        return get_data_source["outputDir"],get_data_source["workDir"],self.logger,vocabularies, get_data_source["wikidata"],get_data_source["vocabularies"]

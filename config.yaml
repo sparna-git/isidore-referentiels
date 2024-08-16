@@ -1,5 +1,6 @@
 outputDir: output #Output File
 workDir: work #Directy of Work
+wikidata: True
 logFile: isidore-referentiels.log
 vocabularies:
   
@@ -18,6 +19,8 @@ vocabularies:
     delete-uris:
       - https://data.bnf.fr/concept/123456
       - https://data.bnf.fr/concept/456789
+    wikidata-oper:
+      - lcsh
 
 
   - id: lcsh
@@ -28,6 +31,7 @@ vocabularies:
     sparql:
       - sparql\lcsh\clean-combined-concepts.ru
     delete-uris: []
+    wikidata-oper: []
 
 
   - id: bne
@@ -38,6 +42,9 @@ vocabularies:
     sparql:
       - sparql\bne\clean-combined-concepts.ru
     delete-uris: []
+    wikidata-oper:
+      - lcsh
+      - rameau
 
   - id: pactols
     downloadPage:
@@ -48,3 +55,7 @@ vocabularies:
     sparql:
       - sparql/pactols/clean-anthroponymes-and-oeuvres.ru
     delete-uris: []
+    wikidata-oper:
+      - lcsh
+      - rameau
+      - bne

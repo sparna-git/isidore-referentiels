@@ -26,7 +26,7 @@ class update_resources:
             if len(files) > 0:
                 for f in files:
                     # Get Data file path
-                    path_file = os.path.join(parent_Dir,self.reference,f) #f"{root}/{f}"
+                    path_file = os.path.join(parent_Dir,self.reference,f)
                     print(f"Process File: {path_file}")
                     self.logger.info(f"Process File: {path_file}")
                                         
