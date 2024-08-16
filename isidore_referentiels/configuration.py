@@ -31,7 +31,6 @@ class readConfiguration:
         pathDirectory = "./"+directory        
         try:            
             if os.path.exists(pathDirectory):
-                #os.removedirs(pathDirectory)
                 shutil.rmtree(pathDirectory)
 
             newDirectory = os.mkdir(pathDirectory)

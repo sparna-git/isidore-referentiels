@@ -102,10 +102,12 @@ class filterWikidata():
             file_sparql_query.write(sparql_query)
 
             # Get file source
-            response = self.find_path_resource()
+            #response = self.find_path_resource()
 
-            response = cmd_subprocess()
+            #response = cmd_subprocess()
             #if response:
+        
+        return 1
 
 
     def load_in_graph(self,source:str) -> Graph:

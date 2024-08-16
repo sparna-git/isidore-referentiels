@@ -33,8 +33,8 @@ def main():
     
     # logger.info("============================ Preprocessing Resources ============================")
     print("============================ Preprocessing Resources ============================")
-    #preprocessing = update_resources(WorkDir,OutputDir)
-    #preprocessing.read_resources(Vocabularies)
+    preprocessing = update_resources(WorkDir,OutputDir)
+    preprocessing.read_resources(Vocabularies)
     
     """
         Phase 2 - Filter all reference    
@@ -44,7 +44,7 @@ def main():
         filter = filterWikidata(OutputDir, WorkDir, vocabulariesObj)
         filter.filter_wikidata() # Create wikidata files
         # Remove Wikidata URI in all referentiels
-        filter.wikidata_uris() # Evaluate and remove 
+        #filter.wikidata_uris() # Evaluate and remove 
 
     print("End process")
     logger.info("End process")
