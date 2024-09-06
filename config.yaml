@@ -2,8 +2,10 @@
 outputDir: output
 # Répertoire où sont stockés les fichiers temporaires de travail du script
 workDir: work
-# 
+# Nom du fichier de log qui sera créé dans $workDir
 logFile: isidore-referentiels.log
+
+# delete-uris-query: sparql/delete-uris/delete-uris.rq
 
 # Si ce paramètre est à True, le script va extraire les triplets d'alignement wikidata de chaque référentiel
 # Le résultat de l'extraction est dans le répertoire $workDir/{id_du_referentiel}/wikidata/{id_du_referentiel}.ttl
