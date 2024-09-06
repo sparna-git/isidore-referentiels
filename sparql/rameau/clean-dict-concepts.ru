@@ -7,21 +7,21 @@ WHERE {
 	{
 		?s skos:editorialNote ?note
 		FILTER(
-			regex(STR(?note), "Dict\. comm\.", "i")
+			regex(STR(?note), "Dict\\. comm\\.", "i")
 			||
-			regex(STR(?note), "Dict\. des communes", "i")
+			regex(STR(?note), "Dict\\. des communes", "i")
 			||
 			regex(STR(?note), "Dictionnaire des communes de France", "i")
 			||
-			regex(STR(?note), "Dict\. national des communes de France", "i")
+			regex(STR(?note), "Dict\\. national des communes de France", "i")
 			||
-			regex(STR(?note), "Dict\. des communes de France", "i")
+			regex(STR(?note), "Dict\\. des communes de France", "i")
 			||
-			regex(STR(?note), "Dict\. administratif des communes", "i")
+			regex(STR(?note), "Dict\\. administratif des communes", "i")
 			||
-			regex(STR(?note), "Code off\. géogr\. INSEE, 1990", "i")
+			regex(STR(?note), "Code off\\. géogr\\. INSEE, 1990", "i")
 			||
-			regex(STR(?note), "Dict\. des prénoms de France / N. Cretin", "i")
+			regex(STR(?note), "Dict\\. des prénoms de France / N. Cretin", "i")
 		)
 		?s ?p ?o .
 	}
@@ -29,21 +29,21 @@ WHERE {
 	{
 		?o skos:editorialNote ?note .
 		FILTER(
-			regex(STR(?note), "Dict\. comm\.", "i")
+			regex(STR(?note), "Dict\\. comm\\.", "i")
 			||
-			regex(STR(?note), "Dict\. des communes", "i")
+			regex(STR(?note), "Dict\\. des communes", "i")
 			||
 			regex(STR(?note), "Dictionnaire des communes de France", "i")
 			||
-			regex(STR(?note), "Dict\. national des communes de France", "i")
+			regex(STR(?note), "Dict\\. national des communes de France", "i")
 			||
-			regex(STR(?note), "Dict\. des communes de France", "i")
+			regex(STR(?note), "Dict\\. des communes de France", "i")
 			||
-			regex(STR(?note), "Dict\. administratif des communes", "i")
+			regex(STR(?note), "Dict\\. administratif des communes", "i")
 			||
-			regex(STR(?note), "Code off\. géogr\. INSEE, 1990", "i")
+			regex(STR(?note), "Code off\\. géogr\\. INSEE, 1990", "i")
 			||
-			regex(STR(?note), "Dict\. des prénoms de France / N. Cretin", "i")
+			regex(STR(?note), "Dict\\. des prénoms de France / N. Cretin", "i")
 		)
 		?s ?p ?o .
 	}

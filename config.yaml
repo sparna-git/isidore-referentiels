@@ -1,21 +1,42 @@
-outputDir: output #Output File
-workDir: work #Directy of Work
-wikidata: True
+# Répertoire où sont enregistrés les fichiers des référentiels après traitement
+outputDir: output
+# Répertoire où sont stockés les fichiers temporaires de travail du script
+workDir: work
+# 
 logFile: isidore-referentiels.log
+
+# Si ce paramètre est à True, le script va extraire les triplets d'alignement wikidata de chaque référentiel
+# Le résultat de l'extraction est dans le répertoire $workDir/{id_du_referentiel}/wikidata/{id_du_referentiel}.ttl
+# Cette extraction est réalisée à partir de la requête SPARQL 
+wikidata: True
+
+# A transformer en:
+# wikidataAlignementQuery: sparql/wikidata/wikidata.rq
+# Si ce paramètre n'est pas présent dans le fichier de config ou n'a aucune valeur, ne pas faire le traitement d'extraction des alignements wikidata
+
+
 vocabularies:
   
+  # ID du référentiel
   - id: rameau
+    # Pour information seulement : lien vers la page de téléchargement des fichiers
+    # Ce paramètre n'est pas utilisé par le script
     downloadPage: 
       - https://pef.bnf.fr/link/539d6d59-c2e3-4e17-b24c-d8a83ca11944#
+    # Chemin vers le répertoire contenant les fichiers de données RDF du référentiel
     data: 
       - data/rameau
-    pre_processing: []          
+    # Liste de chemin vers des fichiers contenant chacun une requête SPARQL de mise à jour qui sera appliquée sur les données
+    # A chaque exécution de requête SPARQL, le résultat est écrit dans un fichier $workDir/{id_du_referentiel}/tmp/{id_du_referentiel}.ttl
     sparql:
       - sparql/rameau/keep-only_isPartOf.ru
       - sparql/rameau/clean-domaines.ru
       - sparql/rameau/clean-aligned-with-geonames.ru
       - sparql/rameau/clean-combined-concepts.ru
       - sparql/rameau/clean-dict-concepts.ru
+    # Liste des URIs unitaires à supprimer du dataset. Quand une URI est supprimée:
+    #   - Tous les triplets dont elle est sujet ou objet sont supprimés
+    #   - Les enfants (skos:narrower ou ^skos:broader) sont rattachés à ses parents
     delete-uris:
       - https://data.bnf.fr/concept/123456
       - https://data.bnf.fr/concept/456789

@@ -12,12 +12,14 @@ class cmd_subprocess:
 
     def execute_update_subprocess(self):
 
-        print(f"Execute Sparql Query :\n Data : {self.dataSource}\n Query : {self.QuerySource}")
-        self.logger.info(f"Execute Update :\n Data : {self.dataSource}\n Query : {self.QuerySource}")
+        arguments = ["update",f"--data={self.dataSource}",f"--update={self.QuerySource}","--dump"]
+
+        print(f"Execute Command with arguments :\n {' '.join(arguments)}")
+        self.logger.info(f"Execute Command with arguments :\n {' '.join(arguments)}")
 
         response = None
         try:
-            response = run(["update",f"--data={self.dataSource}",f"--update={self.QuerySource}","--dump"],shell=True,stdout=PIPE)
+            response = run(arguments,shell=False,stdout=PIPE)
         except CalledProcessError as e:
             print(f"Standard error was {e.output}")
             self.logger.warning(f"Standard error was {e.output}")
@@ -26,12 +28,14 @@ class cmd_subprocess:
     
     def execute_query_subprocess(self):
 
-        print(f"Execute Sparql Query :\n Data : {self.dataSource}\n Query : {self.QuerySource}")
-        self.logger.info(f"Execute Sparql Query :\n Data : {self.dataSource}\n Query : {self.QuerySource}")
+        arguments = ["sparql",f"--data={self.dataSource}",f"--query={self.QuerySource}"]
+
+        print(f"Execute Command with arguments :\n {' '.join(arguments)}")
+        self.logger.info(f"Execute Command with arguments :\n {' '.join(arguments)}")
 
         response = None
         try:
-            response = run(["sparql",f"--data={self.dataSource}",f"--query={self.QuerySource}"],shell=True,stdout=PIPE)
+            response = run(arguments,shell=False,stdout=PIPE)
         except CalledProcessError as e:
             print(f"Standard error was {e.output}")
             self.logger.warning(f"Standard error was {e.output}")

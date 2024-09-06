@@ -16,3 +16,7 @@ analyze/shacl-play-app-0.8.0-onejar.jar
 analyze/shacl-play-app.log
 
 data/
+
+isidore_referentiels/__pycache__/
+
+output/
