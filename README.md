@@ -56,7 +56,7 @@ cd analyze
 Les données à analyser sont lues depuis le répertoire `../data` et les rapports d'analyse sont dans `analysis`. Ouvrir les fichiers HTML pour lire les rapports, par exemple `analysis/lcsh/subjects.skosrdf-doc.html`
 
 
-## Etape 2 : Traitement/filtrage des fichiers
+## Etape 2 : Nettoyage des fichiers
 
 Si les dépendances ne sont pas installées, il faut les installer:
 

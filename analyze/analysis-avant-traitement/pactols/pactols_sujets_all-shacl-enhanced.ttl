@@ -1,0 +1,651 @@
+@prefix bf:        <http://id.loc.gov/ontologies/bibframe/> .
+@prefix dash:      <http://datashapes.org/dash#> .
+@prefix dc:        <http://purl.org/dc/elements/1.1/> .
+@prefix dcterms:   <http://purl.org/dc/terms/> .
+@prefix foaf:      <http://xmlns.com/foaf/0.1/> .
+@prefix geo:       <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix iso-thes:  <http://purl.org/iso25964/skos-thes#> .
+@prefix madsrdf:   <http://www.loc.gov/mads/rdf/v1#> .
+@prefix opentheso: <http://purl.org/umu/uneskos#> .
+@prefix owl:       <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:       <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:      <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh:        <http://www.w3.org/ns/shacl#> .
+@prefix shape:     <https://shacl-play.sparna.fr/shapes/> .
+@prefix skos:      <http://www.w3.org/2004/02/skos/core#> .
+@prefix skosxl:    <http://www.w3.org/2008/05/skos-xl#> .
+@prefix wdt:       <http://www.opengis.net/ont/geosparql#> .
+@prefix xsd:       <http://www.w3.org/2001/XMLSchema#> .
+
+shape:ThesaurusArray_modified
+        sh:datatype     xsd:date ;
+        sh:description  "414 occurences and 414 distinct values"@en ;
+        sh:minCount     1 ;
+        sh:name         "modified"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         dcterms:modified .
+
+shape:Concept_replaces
+        sh:class        skos:Concept ;
+        sh:description  "436 occurences and 426 distinct values"@en ;
+        sh:name         "replaces"@en ;
+        sh:nodeKind     sh:IRI ;
+        sh:path         dcterms:replaces .
+
+shape:Concept_relatedMatch
+        sh:description  "31 occurences and 26 distinct values"@en ;
+        sh:name         "relatedMatch"@en ;
+        sh:nodeKind     sh:IRI ;
+        sh:path         skos:relatedMatch .
+
+shape:Concept_contributor
+        sh:datatype     xsd:string ;
+        sh:description  "13233 occurences and 18 distinct values"@en ;
+        sh:name         "contributor"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         dcterms:contributor .
+
+shape:Concept_broader
+        sh:class        skos:Concept ;
+        sh:description  "12492 occurences and 2113 distinct values"@en ;
+        sh:name         "broader"@en ;
+        sh:nodeKind     sh:IRI ;
+        sh:path         skos:broader .
+
+shape:ConceptScheme_creator
+        sh:description  "4 occurences and 4 distinct values"@en ;
+        sh:minCount     1 ;
+        sh:name         "creator"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:or           ( shape:ConceptScheme_creator_datatype_0 shape:ConceptScheme_creator_datatype_1 ) ;
+        sh:path         dcterms:creator .
+
+shape:Collection_prefLabel
+        dash:propertyRole  dash:LabelRole ;
+        sh:datatype        rdf:langString ;
+        sh:description     "60 occurences and 60 distinct values"@en ;
+        sh:languageIn      ( "ar" "de" "en" "es" "fr" "it" "nl" ) ;
+        sh:minCount        1 ;
+        sh:name            "prefLabel"@en ;
+        sh:nodeKind        sh:Literal ;
+        sh:path            skos:prefLabel .
+
+shape:Image_title  sh:datatype  xsd:string ;
+        sh:description  "33 occurences and 32 distinct values"@en ;
+        sh:maxCount     1 ;
+        sh:name         "title"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         dcterms:title .
+
+shape:Concept_creator
+        sh:datatype     xsd:string ;
+        sh:description  "112 occurences and 15 distinct values"@en ;
+        sh:maxCount     1 ;
+        sh:name         "creator"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         dcterms:creator .
+
+shape:Concept_memberOf
+        sh:class        skos:Collection ;
+        sh:description  "21889 occurences and 19 distinct values"@en ;
+        sh:name         "memberOf"@en ;
+        sh:nodeKind     sh:IRI ;
+        sh:path         opentheso:memberOf .
+
+shape:Concept_notation
+        sh:datatype     xsd:string ;
+        sh:description  "13 occurences and 13 distinct values"@en ;
+        sh:maxCount     1 ;
+        sh:name         "notation"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         skos:notation .
+
+shape:Concept_hiddenLabel
+        sh:datatype     rdf:langString ;
+        sh:description  "89 occurences and 89 distinct values"@en ;
+        sh:languageIn   ( "fr" ) ;
+        sh:name         "hiddenLabel"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         skos:hiddenLabel .
+
+shape:ConceptScheme_hasTopConcept
+        sh:class        skos:Concept ;
+        sh:description  "13 occurences and 13 distinct values"@en ;
+        sh:minCount     1 ;
+        sh:name         "hasTopConcept"@en ;
+        sh:nodeKind     sh:IRI ;
+        sh:path         skos:hasTopConcept .
+
+shape:Concept_changeNote
+        sh:datatype     rdf:langString ;
+        sh:description  "22 occurences and 22 distinct values"@en ;
+        sh:languageIn   ( "en" "fr" ) ;
+        sh:maxCount     1 ;
+        sh:name         "changeNote"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         skos:changeNote .
+
+shape:Concept_closeMatch
+        sh:description  "91 occurences and 88 distinct values"@en ;
+        sh:name         "closeMatch"@en ;
+        sh:nodeKind     sh:IRI ;
+        sh:path         skos:closeMatch .
+
+shape:ConceptScheme_creator_datatype_1
+        sh:datatype  xsd:string .
+
+shape:Concept_narrowerGeneric
+        sh:class        skos:Concept ;
+        sh:description  "11 occurences and 11 distinct values"@en ;
+        sh:name         "narrowerGeneric"@en ;
+        sh:nodeKind     sh:IRI ;
+        sh:path         iso-thes:narrowerGeneric .
+
+shape:Concept_narrowerPartitive
+        sh:class        skos:Concept ;
+        sh:description  "12 occurences and 12 distinct values"@en ;
+        sh:name         "narrowerPartitive"@en ;
+        sh:nodeKind     sh:IRI ;
+        sh:path         iso-thes:narrowerPartitive .
+
+shape:Concept_note  sh:datatype  rdf:langString ;
+        sh:description  "348 occurences and 343 distinct values"@en ;
+        sh:languageIn   ( "ar" "en" "fr" ) ;
+        sh:name         "note"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         skos:note .
+
+shape:Collection  rdf:type  sh:NodeShape ;
+        rdfs:comment    "19 instances"@en ;
+        rdfs:label      "Collection"@en ;
+        sh:property     shape:Collection_created , shape:Collection_member , shape:Collection_notation , shape:Collection_microThesaurusOf , shape:Collection_definition , shape:Collection_prefLabel , shape:Collection_identifier ;
+        sh:targetClass  skos:Collection .
+
+shape:Concept_broaderInstantial
+        sh:class        skos:Concept ;
+        sh:description  "28 occurences and 19 distinct values"@en ;
+        sh:maxCount     1 ;
+        sh:name         "broaderInstantial"@en ;
+        sh:nodeKind     sh:IRI ;
+        sh:path         iso-thes:broaderInstantial .
+
+shape:Collection_identifier
+        sh:datatype     xsd:string ;
+        sh:description  "19 occurences and 19 distinct values"@en ;
+        sh:in           ( "4" "G137" "G116" "G135" "g184" "2" "G122" "g185" "G126" "G132" "G124" "G130" "1" "6" "G120" "3" "G118" "G128" "G173" ) ;
+        sh:maxCount     1 ;
+        sh:minCount     1 ;
+        sh:name         "identifier"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         dcterms:identifier .
+
+shape:Concept_related
+        sh:class        skos:Concept ;
+        sh:description  "15454 occurences and 6848 distinct values"@en ;
+        sh:name         "related"@en ;
+        sh:nodeKind     sh:IRI ;
+        sh:path         skos:related .
+
+shape:Image_rights  sh:datatype  xsd:string ;
+        sh:description  "34 occurences and 4 distinct values"@en ;
+        sh:maxCount     1 ;
+        sh:name         "rights"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         dcterms:rights .
+
+shape:ThesaurusArray  rdf:type  sh:NodeShape ;
+        rdfs:comment    "205 instances"@en ;
+        rdfs:label      "ThesaurusArray"@en ;
+        sh:property     shape:ThesaurusArray_member , shape:ThesaurusArray_created , shape:ThesaurusArray_prefLabel , shape:ThesaurusArray_superOrdinate , shape:ThesaurusArray_modified ;
+        sh:targetClass  iso-thes:ThesaurusArray .
+
+shape:ConceptScheme_format
+        sh:datatype     xsd:string ;
+        sh:description  "1 occurences and 1 distinct values"@en ;
+        sh:hasValue     "SKOS" ;
+        sh:maxCount     1 ;
+        sh:minCount     1 ;
+        sh:name         "format"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         dcterms:format .
+
+shape:Concept_narrowerInstantial
+        sh:class        skos:Concept ;
+        sh:description  "28 occurences and 28 distinct values"@en ;
+        sh:name         "narrowerInstantial"@en ;
+        sh:nodeKind     sh:IRI ;
+        sh:path         iso-thes:narrowerInstantial .
+
+shape:Collection_microThesaurusOf
+        sh:class        skos:Collection ;
+        sh:description  "19 occurences and 19 distinct values"@en ;
+        sh:in           ( <https://ark.frantiq.fr/ark:/26678/pcrtIriK2LwtHZ> <https://ark.frantiq.fr/ark:/26678/pcrtSPHlY88HRW> <https://ark.frantiq.fr/ark:/26678/pcrtxw5st07tnr> <https://ark.frantiq.fr/ark:/26678/pcrtLminDZvylD> <https://ark.frantiq.fr/ark:/26678/pcrtrjtm2djdmq3dzpqk0nbz> <https://ark.frantiq.fr/ark:/26678/pcrtrG9ejXOVNA> <https://ark.frantiq.fr/ark:/26678/pcrttp2qp0084z> <https://ark.frantiq.fr/ark:/26678/pcrtv0jq332vcq3gxt5m13d5> <https://ark.frantiq.fr/ark:/26678/pcrtj1zjzzpbmd> <https://ark.frantiq.fr/ark:/26678/pcrtrxnswx9qw6> <https://ark.frantiq.fr/ark:/26678/pcrtcwprjx5rh5> <https://ark.frantiq.fr/ark:/26678/pcrtxnpdz6h34n> <https://ark.frantiq.fr/ark:/26678/pcrtwYXUs9hrxS> <https://ark.frantiq.fr/ark:/26678/pcrtnbDLi2FkAj> <https://ark.frantiq.fr/ark:/26678/pcrtv66rn9cbv1> <https://ark.frantiq.fr/ark:/26678/pcrtN5h4VAwZcq> <https://ark.frantiq.fr/ark:/26678/pcrtcg5jzppf8w> <https://ark.frantiq.fr/ark:/26678/pcrts5kq8x52nf> <https://ark.frantiq.fr/ark:/26678/pcrt55mxscwskk> ) ;
+        sh:maxCount     1 ;
+        sh:minCount     1 ;
+        sh:name         "microThesaurusOf"@en ;
+        sh:nodeKind     sh:IRI ;
+        sh:path         iso-thes:microThesaurusOf .
+
+shape:ConceptScheme_publisher
+        sh:datatype     rdf:langString ;
+        sh:description  "1 occurences and 1 distinct values"@en ;
+        sh:hasValue     "Centre national de la recherche scientifique (CNRS)"@fr ;
+        sh:languageIn   ( "fr" ) ;
+        sh:maxCount     1 ;
+        sh:minCount     1 ;
+        sh:name         "publisher"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         dcterms:publisher .
+
+shape:ConceptScheme_description
+        sh:datatype     rdf:langString ;
+        sh:description  "2 occurences and 2 distinct values"@en ;
+        sh:languageIn   ( "en" "fr" ) ;
+        sh:minCount     1 ;
+        sh:name         "description"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         dcterms:description .
+
+shape:ConceptScheme_contributor_datatype_1
+        sh:datatype  xsd:string .
+
+shape:Concept_subordinateArray
+        sh:class        iso-thes:ThesaurusArray ;
+        sh:description  "205 occurences and 205 distinct values"@en ;
+        sh:name         "subordinateArray"@en ;
+        sh:nodeKind     sh:IRI ;
+        sh:path         iso-thes:subordinateArray .
+
+shape:ConceptScheme  rdf:type  sh:NodeShape ;
+        rdfs:comment    "1 instances"@en ;
+        rdfs:label      "ConceptScheme"@en ;
+        sh:property     shape:ConceptScheme_type , shape:ConceptScheme_license , shape:ConceptScheme_title , shape:ConceptScheme_description , shape:ConceptScheme_language , shape:ConceptScheme_contributor , shape:ConceptScheme_identifier , shape:ConceptScheme_prefLabel , shape:ConceptScheme_format , shape:ConceptScheme_hasTopConcept , shape:ConceptScheme_modified , shape:ConceptScheme_created , shape:ConceptScheme_rightsHolder , shape:ConceptScheme_creator , shape:ConceptScheme_publisher ;
+        sh:targetClass  skos:ConceptScheme .
+
+shape:ConceptScheme_title
+        sh:description  "3 occurences and 3 distinct values"@en ;
+        sh:minCount     1 ;
+        sh:name         "title"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:or           ( shape:ConceptScheme_title_datatype_0 shape:ConceptScheme_title_datatype_1 ) ;
+        sh:path         dcterms:title .
+
+shape:ConceptScheme_title_datatype_0
+        sh:datatype  rdf:langString .
+
+shape:Concept_broaderGeneric
+        sh:class        skos:Concept ;
+        sh:description  "11 occurences and 7 distinct values"@en ;
+        sh:maxCount     1 ;
+        sh:name         "broaderGeneric"@en ;
+        sh:nodeKind     sh:IRI ;
+        sh:path         iso-thes:broaderGeneric .
+
+shape:ThesaurusArray_created
+        sh:datatype     xsd:date ;
+        sh:description  "414 occurences and 414 distinct values"@en ;
+        sh:minCount     1 ;
+        sh:name         "created"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         dcterms:created .
+
+shape:Concept_deprecated
+        sh:datatype     xsd:boolean ;
+        sh:description  "466 occurences and 1 distinct values"@en ;
+        sh:hasValue     true ;
+        sh:maxCount     1 ;
+        sh:name         "deprecated"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         owl:deprecated .
+
+shape:Concept_source  sh:datatype  xsd:string ;
+        sh:description  "1 occurences and 1 distinct values"@en ;
+        sh:maxCount     1 ;
+        sh:name         "source"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         dcterms:source .
+
+shape:ConceptScheme_contributor
+        sh:description  "12 occurences and 12 distinct values"@en ;
+        sh:minCount     1 ;
+        sh:name         "contributor"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:or           ( shape:ConceptScheme_contributor_datatype_0 shape:ConceptScheme_contributor_datatype_1 ) ;
+        sh:path         dcterms:contributor .
+
+shape:ConceptScheme_language
+        sh:datatype     xsd:string ;
+        sh:description  "8 occurences and 8 distinct values"@en ;
+        sh:minCount     1 ;
+        sh:name         "language"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         dcterms:language .
+
+shape:Concept_editorialNote
+        sh:datatype     rdf:langString ;
+        sh:description  "166 occurences and 108 distinct values"@en ;
+        sh:languageIn   ( "ar" "fr" ) ;
+        sh:name         "editorialNote"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         skos:editorialNote .
+
+shape:Concept_inScheme
+        sh:class        skos:ConceptScheme ;
+        sh:description  "12554 occurences and 1 distinct values"@en ;
+        sh:hasValue     <https://ark.frantiq.fr/ark:/26678/TH_1> ;
+        sh:maxCount     1 ;
+        sh:minCount     1 ;
+        sh:name         "inScheme"@en ;
+        sh:nodeKind     sh:IRI ;
+        sh:path         skos:inScheme .
+
+shape:ConceptScheme_type
+        sh:datatype     rdf:langString ;
+        sh:description  "1 occurences and 1 distinct values"@en ;
+        sh:hasValue     "thesaurus"@en ;
+        sh:languageIn   ( "en" ) ;
+        sh:maxCount     1 ;
+        sh:minCount     1 ;
+        sh:name         "type"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         dcterms:type .
+
+shape:Concept_narrower
+        sh:class        skos:Concept ;
+        sh:description  "12492 occurences and 12489 distinct values"@en ;
+        sh:name         "narrower"@en ;
+        sh:nodeKind     sh:IRI ;
+        sh:path         skos:narrower .
+
+shape:Collection_definition
+        sh:datatype     rdf:langString ;
+        sh:description  "1 occurences and 1 distinct values"@en ;
+        sh:languageIn   ( "fr" ) ;
+        sh:maxCount     1 ;
+        sh:name         "definition"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         skos:definition .
+
+shape:Concept_narrowMatch
+        sh:description  "34 occurences and 33 distinct values"@en ;
+        sh:name         "narrowMatch"@en ;
+        sh:nodeKind     sh:IRI ;
+        sh:path         skos:narrowMatch .
+
+shape:ConceptScheme_license
+        sh:datatype     xsd:string ;
+        sh:description  "1 occurences and 1 distinct values"@en ;
+        sh:hasValue     "OdBL" ;
+        sh:maxCount     1 ;
+        sh:minCount     1 ;
+        sh:name         "license"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         dcterms:license .
+
+shape:Concept_identifier
+        sh:datatype     xsd:string ;
+        sh:description  "12554 occurences and 12554 distinct values"@en ;
+        sh:maxCount     1 ;
+        sh:minCount     1 ;
+        sh:name         "identifier"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         dcterms:identifier .
+
+shape:ThesaurusArray_prefLabel
+        dash:propertyRole  dash:LabelRole ;
+        sh:datatype        rdf:langString ;
+        sh:description     "414 occurences and 414 distinct values"@en ;
+        sh:languageIn      ( "ar" "de" "en" "es" "fr" "it" "nl" ) ;
+        sh:minCount        1 ;
+        sh:name            "prefLabel"@en ;
+        sh:nodeKind        sh:Literal ;
+        sh:path            skos:prefLabel .
+
+shape:Image_identifier
+        dash:propertyRole  dash:LabelRole ;
+        sh:datatype        xsd:string ;
+        sh:description     "36 occurences and 25 distinct values"@en ;
+        sh:maxCount        1 ;
+        sh:minCount        1 ;
+        sh:name            "identifier"@en ;
+        sh:nodeKind        sh:Literal ;
+        sh:path            dcterms:identifier .
+
+shape:Concept_isReplacedBy
+        sh:class        skos:Concept ;
+        sh:description  "436 occurences and 316 distinct values"@en ;
+        sh:name         "isReplacedBy"@en ;
+        sh:nodeKind     sh:IRI ;
+        sh:path         dcterms:isReplacedBy .
+
+shape:ConceptScheme_created
+        sh:datatype     xsd:date ;
+        sh:description  "2 occurences and 2 distinct values"@en ;
+        sh:minCount     1 ;
+        sh:name         "created"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         dcterms:created .
+
+shape:ConceptScheme_rightsHolder
+        sh:datatype     xsd:string ;
+        sh:description  "1 occurences and 1 distinct values"@en ;
+        sh:hasValue     "CNRS-Frantiq" ;
+        sh:maxCount     1 ;
+        sh:minCount     1 ;
+        sh:name         "rightsHolder"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         dcterms:rightsHolder .
+
+shape:Concept_created
+        sh:datatype     xsd:date ;
+        sh:description  "12554 occurences and 735 distinct values"@en ;
+        sh:maxCount     1 ;
+        sh:minCount     1 ;
+        sh:name         "created"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         dcterms:created .
+
+shape:Collection_member
+        sh:class        skos:Concept ;
+        sh:description  "26319 occurences and 12547 distinct values"@en ;
+        sh:minCount     1 ;
+        sh:name         "member"@en ;
+        sh:nodeKind     sh:IRI ;
+        sh:path         skos:member .
+
+shape:  rdf:type          owl:Ontology ;
+        dcterms:abstract  "Generated by SHACL Play!.\n313095 triples in the dataset."@en ;
+        dcterms:created   "2024-09-06T07:37:48.782Z"^^xsd:dateTime .
+
+shape:Concept_altLabel
+        sh:datatype     rdf:langString ;
+        sh:description  "29543 occurences and 28974 distinct values"@en ;
+        sh:languageIn   ( "ar" "de" "en" "es" "fr" "he" "it" "nl" ) ;
+        sh:name         "altLabel"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         skos:altLabel .
+
+shape:ConceptScheme_prefLabel
+        dash:propertyRole  dash:LabelRole ;
+        sh:datatype        rdf:langString ;
+        sh:description     "10 occurences and 10 distinct values"@en ;
+        sh:languageIn      ( "ar" "de" "el" "en" "es" "fr" "he" "it" "nl" "ru" ) ;
+        sh:minCount        1 ;
+        sh:name            "prefLabel"@en ;
+        sh:nodeKind        sh:Literal ;
+        sh:path            skos:prefLabel .
+
+shape:ConceptScheme_modified
+        sh:datatype     xsd:date ;
+        sh:description  "2 occurences and 2 distinct values"@en ;
+        sh:minCount     1 ;
+        sh:name         "modified"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         dcterms:modified .
+
+shape:ConceptScheme_creator_datatype_0
+        sh:datatype  rdf:langString .
+
+shape:Concept_broaderPartitive
+        sh:class        skos:Concept ;
+        sh:description  "12 occurences and 5 distinct values"@en ;
+        sh:maxCount     1 ;
+        sh:name         "broaderPartitive"@en ;
+        sh:nodeKind     sh:IRI ;
+        sh:path         iso-thes:broaderPartitive .
+
+shape:ConceptScheme_title_datatype_1
+        sh:datatype  xsd:string .
+
+shape:Concept_exactMatch
+        sh:class        skos:Concept ;
+        sh:description  "18606 occurences and 18062 distinct values"@en ;
+        sh:name         "exactMatch"@en ;
+        sh:nodeKind     sh:IRI ;
+        sh:path         skos:exactMatch .
+
+shape:Concept_example
+        sh:datatype     rdf:langString ;
+        sh:description  "1 occurences and 1 distinct values"@en ;
+        sh:languageIn   ( "fr" ) ;
+        sh:maxCount     1 ;
+        sh:name         "example"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         skos:example .
+
+shape:Concept_relatedHasPart
+        sh:class        skos:Concept ;
+        sh:description  "2 occurences and 2 distinct values"@en ;
+        sh:maxCount     1 ;
+        sh:name         "relatedHasPart"@en ;
+        sh:nodeKind     sh:IRI ;
+        sh:path         iso-thes:relatedHasPart .
+
+shape:Concept_definition
+        sh:datatype     rdf:langString ;
+        sh:description  "10784 occurences and 10671 distinct values"@en ;
+        sh:languageIn   ( "all" "ar" "de" "el" "en" "es" "fr" "he" "it" "nl" "ru" ) ;
+        sh:name         "definition"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         skos:definition .
+
+shape:Image  rdf:type   sh:NodeShape ;
+        rdfs:comment    "36 instances"@en ;
+        rdfs:label      "Image"@en ;
+        sh:property     shape:Image_creator , shape:Image_rights , shape:Image_title , shape:Image_identifier ;
+        sh:targetClass  foaf:Image .
+
+shape:Concept_scopeNote
+        sh:datatype     rdf:langString ;
+        sh:description  "527 occurences and 383 distinct values"@en ;
+        sh:languageIn   ( "en" "fr" ) ;
+        sh:name         "scopeNote"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         skos:scopeNote .
+
+shape:Concept_prefLabel
+        dash:propertyRole  dash:LabelRole ;
+        sh:datatype        rdf:langString ;
+        sh:description     "81644 occurences and 80720 distinct values"@en ;
+        sh:languageIn      ( "ar" "de" "el" "en" "es" "fr" "he" "it" "nl" "ru" ) ;
+        sh:minCount        1 ;
+        sh:name            "prefLabel"@en ;
+        sh:nodeKind        sh:Literal ;
+        sh:path            skos:prefLabel .
+
+shape:ThesaurusArray_superOrdinate
+        sh:class        skos:Concept ;
+        sh:description  "205 occurences and 60 distinct values"@en ;
+        sh:maxCount     1 ;
+        sh:minCount     1 ;
+        sh:name         "superOrdinate"@en ;
+        sh:nodeKind     sh:IRI ;
+        sh:path         iso-thes:superOrdinate .
+
+shape:Collection_created
+        sh:datatype     xsd:date ;
+        sh:description  "2 occurences and 2 distinct values"@en ;
+        sh:maxCount     1 ;
+        sh:name         "created"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         dcterms:created .
+
+shape:Concept  rdf:type  sh:NodeShape ;
+        rdfs:comment    "12554 instances"@en ;
+        rdfs:label      "Concept"@en ;
+        sh:property     shape:Concept_deprecated , shape:Concept_scopeNote , shape:Concept_broaderPartitive , shape:Concept_creator , shape:Concept_P625 , shape:Concept_subordinateArray , shape:Concept_broader , shape:Concept_source , shape:Concept_broaderGeneric , shape:Concept_narrowerInstantial , shape:Concept_altLabel , shape:Concept_hiddenLabel , shape:Concept_inScheme , shape:Concept_narrower , shape:Concept_narrowerGeneric , shape:Concept_relatedHasPart , shape:Concept_broaderInstantial , shape:Concept_contributor , shape:Concept_broadMatch , shape:Concept_relatedMatch , shape:Concept_example , shape:Concept_closeMatch , shape:Concept_narrowMatch , shape:Concept_definition , shape:Concept_historyNote , shape:Concept_identifier , shape:Concept_exactMatch , shape:Concept_changeNote , shape:Concept_prefLabel , shape:Concept_note , shape:Concept_isReplacedBy , shape:Concept_editorialNote , shape:Concept_notation , shape:Concept_related , shape:Concept_narrowerPartitive , shape:Concept_created , shape:Concept_replaces , shape:Concept_modified , shape:Concept_topConceptOf , shape:Concept_memberOf ;
+        sh:targetClass  skos:Concept .
+
+shape:Image_creator  sh:datatype  xsd:string ;
+        sh:description  "35 occurences and 34 distinct values"@en ;
+        sh:maxCount     1 ;
+        sh:name         "creator"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         dcterms:creator .
+
+shape:ConceptScheme_identifier
+        sh:datatype     xsd:string ;
+        sh:description  "1 occurences and 1 distinct values"@en ;
+        sh:hasValue     "https://pactols.frantiq.fr/opentheso/?idt=TH_1" ;
+        sh:maxCount     1 ;
+        sh:minCount     1 ;
+        sh:name         "identifier"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         dcterms:identifier .
+
+shape:ConceptScheme_contributor_datatype_0
+        sh:datatype  rdf:langString .
+
+shape:Concept_historyNote
+        sh:datatype     rdf:langString ;
+        sh:description  "335 occurences and 201 distinct values"@en ;
+        sh:languageIn   ( "fr" ) ;
+        sh:maxCount     1 ;
+        sh:name         "historyNote"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         skos:historyNote .
+
+shape:Concept_P625  sh:datatype  wdt:wktLiteral ;
+        sh:description  "1 occurences and 1 distinct values"@en ;
+        sh:maxCount     1 ;
+        sh:name         "P625"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         wdt:P625 .
+
+shape:ThesaurusArray_member
+        sh:class        skos:Concept ;
+        sh:description  "2411 occurences and 2252 distinct values"@en ;
+        sh:name         "member"@en ;
+        sh:nodeKind     sh:IRI ;
+        sh:path         skos:member .
+
+shape:Concept_broadMatch
+        sh:description  "11 occurences and 10 distinct values"@en ;
+        sh:maxCount     1 ;
+        sh:name         "broadMatch"@en ;
+        sh:nodeKind     sh:IRI ;
+        sh:path         skos:broadMatch .
+
+shape:Collection_notation
+        sh:datatype     xsd:string ;
+        sh:description  "17 occurences and 17 distinct values"@en ;
+        sh:maxCount     1 ;
+        sh:name         "notation"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         skos:notation .
+
+shape:Concept_modified
+        sh:datatype     xsd:date ;
+        sh:description  "12543 occurences and 203 distinct values"@en ;
+        sh:maxCount     1 ;
+        sh:name         "modified"@en ;
+        sh:nodeKind     sh:Literal ;
+        sh:path         dcterms:modified .
+
+shape:Concept_topConceptOf
+        sh:class        skos:ConceptScheme ;
+        sh:description  "14 occurences and 1 distinct values"@en ;
+        sh:maxCount     1 ;
+        sh:name         "topConceptOf"@en ;
+        sh:nodeKind     sh:IRI ;
+        sh:path         skos:topConceptOf .

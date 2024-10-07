@@ -1,0 +1,137 @@
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix dct:  <http://purl.org/dc/terms/> .
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<https://dummy.dataset.uri/partition_Concept>
+        dct:conformsTo          <https://shacl-play.sparna.fr/shapes/Concept> ;
+        void:class              <http://www.w3.org/2004/02/skos/core#Concept> ;
+        void:entities           "510011"^^xsd:int ;
+        void:propertyPartition  <https://dummy.dataset.uri/partition_Concept_narrower> , <https://dummy.dataset.uri/partition_Concept_editorialNote> , <https://dummy.dataset.uri/partition_Concept_prefLabel> , <https://dummy.dataset.uri/partition_Concept_historyNote> , <https://dummy.dataset.uri/partition_Concept_note> , <https://dummy.dataset.uri/partition_Concept_notation> , <https://dummy.dataset.uri/partition_Concept_hasCloseExternalAuthority> , <https://dummy.dataset.uri/partition_Concept_example> , <https://dummy.dataset.uri/partition_Concept_broader> , <https://dummy.dataset.uri/partition_Concept_altLabel> , <https://dummy.dataset.uri/partition_Concept_inScheme> , <https://dummy.dataset.uri/partition_Concept_altLabel_2> , <https://dummy.dataset.uri/partition_Concept_related> .
+
+<https://dummy.dataset.uri/partition_Label_literalForm>
+        dct:conformsTo        <https://shacl-play.sparna.fr/shapes/Label_literalForm> ;
+        void:distinctObjects  "392078"^^xsd:int ;
+        void:property         <http://www.w3.org/2008/05/skos-xl#literalForm> ;
+        void:triples          "398065"^^xsd:int .
+
+<https://dummy.dataset.uri/partition_Label_note>
+        dct:conformsTo        <https://shacl-play.sparna.fr/shapes/Label_note> ;
+        void:distinctObjects  "343"^^xsd:int ;
+        void:property         <http://www.w3.org/2004/02/skos/core#note> ;
+        void:triples          "379"^^xsd:int .
+
+<https://dummy.dataset.uri/partition_Label_seeAlso>
+        dct:conformsTo        <https://shacl-play.sparna.fr/shapes/Label_seeAlso> ;
+        void:distinctObjects  "18"^^xsd:int ;
+        void:property         <http://www.w3.org/2000/01/rdf-schema#seeAlso> ;
+        void:triples          "20"^^xsd:int .
+
+<https://dummy.dataset.uri/partition_Concept_prefLabel>
+        dct:conformsTo        <https://shacl-play.sparna.fr/shapes/Concept_prefLabel> ;
+        void:distinctObjects  "504522"^^xsd:int ;
+        void:property         <http://www.w3.org/2004/02/skos/core#prefLabel> ;
+        void:triples          "510011"^^xsd:int .
+
+<https://dummy.dataset.uri/partition_Concept_altLabel_2>
+        dct:conformsTo        <https://shacl-play.sparna.fr/shapes/Concept_altLabel_2> ;
+        void:distinctObjects  "390688"^^xsd:int ;
+        void:property         <http://www.w3.org/2008/05/skos-xl#altLabel> ;
+        void:triples          "390688"^^xsd:int .
+
+<https://dummy.dataset.uri/partition_Concept_editorialNote>
+        dct:conformsTo        <https://shacl-play.sparna.fr/shapes/Concept_editorialNote> ;
+        void:distinctObjects  "49613"^^xsd:int ;
+        void:property         <http://www.w3.org/2004/02/skos/core#editorialNote> ;
+        void:triples          "134547"^^xsd:int .
+
+<https://dummy.dataset.uri/partition_Concept_example>
+        dct:conformsTo        <https://shacl-play.sparna.fr/shapes/Concept_example> ;
+        void:distinctObjects  "8565"^^xsd:int ;
+        void:property         <http://www.w3.org/2004/02/skos/core#example> ;
+        void:triples          "10271"^^xsd:int .
+
+<https://dummy.dataset.uri/partition_Concept_broader>
+        dct:conformsTo        <https://shacl-play.sparna.fr/shapes/Concept_broader> ;
+        void:distinctObjects  "66705"^^xsd:int ;
+        void:property         <http://www.w3.org/2004/02/skos/core#broader> ;
+        void:triples          "299004"^^xsd:int .
+
+<https://dummy.dataset.uri/partition_Label>
+        dct:conformsTo          <https://shacl-play.sparna.fr/shapes/Label> ;
+        void:class              <http://www.w3.org/2008/05/skos-xl#Label> ;
+        void:entities           "398065"^^xsd:int ;
+        void:propertyPartition  <https://dummy.dataset.uri/partition_Label_seeAlso> , <https://dummy.dataset.uri/partition_Label_example> , <https://dummy.dataset.uri/partition_Label_hasCloseExternalAuthority> , <https://dummy.dataset.uri/partition_Label_editorialNote> , <https://dummy.dataset.uri/partition_Label_literalForm> , <https://dummy.dataset.uri/partition_Label_note> .
+
+<https://dummy.dataset.uri>
+        a                        void:Dataset ;
+        void:classPartition      <https://dummy.dataset.uri/partition_Concept> , <https://dummy.dataset.uri/partition_Label> ;
+        void:triples             "4012979"^^xsd:int ;
+        sh:suggestedShapesGraph  <https://shacl-play.sparna.fr/shapes/> .
+
+<https://dummy.dataset.uri/partition_Label_editorialNote>
+        dct:conformsTo        <https://shacl-play.sparna.fr/shapes/Label_editorialNote> ;
+        void:distinctObjects  "29"^^xsd:int ;
+        void:property         <http://www.w3.org/2004/02/skos/core#editorialNote> ;
+        void:triples          "886"^^xsd:int .
+
+<https://dummy.dataset.uri/partition_Concept_historyNote>
+        dct:conformsTo        <https://shacl-play.sparna.fr/shapes/Concept_historyNote> ;
+        void:distinctObjects  "1023"^^xsd:int ;
+        void:property         <http://www.w3.org/2004/02/skos/core#historyNote> ;
+        void:triples          "6246"^^xsd:int .
+
+<https://dummy.dataset.uri/partition_Concept_hasCloseExternalAuthority>
+        dct:conformsTo        <https://shacl-play.sparna.fr/shapes/Concept_hasCloseExternalAuthority> ;
+        void:distinctObjects  "56134"^^xsd:int ;
+        void:property         <http://www.loc.gov/mads/rdf/v1#hasCloseExternalAuthority> ;
+        void:triples          "56448"^^xsd:int .
+
+<https://dummy.dataset.uri/partition_Concept_narrower>
+        dct:conformsTo        <https://shacl-play.sparna.fr/shapes/Concept_narrower> ;
+        void:distinctObjects  "227669"^^xsd:int ;
+        void:property         <http://www.w3.org/2004/02/skos/core#narrower> ;
+        void:triples          "314883"^^xsd:int .
+
+<https://dummy.dataset.uri/partition_Concept_inScheme>
+        dct:conformsTo        <https://shacl-play.sparna.fr/shapes/Concept_inScheme> ;
+        void:distinctObjects  "1"^^xsd:int ;
+        void:property         <http://www.w3.org/2004/02/skos/core#inScheme> ;
+        void:triples          "509645"^^xsd:int .
+
+<https://dummy.dataset.uri/partition_Label_hasCloseExternalAuthority>
+        dct:conformsTo        <https://shacl-play.sparna.fr/shapes/Label_hasCloseExternalAuthority> ;
+        void:distinctObjects  "113"^^xsd:int ;
+        void:property         <http://www.loc.gov/mads/rdf/v1#hasCloseExternalAuthority> ;
+        void:triples          "113"^^xsd:int .
+
+<https://dummy.dataset.uri/partition_Concept_notation>
+        dct:conformsTo        <https://shacl-play.sparna.fr/shapes/Concept_notation> ;
+        void:distinctObjects  "267"^^xsd:int ;
+        void:property         <http://www.w3.org/2004/02/skos/core#notation> ;
+        void:triples          "46789"^^xsd:int .
+
+<https://dummy.dataset.uri/partition_Label_example>
+        dct:conformsTo        <https://shacl-play.sparna.fr/shapes/Label_example> ;
+        void:distinctObjects  "211"^^xsd:int ;
+        void:property         <http://www.w3.org/2004/02/skos/core#example> ;
+        void:triples          "224"^^xsd:int .
+
+<https://dummy.dataset.uri/partition_Concept_note>
+        dct:conformsTo        <https://shacl-play.sparna.fr/shapes/Concept_note> ;
+        void:distinctObjects  "10088"^^xsd:int ;
+        void:property         <http://www.w3.org/2004/02/skos/core#note> ;
+        void:triples          "13029"^^xsd:int .
+
+<https://dummy.dataset.uri/partition_Concept_altLabel>
+        dct:conformsTo        <https://shacl-play.sparna.fr/shapes/Concept_altLabel> ;
+        void:distinctObjects  "385117"^^xsd:int ;
+        void:property         <http://www.w3.org/2004/02/skos/core#altLabel> ;
+        void:triples          "390680"^^xsd:int .
+
+<https://dummy.dataset.uri/partition_Concept_related>
+        dct:conformsTo        <https://shacl-play.sparna.fr/shapes/Concept_related> ;
+        void:distinctObjects  "17237"^^xsd:int ;
+        void:property         <http://www.w3.org/2004/02/skos/core#related> ;
+        void:triples          "22971"^^xsd:int .

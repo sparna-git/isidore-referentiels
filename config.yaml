@@ -47,8 +47,11 @@ vocabularies:
     # 1. Lit les alignements Wikidata de ce référentiel (rameau)
     # 2. Lit tous les alignements Wikidata des référentiels indiqués en paramètre
     # 3. Compare les alignements Wikidata de ce reférentiel avec tous les autres et trouve les concepts alignés sur les même URI Wikidata
-    # 4. Génère un fichier CSV dans 
-    wikidata-oper:
+    # 4. Génère un fichier CSV dans $workDir/wikidata/{id_du_referentiel}/{id_referentiel}.csv contenant l'alignement de ce référentiel avec Wikidata
+    # 5. Génère un fichier CSV dans $workDir/wikidata/{id_du_referentiel}/{id_autre_referentiel}.csv contenant l'alignement de l'autre référentiel avec Wikidata
+    # 6. Génère un fichier CSV final dans $workDir/wikidata/{id_du_referentiel}/{id_referentiel}_match.csv contenant les correspondance entre les URI de ce référentiel avec les URIs de tous les autres
+    # 7. Supprime de ce référentiel toutes les URIs qui ont une équivalence avec une autre URI dans le fichier CSV de "xxx_match.csv"
+    wikidata-oper: 
       - lcsh
 
 
