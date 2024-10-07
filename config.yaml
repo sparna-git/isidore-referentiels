@@ -4,13 +4,13 @@ outputDir: output
 workDir: work
 # Nom du fichier de log qui sera créé dans $workDir
 logFile: isidore-referentiels.log
-
-# delete-uris-query: sparql/delete-uris/delete-uris.rq
+# Requête pour supprimir les uris unitaires 
+delete-uris-query: sparql/delete-uris/delete-uris.rq
 
 # Si ce paramètre est à True, le script va extraire les triplets d'alignement wikidata de chaque référentiel
 # Le résultat de l'extraction est dans le répertoire $workDir/{id_du_referentiel}/wikidata/{id_du_referentiel}.ttl
 # Cette extraction est réalisée à partir de la requête SPARQL 
-wikidata: True
+wikidata: False
 
 # A transformer en:
 # wikidataAlignementQuery: sparql/wikidata/wikidata.rq
@@ -42,6 +42,8 @@ vocabularies:
     delete-uris:
       - https://data.bnf.fr/concept/123456
       - https://data.bnf.fr/concept/456789
+    wikidataAlignementQuery: 
+      - sparql/wikidata/wikidata.rq
     # 1. Lit les alignements Wikidata de ce référentiel (rameau)
     # 2. Lit tous les alignements Wikidata des référentiels indiqués en paramètre
     # 3. Compare les alignements Wikidata de ce reférentiel avec tous les autres et trouve les concepts alignés sur les même URI Wikidata
@@ -57,7 +59,12 @@ vocabularies:
       - data/lcsh
     sparql:
       - sparql/lcsh/clean-combined-concepts.ru
-    delete-uris: []
+    delete-uris: 
+      - http://id.loc.gov/authorities/subjects/sh00000011
+      - http://id.loc.gov/authorities/subjects/sh2006006405
+      - http://id.loc.gov/authorities/subjects/sh00000014
+    wikidataAlignementQuery: 
+      - sparql/wikidata/wikidata.rq
     wikidata-oper: []
 
 
@@ -69,6 +76,8 @@ vocabularies:
     sparql:
       - sparql/bne/clean-combined-concepts.ru
     delete-uris: []
+    wikidataAlignementQuery: 
+      - sparql/wikidata/wikidata.rq
     wikidata-oper:
       - lcsh
       - rameau
@@ -82,6 +91,8 @@ vocabularies:
     sparql:
       - sparql/pactols/clean-anthroponymes-and-oeuvres.ru
     delete-uris: []
+    wikidataAlignementQuery: 
+      - sparql/wikidata/wikidata.rq
     wikidata-oper:
       - lcsh
       - rameau

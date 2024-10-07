@@ -1,0 +1,22 @@
+id: rameau
+downloadPage:
+  - https://pef.bnf.fr/link/539d6d59-c2e3-4e17-b24c-d8a83ca11944#
+data: 
+  - data/rameau
+sparql:
+  - sparql/rameau/keep-only_isPartOf.ru
+  - sparql/rameau/clean-domaines.ru
+  - sparql/rameau/clean-aligned-with-geonames.ru
+  - sparql/rameau/clean-combined-concepts.ru
+  - sparql/rameau/clean-dict-concepts.ru
+Analyze:
+  - sparql/analyze/analyze_referentiel.rq
+Wikidata:
+  - sparql/wikidata/wikidata.rq
+algorithms:
+  - I
+  - E
+  - N
+
+
+  
