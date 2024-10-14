@@ -16,11 +16,12 @@ def main():
 
     if (args.configuration) and args.referentiel and args.etape:
 
-        ref = referentiel.Information(open(args.configuration))
+        ref = referentiel.Information(open(args.configuration),args.etape)
         ref.print_referentiel_information()
 
         if args.etape == "clean":
             clean_referentiel(ref).execute_sparql_update()
+            #print("Etape Clean")
         elif args.etape == "report":
             report(ref).generer_report()
             
