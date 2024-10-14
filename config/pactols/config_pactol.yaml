@@ -1,0 +1,25 @@
+id: pactols
+downloadPage:
+  - https://github.com/frantiq/PACTOLS
+  - https://github.com/frantiq/PACTOLS/tree/master/pactols-latest-version/pactols_sujets_al
+data: 
+  - data/pactols
+# Répertoire où sont enregistrés les fichiers des référentiels après traitement
+OutputDir: Output
+# Répertoire où sont stockés les fichiers temporaires de travail du script
+WorkDir: Work
+# Nom du fichier de log qui sera créé dans $workDir
+logFile: isidore-referentiels_pactols.log
+clean:
+  sparql:
+      - config/pactols/sparql/clean-anthroponymes-and-oeuvres.ru
+report:
+  # Répertoire où se trouve le fichier après de l'etape de nettoyage .
+  data: output_clean
+  # Concepts
+  algorithms:
+    - Labels
+    - Wikidata
+    - Statistique
+integrate: []
+merge: []
