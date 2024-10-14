@@ -7,8 +7,9 @@ from isidore_referentiels.process.Tools import tools
 
 class Information(confReferentiel,cmd_subprocess):
 
-    def __init__(self, Data_yaml_Global):
-        super().__init__(Data_yaml_Global)
+    def __init__(self, Data_yaml_Global,etape:str):
+        super().__init__(Data_yaml_Global,etape)
+
         # Logging
         self.logger = logging.getLogger(__name__)
 
