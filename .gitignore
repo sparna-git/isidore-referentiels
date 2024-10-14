@@ -26,3 +26,5 @@ output/
 /isidore_referentiels/clean/__pycache__
 
 data.bak/
+
+logs/
