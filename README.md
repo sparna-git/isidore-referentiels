@@ -65,19 +65,17 @@ poetry update
 poetry install
 ```
 
-Lancement du script:
+Lancement de l'étape 1 "clean"
 
 ```
-poetry run isidore_referentiels {fichier_de_config.yaml}
+poetry run isidore_referentiels --etape clean --configuration {fichier_de_config.yaml} --referentiel {repertoire_de_data}
 ```
 
 Par exemple :
 
 ```
-poetry run isidore_referentiels config.yaml
+poetry run isidore_referentiels --etape clean --configuration config/lcsh/config_lcsh.yaml --referentiel ./data/lcsh 
 ```
-
-Les logs de traitements sont dans `$workDir/isidore-referentiels.log`.
 
 
 ### Fichier de config config.yaml
