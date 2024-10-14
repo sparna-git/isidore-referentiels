@@ -13,13 +13,14 @@ class cmd_subprocess:
 
         arguments = ["riot",f"{ResourceData}/*",">",f"{DataTmp}"]
         print(f"Execute Command with arguments :\n {' '.join(arguments)}")
-        #self.logger.info(f"Execute Command with arguments :\n {' '.join(arguments)}")
+        self.logger.info(f"Execute Command with arguments :\n {' '.join(arguments)}")
+        
         response = None
         try:
             response = run(arguments,shell=True,stdout=PIPE, stderr=PIPE)
         except CalledProcessError as e:
             print(f"Standard error was {e.output}")
-            #self.logger.warning(f"Standard error was {e.output}")
+            self.logger.warning(f"Standard error was {e.output}")
 
         return response
 

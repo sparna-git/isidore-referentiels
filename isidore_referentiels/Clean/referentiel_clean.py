@@ -37,6 +37,10 @@ class clean_referentiel():
         Path_Result = tools.get_path_absoluted(fileOutput)
         
         response = cmd_subprocess.merge_data(self,Path_data,Path_Result)
+        if response.stderr.__sizeof__()> 0:
+            self.logger.warning("Error in the merge files")
+            self.logger.warning(response.stderr)
+
         self.__Referentiel_data = Path_Result
 
     def __set_output_clean(self, path_tmp_file:str) -> str:
@@ -81,9 +85,13 @@ class clean_referentiel():
             self.logger.info(f"Le requête à retourne: {response.stdout.__sizeof__()}")
 
             # Stocker les erreurs dans le log
-            if response.stderr:
-                self.logger.warning(f"Erreurs de la requête sparql {path_sparql}")
-                self.logger.warning(response.stderr)
+            #if response.stderr.__sizeof__() > 0:
+            self.logger.info(f"Erreurs de la requête sparql {path_sparql}")
+            self.logger.info(response.stderr)
+
+            
+            if response.stderr.__sizeof__() > 0:
+                print("long error not wrote")
 
             # Write in file
             if response.stdout:                
