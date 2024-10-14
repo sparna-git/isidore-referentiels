@@ -5,21 +5,22 @@ downloadPage:
 data: 
   - data/bne
 # Répertoire où sont enregistrés les fichiers des référentiels après traitement
-OutputDir: Output
+outputDir: output
 # Répertoire où sont stockés les fichiers temporaires de travail du script
-WorkDir: Work
+workDir: work
 # Nom du fichier de log qui sera créé dans $workDir
 logFile: isidore-referentiels_bne.log
 clean:
   sparql:
     - config/bne/sparql/clean-combined-concepts.ru
+  output: work/bne/output_clean
 report:
   # Répertoire où se trouve le fichier après de l'etape de nettoyage .
   data: output_clean
   # Concepts
   algorithms:
-    - Libelles_Labels
-    - Wikidata
-    - Statistique
+    - labels
+    - wikidata
+    - statistique
 Filter: []
 merge: []

@@ -4,9 +4,9 @@ downloadPage:
 data: 
   - data/rameau
 # Répertoire où sont enregistrés les fichiers des référentiels après traitement
-OutputDir: Output
+outputDir: output
 # Répertoire où sont stockés les fichiers temporaires de travail du script
-WorkDir: Work
+workDir: work
 # Nom du fichier de log qui sera créé dans $workDir
 logFile: isidore-referentiels_rameau.log
 clean:
@@ -16,13 +16,14 @@ clean:
     - config/rameau/sparql/clean-aligned-with-geonames.ru
     - config/rameau/sparql/clean-combined-concepts.ru
     - config/rameau/sparql/clean-dict-concepts.ru
+  output: work/rameau/output_clean
 report:
   # Répertoire où se trouve le fichier après de l'etape de nettoyage .
   data: output_clean
   # Concepts
   algorithms:
-    - Labels
-    - Wikidata
-    - Statistique
+    - labels
+    - wikidata
+    - statistique
 Filter: []
 merge: []
