@@ -11,7 +11,7 @@ class cmd_subprocess:
 
     def merge_data(self,ResourceData:str,DataTmp:str):
 
-        arguments = ["riot",f"{ResourceData}\*",">",f"{DataTmp}"]
+        arguments = ["riot",f"{ResourceData}/*",">",f"{DataTmp}"]
         print(f"Execute Command with arguments :\n {' '.join(arguments)}")
         #self.logger.info(f"Execute Command with arguments :\n {' '.join(arguments)}")
         response = None
