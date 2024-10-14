@@ -2,7 +2,7 @@ import argparse
 from pathlib import Path
 from isidore_referentiels.Referentiel_Information import referentiel
 from isidore_referentiels.Clean.referentiel_clean import clean_referentiel
-from isidore_referentiels.Report.Referentiel_report import report
+#from isidore_referentiels.Report.Referentiel_report import report
 
 def main():
 
