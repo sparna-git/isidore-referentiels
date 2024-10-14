@@ -20,3 +20,7 @@ data/
 isidore_referentiels/__pycache__/
 
 output/
+/isidore_referentiels/Clean/__pycache__
+/isidore_referentiels/clean/__pycache__
+/isidore_referentiels/download/__pycache__
+/isidore_referentiels/clean/__pycache__

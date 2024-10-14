@@ -16,7 +16,7 @@ class cmd_subprocess:
         #self.logger.info(f"Execute Command with arguments :\n {' '.join(arguments)}")
         response = None
         try:
-            response = run(arguments,shell=True,stdout=PIPE)
+            response = run(arguments,shell=True,stdout=PIPE, stderr=PIPE)
         except CalledProcessError as e:
             print(f"Standard error was {e.output}")
             #self.logger.warning(f"Standard error was {e.output}")
@@ -32,7 +32,7 @@ class cmd_subprocess:
 
         response = None
         try:
-            response = run(arguments,shell=True,stdout=PIPE)
+            response = run(arguments,shell=True,stdout=PIPE, stderr=PIPE)
         except CalledProcessError as e:
             print(f"Standard error was {e.output}")
             self.logger.warning(f"Standard error was {e.output}")
