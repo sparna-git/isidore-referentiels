@@ -24,3 +24,5 @@ output/
 /isidore_referentiels/clean/__pycache__
 /isidore_referentiels/download/__pycache__
 /isidore_referentiels/clean/__pycache__
+
+data.bak/
