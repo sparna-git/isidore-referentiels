@@ -1,9 +1,11 @@
 import os
+from pathlib import Path
 import shutil
 import logging
 from urllib3 import request,exceptions, HTTPHeaderDict, PoolManager
 import time
 import json
+import logging
 #
 
 headers = HTTPHeaderDict()
@@ -21,6 +23,15 @@ def create_directory(DirectoryResource:str):
 class Tools:
 
     nCount = 0
+
+    def __init__(self, directory:str) -> None:
+
+        directory_work = Path(directory).absolute()
+        self.directory = create_directory(directory_work)
+        # Create log
+        self.logger = logging
+        LogDirectory = os.path.join(self.directory,)
+        self.logger.basicConfig(filename="geonames.log",level=logging.DEBUG,format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
     def download_json_resource(self,geonameId,GeonamesUser:str):        
         headers.add("Accept", "application/json;charset=UTF-8")
@@ -65,16 +76,16 @@ class Tools:
 class Geonames_RDF(Tools):
 
     def __init__(self,WorkDirectory:str,GeonamesUser:str) -> None:
-        self.Work_Dir = create_directory(WorkDirectory)
+        super().__init__(WorkDirectory)
+        
+        self.Work_Dir = self.directory
         self.GeonamesUser = GeonamesUser
         self.__list_of_continent = self.__continent()
         self.__continent_countries = {}
 
-        # Create log
-        directoryLog = os.path.join(self.Work_Dir,"geonames.log")
-        logging.basicConfig(filename=directoryLog,level=logging.DEBUG,format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
         self.logger = logging.getLogger(__name__)
         self.logger.info("========================= GEONAMES =========================")
+
 
     """
         Recuperer les cles pour chaque Geonames
@@ -92,6 +103,7 @@ class Geonames_RDF(Tools):
     def __continent(self) -> list:
         
         resp_OK = self.download_json_resource("6295630",self.GeonamesUser)
+        print(resp_OK)
         if resp_OK:
             return self.__get_geonames_id(resp_OK.json())
                 
@@ -117,6 +129,7 @@ class Geonames_RDF(Tools):
 
         self.logger.info("*************** Download Continents *************** ")
         print("*************** Download Continents  ***************")
+        print(self.__list_of_continent)
         for Continent_Name, geonamesId in self.__list_of_continent:
             #
             resp_OK = self.download_rdf_resource(geonamesId)
