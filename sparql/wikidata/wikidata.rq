@@ -1,6 +1,0 @@
-Select ?uriRef ?URIWikidata
-Where {
-    ?uriRef ?p ?URIWikidata .
-    FILTER(isIRI(?URIWikidata))
-    FILTER(CONTAINS(STR(?URIWikidata),"wikidata"))
-}
