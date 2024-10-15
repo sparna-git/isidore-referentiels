@@ -50,8 +50,8 @@ class clean_referentiel():
             os.mkdir(self.path_output)
 
         output_result = Path(self.path_output).absolute()
-        self.logger.info(f"Repértoir de résultat: {output_result}")
-        print(f"Repértoir de résultat: {output_result}")
+        self.logger.info(f"Repértoire de résultat: {output_result}")
+        print(f"Repértoire de résultat: {output_result}")
 
         # Copy the result in the Clean Directory 
         self.logger.info(f"Copie le résultat {path_tmp_file} au repértoire {output_result}")

@@ -22,3 +22,11 @@ output/
 data.bak/
 
 logs/
+
+analyze/analysis-apres-traitement/
+
+analyze/analysis-avant-traitement/
+
+isidore_referentiels/process/__pycache__/
+
+isidore_referentiels/Referentiel_Information/__pycache__/

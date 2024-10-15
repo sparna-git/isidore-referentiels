@@ -13,6 +13,7 @@ logFile: isidore-referentiels_lcsh.log
 clean:
   sparql:
     - config/lcsh/sparql/clean-combined-concepts.ru
+    - config/lcsh/sparql/clean-anonymous-concepts.ru
   output: work/lcsh/output_clean
 report:
   - algorithms:

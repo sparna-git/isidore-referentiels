@@ -12,12 +12,11 @@ class cmd_subprocess:
     def merge_data(self,ResourceData:str,DataTmp:str):
 
         arguments = ["riot",f"{ResourceData}/*",">",f"{DataTmp}"]
-        print(f"Execute Command with arguments :\n {' '.join(arguments)}")
-        self.logger.info(f"Execute Command with arguments :\n {' '.join(arguments)}")
-        
+        print(f"Execute Command with arguments :\n{' '.join(arguments)}")
+        self.logger.info(f"Execute Command with arguments :\n{' '.join(arguments)}")
         response = None
         try:
-            response = run(arguments,shell=True,stdout=PIPE, stderr=PIPE)
+            response = run(' '.join(arguments),shell=True,stdout=PIPE, stderr=PIPE)
         except CalledProcessError as e:
             print(f"Standard error was {e.output}")
             self.logger.warning(f"Standard error was {e.output}")
@@ -28,12 +27,12 @@ class cmd_subprocess:
 
         arguments = ["update",f"--data={dataSource}",f"--update={QuerySource}","--dump"]
 
-        print(f"Execute Command with arguments :\n {' '.join(arguments)}")
-        self.logger.info(f"Execute Command with arguments :\n {' '.join(arguments)}")
+        print(f"Execute Command with arguments :\n{' '.join(arguments)}")
+        self.logger.info(f"Execute Command with arguments :\n{' '.join(arguments)}")
 
         response = None
         try:
-            response = run(arguments,shell=True,stdout=PIPE,stderr=PIPE)
+            response = run(' '.join(arguments),shell=True,stdout=PIPE, stderr=PIPE)
         except CalledProcessError as e:
             print(f"Standard error was {e.output}")
             self.logger.warning(f"Standard error was {e.output}")
@@ -44,12 +43,12 @@ class cmd_subprocess:
 
         arguments = ["sparql",f"--data={dataSource}",f"--query={QuerySource}",f"--results={format}"]
 
-        print(f"Execute Command with arguments :\n {' '.join(arguments)}")
-        self.logger.info(f"Execute Command with arguments :\n {' '.join(arguments)}")
+        print(f"Execute Command with arguments :\n{' '.join(arguments)}")
+        self.logger.info(f"Execute Command with arguments :\n{' '.join(arguments)}")
 
         response = None
         try:
-            response = run(arguments,shell=True,stdout=PIPE,stderr=PIPE)            
+            response = run(' '.join(arguments),shell=True,stdout=PIPE,stderr=PIPE)            
         except CalledProcessError as e:
             print(f"Standard error was {e.output}")
             self.logger.warning(f"Standard error was {e.output}")

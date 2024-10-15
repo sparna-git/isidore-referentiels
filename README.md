@@ -2,7 +2,7 @@
 
 Récupération et pré-traitements des référentiels Isidore
 
-## Prérequis
+## Installation
 
 ### Python
 
@@ -12,6 +12,14 @@ Récupération et pré-traitements des référentiels Isidore
 ```
 sudo apt install python3-poetry
 ```
+
+### Java
+
+Jena et les scripts d'analyse des référentiels utilisent SHACL Play et nécessitent d'avoir Java installé. Les scripts ont été testés avec Java 21.
+
+### Commandes Linux
+
+Les commandes `wget`, `grep`, `tar` et `zip` doivent être disponibles dans la ligne de commande
 
 ### Jena
 
@@ -25,6 +33,11 @@ Il faut installer les commandes Jena : https://jena.apache.org/documentation/too
 export JENA_HOME=/home/thomas/programs/apache-jena/apache-jena-5.1.0
 export PATH=$PATH:$JENA_HOME/bin
 ```
+
+### Executables
+
+Certains exécutables ne sont pas fournis dans le dépôt, il faut les télécharger séparément.
+
 
 Les commandes `sparql` ou `riot` doivent être executables directement dans un prompt.
 
