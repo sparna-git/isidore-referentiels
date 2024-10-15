@@ -5,25 +5,19 @@ prepare/data/
 
 analyze/analysis/
 
-analyze/rdf-toolkit-0.6.1-onejar.jar
-
-analyze/rdf2xls-app-1.0.0-onejar.jar
-
 analyze/rdf2xls-app.log
-
-analyze/shacl-play-app-0.8.0-onejar.jar
 
 analyze/shacl-play-app.log
 
 data/
 
-isidore_referentiels/__pycache__/
-
-output/
+/isidore_referentiels/__pycache__/
 /isidore_referentiels/Clean/__pycache__
 /isidore_referentiels/clean/__pycache__
 /isidore_referentiels/download/__pycache__
 /isidore_referentiels/clean/__pycache__
+
+output/
 
 data.bak/
 
