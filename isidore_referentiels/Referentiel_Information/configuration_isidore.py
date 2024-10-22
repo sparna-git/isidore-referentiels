@@ -45,7 +45,7 @@ class readConfiguration:
             File_log = os.path.join(Path(self.path_referentiel).absolute(),self.conf["logFile"])
             logger.basicConfig(filename=File_log,level=logging.DEBUG,format="{asctime} - {levelname} - {message}",style="{" ,datefmt="%d-%m-%Y %H:%M")
             logger.info("Start........")
-        return logger
+            return logger
 
     def __createDirectory(self,directory) -> str:
 

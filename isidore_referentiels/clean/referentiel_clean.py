@@ -45,9 +45,14 @@ class clean_referentiel():
 
     def __set_output_clean(self, path_tmp_file:str) -> str:
 
+        print(path_tmp_file)
+        
+
         # Créer le repértoire pour stocker le résultat
         if not os.path.exists(self.path_output):
             os.mkdir(self.path_output)
+
+        print(self.path_output)
 
         output_result = Path(self.path_output).absolute()
         self.logger.info(f"Repértoire de résultat: {output_result}")
@@ -110,17 +115,18 @@ class clean_referentiel():
     
     def execute_sparql_update(self):
 
+        # Fusion de tous les fichiers d'entrée
+        print("Fusion des fichiers")
+        self.logger.info("Fusion des fichiers")
+        self.__merge_referentiel_data()
+
+        path_result = None
         if len(self.__Referentiel_sparql) > 0:
             print(f"Sparql Queries: {self.__Referentiel_sparql}")
         
             self.logger.info(f"* * * * Nettoyer les données avec des requêtes Sparql [Clean] * * * *")
             print(f"* * * * Nettoyer les données avec des requêtes Sparql [Clean] * * * *")
 
-            # Fusion de tous les fichiers d'entrée
-            print("Fusion des fichiers")
-            self.logger.info("Fusion des fichiers")
-            self.__merge_referentiel_data()
-            
             # Lancer la requêtes sparql dans une jue des données et stocke le résultat dans une fichier temporale        
             __file_output = self.__sparql_queries(self.__Tmp_File)
             # Créer le répertoire de sortir output+etape (output_clean)
@@ -128,6 +134,6 @@ class clean_referentiel():
             
         else:
             # Coller le fichier dans le répertoire correspondant
-            self.__set_output_clean(self.__Referentiel_data)
+            path_result = self.__set_output_clean(self.__Referentiel_data)
 
         return path_result

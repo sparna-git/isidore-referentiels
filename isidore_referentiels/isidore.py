@@ -2,7 +2,7 @@ import argparse
 from pathlib import Path
 from isidore_referentiels.Referentiel_Information import referentiel
 from isidore_referentiels.clean.referentiel_clean import clean_referentiel
-#from isidore_referentiels.Report.Referentiel_report import report
+from isidore_referentiels.report.Referentiel_report import report
 
 def main():
 
@@ -24,6 +24,7 @@ def main():
             #print("Etape Clean")
         elif args.etape == "report":
             report(ref).generer_report()
+            print("Report")
             
         else:
             print("Pour lancer le processus, il y a besoin d'une Etape......")
