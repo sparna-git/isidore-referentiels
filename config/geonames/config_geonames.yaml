@@ -1,27 +1,25 @@
-id: lcsh
+id: geonames
 downloadPage: 
-  - https://id.loc.gov/download/     
+  - https://www.geonames.org/ 
 data: 
-  - data/lcsh
+  - data/geonames
 # Répertoire où sont enregistrés les fichiers des référentiels après traitement
 outputDir: output
 # Répertoire où sont stockés les fichiers temporaires de travail du script
 workDir: work
 # Nom du fichier de log qui sera créé dans $workDir
-logFile: isidore-referentiels_lcsh.log
+logFile: isidore-referentiels_geonames.log
 # Etapes
 clean:
-  sparql:
-    - config/lcsh/sparql/clean-combined-concepts.ru
-    - config/lcsh/sparql/clean-anonymous-concepts.ru
-  output: work/lcsh/output_clean  
+  sparql: []    
+  output: work/geonames/output_clean
 report:
   data: 
-    - work/lcsh/output_clean
+    - work/geonames/output_clean
   output: 
-    - work/lcsh/output_report
+    - work/geonames/output_report
   algorithms:
     - wikidata
-    - labels
+    - libelles
 integrate: []
 merge: []

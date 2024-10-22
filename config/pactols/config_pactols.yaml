@@ -16,7 +16,10 @@ clean:
   output: work/pactols/output_clean
 report:
   # Répertoire où se trouve le fichier après de l'etape de nettoyage .
-  data: output_clean
+  data: 
+    - work/pactols/output_clean
+  output: 
+    - work/pactols/output_report
   # Concepts
   algorithms:
     - labels

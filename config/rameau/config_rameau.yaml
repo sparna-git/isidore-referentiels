@@ -19,7 +19,10 @@ clean:
   output: work/rameau/output_clean
 report:
   # Répertoire où se trouve le fichier après de l'etape de nettoyage .
-  data: output_clean
+  data: 
+    - work/rameau/output_clean
+  output: 
+    - work/rameau/output_report
   # Concepts
   algorithms:
     - labels
