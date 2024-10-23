@@ -23,5 +23,11 @@ report:
   algorithms:
     - alignement
     - labels
-integrate: []
+integrate:
+  report: 
+    - work/lcsh/output_report
+  resource: 
+    - work/lcsh/output_clean
+  output: 
+    - work/lcsh/output_integrate
 merge: []

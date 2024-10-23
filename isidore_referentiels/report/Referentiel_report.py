@@ -97,6 +97,19 @@ class report(algorithms_referentiels):
     def __get_doublons_labels(self) -> pd.DataFrame:
         return self.__set_doublons_labels()
     
+    def __evaluation(self,row):
+
+        Alignement = row["alignement"]
+        Libelles = row["libelles"]
+        
+        reponse = "NEUTRE"
+        if (Alignement == "A EXCLURE") or (Libelles == "A EXCLURE"):
+            reponse = "A EXCLURE"
+        
+
+
+        return reponse
+
     def __generate_resource(self):
 
         tmp_report_directory = os.path.join(self.__Tmpdir,"Report")
@@ -149,10 +162,12 @@ class report(algorithms_referentiels):
                 print(f"ne se trouve pas information pour analizer <<doublon de libellés>> avec le referentiel {self.__Referentiel}")
                 self.logger.info(f"ne se trouve pas information pour analizer <<doublons de libellés>> avec le referentiel {self.__Referentiel}")
                 dfReferentiel["libelles"] = ""
-
-        
+       
         if self.__alignement_dataset.size + self.__lables_dataset.size == 0:
             dfReferentiel["juguement"] = "Autre"
+        else:
+            dfReferentiel["juguement"] = dfReferentiel.apply(self.__evaluation,axis=1)
+
 
         if not os.path.exists(self.Output_report):
             path_full = Path(self.Output_report).absolute()

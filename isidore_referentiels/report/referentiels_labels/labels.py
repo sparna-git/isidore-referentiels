@@ -269,7 +269,7 @@ class libelles(dataset):
 
         # 
         dfReferentiel["libelles"] = dfReferentiel.apply(self.__eval_result,axis=1)
-        dfReferentiel["libeles_doublons"] = dfReferentiel.apply(self.__eval_comment,axis=1)
+        dfReferentiel["libelles_doublons"] = dfReferentiel.apply(self.__eval_comment,axis=1)
         dfReferentiel.to_csv(os.path.join(directoryTmp,'libelles_doublons.csv'),index=False)
 
         # Créer le fichier de travaille
