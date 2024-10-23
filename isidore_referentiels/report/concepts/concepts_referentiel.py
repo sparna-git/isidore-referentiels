@@ -10,9 +10,12 @@ class generate_concepts:
     def __init__(self, resource) -> None:
 
         pathResource = None
-        for root,directories,files in os.walk(resource):
-            if len(files) == 1:
-                pathResource = os.path.join(root,files[0])
+        if os.path.isfile(resource):
+            pathResource = Path(resource).absolute()
+        else:
+            for root,directories,files in os.walk(resource):
+                if len(files) == 1:
+                    pathResource = os.path.join(root,files[0])
         self.referentiel = Path(pathResource).absolute()
         self.logger = logging.getLogger(__name__)
 
@@ -30,11 +33,11 @@ class generate_concepts:
                 self.logger.warning(response.stderr)
         return
     
-    def __set_generate_wikidata(self) -> pd.DataFrame:
+    def __set_generate_alignement(self) -> pd.DataFrame:
         # Lire le fichier de requête pour générer une jeu de données
-        sparql_wikidata = Path(__file__).with_name('sparql_wikidata.rq')
+        sparql_alignement = Path(__file__).with_name('sparql_alignement.rq')
         # Stocker le résultat dans une dataframe 
-        dfWikidata = self.__get_data(sparql_wikidata)        
+        dfWikidata = self.__get_data(sparql_alignement)        
         
         return dfWikidata
     
@@ -46,7 +49,7 @@ class generate_concepts:
 
         return dfLibelles
     
-    def get_resource_report(self) -> pd.DataFrame:
+    def get_report(self) -> pd.DataFrame:
         return self.__set_generate_labels()
     
     def get_labels(self) -> pd.DataFrame:
@@ -54,5 +57,5 @@ class generate_concepts:
         df = dfLabels[["Concept","prefLabel_fr","prefLabel_en","prefLabel_es","altLabel"]]
         return df
     
-    def get_wikidata(self) -> pd.DataFrame:
-        return self.__set_generate_wikidata()
+    def get_alignement(self) -> pd.DataFrame:
+        return self.__set_generate_alignement()

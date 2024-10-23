@@ -45,14 +45,9 @@ class clean_referentiel():
 
     def __set_output_clean(self, path_tmp_file:str) -> str:
 
-        print(path_tmp_file)
-        
-
         # Créer le repértoire pour stocker le résultat
         if not os.path.exists(self.path_output):
             os.mkdir(self.path_output)
-
-        print(self.path_output)
 
         output_result = Path(self.path_output).absolute()
         self.logger.info(f"Repértoire de résultat: {output_result}")
@@ -88,17 +83,13 @@ class clean_referentiel():
             
             print(f"Le requête à retourne: {response.stdout.__sizeof__()}")
             self.logger.info(f"Le requête à retourne: {response.stdout.__sizeof__()}")
-
-            # Stocker les erreurs dans le log
-            #if response.stderr.__sizeof__() > 0:
-            self.logger.info(f"Erreurs de la requête sparql {path_sparql}")
-            self.logger.info(response.stderr)
-
             
+            # Ecrir dans le log les erreures 
             if response.stderr.__sizeof__() > 0:
-                print("long error not wrote")
+                self.logger.info(f"Erreurs de la requête sparql {path_sparql}")
+                self.logger.info(response.stderr)
 
-            # Write in file
+            # Ecrir dans un fichier tmp le résultat de la requete
             if response.stdout:                
                 if os.path.exists(tmp_file):
                     os.remove(tmp_file)
@@ -122,10 +113,9 @@ class clean_referentiel():
 
         path_result = None
         if len(self.__Referentiel_sparql) > 0:
-            print(f"Sparql Queries: {self.__Referentiel_sparql}")
-        
-            self.logger.info(f"* * * * Nettoyer les données avec des requêtes Sparql [Clean] * * * *")
-            print(f"* * * * Nettoyer les données avec des requêtes Sparql [Clean] * * * *")
+            print(f"Sparql Queries: {self.__Referentiel_sparql}")        
+            self.logger.info("* * * * Nettoyer les données avec des requêtes Sparql [Clean] * * * *")
+            print("* * * * Nettoyer les données avec des requêtes Sparql [Clean] * * * *")
 
             # Lancer la requêtes sparql dans une jue des données et stocke le résultat dans une fichier temporale        
             __file_output = self.__sparql_queries(self.__Tmp_File)

@@ -11,7 +11,9 @@ workDir: work
 logFile: isidore-referentiels_geonames.log
 # Etapes
 clean:
-  sparql: []    
+  sparql:
+    - config/geonames/sparql/insert_wikidata.ru
+    - config/geonames/sparql/insert_skos.ru
   output: work/geonames/output_clean
 report:
   data: 
@@ -19,7 +21,13 @@ report:
   output: 
     - work/geonames/output_report
   algorithms:
-    - wikidata
+    - alignement
     - libelles
-integrate: []
+integrate:
+  report: 
+    - work/geonames/output_report
+  resource: 
+    - work/geonames/output_clean
+  output: 
+    - work/geonames/output_integrate
 merge: []

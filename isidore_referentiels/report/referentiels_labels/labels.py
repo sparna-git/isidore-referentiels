@@ -1,5 +1,7 @@
 import pandas as pd
+import os
 import spacy
+
 from spacy.tokens import Doc
 
 # 
@@ -79,16 +81,16 @@ class validate_referentiel:
             #description_output = input
             dffind_concepts = self.dataset[self.dataset[self.dataset.columns[1]].isin([qa_input])]
             if dffind_concepts.size > 1:
-                description_output = pd.Series("A EXCLURE",self.__get_concepts(dffind_concepts))
+                description_output = self.__get_concepts(dffind_concepts)
             if dffind_concepts.size == 1:
-                description_output = pd.Series("A EXCLURE",dffind_concepts[dffind_concepts.columns[0]].iloc[0])
-            if dffind_concepts.size == 0:
-               description_output = pd.Series("NEUTRE","")
+                description_output = dffind_concepts[dffind_concepts.columns[0]].iloc[0]
+            if dffind_concepts.empty:
+                description_output = "Autre"
         return description_output
     
-    def get_relation(self,column_name:str,label:str,jugement:str) -> pd.DataFrame:
+    def get_relation(self,column_name:str,label:str) -> pd.DataFrame:
         
-        self.datasetPivot[[label,jugement]] =  self.datasetPivot[column_name].apply(self.__evaluate_linguistique)
+        self.datasetPivot[label] =  self.datasetPivot[column_name].apply(self.__evaluate_linguistique)
         return self.datasetPivot
 
 
@@ -111,7 +113,7 @@ class libelles(dataset):
             dfOper = dfInput[~dfInput["prefLabel_fr"].isna()].copy()
             if dfOper.size > 0:
                 val = validate_referentiel(dfOper,self.dataset[["Concept","prefLabel_fr"]],self.get_preflabel_fr_dataset())
-                df = val.get_relation("prefLabel_fr","Label_fr_jugement","Label_fr_comment")
+                df = val.get_relation("prefLabel_fr","Label_fr")
         return df
             
     def __generate_prefLabel_en(self) -> pd.DataFrame:
@@ -121,17 +123,17 @@ class libelles(dataset):
             dfOper = dfInput[~dfInput["prefLabel_en"].isna()].copy()
             if dfOper.size > 0:
                 val = validate_referentiel(dfOper,self.dataset[["Concept","prefLabel_en"]],self.get_preflabel_en_dataset())
-                df = val.get_relation("prefLabel_en","Label_en_jugement","Label_en_comment")
+                df = val.get_relation("prefLabel_en","Label_en")
         return df
 
     def __generate_prefLabel_es(self) -> pd.DataFrame:
         df = pd.DataFrame()
         if len(self.get_preflabel_es_dataset()) > 0:
             dfInput = self.referentiel[["Concept","prefLabel_es"]]
-            dfOper = dfInput[~dfInput["prefLabel_en"].isna()].copy()
+            dfOper = dfInput[~dfInput["prefLabel_es"].isna()].copy()
             if dfOper.size > 0:
                 val = validate_referentiel(dfOper,self.dataset[["Concept","prefLabel_es"]],self.get_preflabel_es_dataset())
-                df = val.get_relation("prefLabel_es","Label_es_jugement","Label_es_comment")
+                df = val.get_relation("prefLabel_es","Label_es")
         return df
     
     def __generate_altLabel(self) -> pd.DataFrame:
@@ -141,10 +143,66 @@ class libelles(dataset):
             dfOper = dfInput[~dfInput["altLabel"].isna()].copy()
             if dfOper.size > 0:
                 val = validate_referentiel(dfOper,self.dataset[["Concept","altLabel"]],self.get_altlabel_dataset())
-                df = val.get_relation("altLabel","altLabel_jugement","altLabel_comment")                                 
+                df = val.get_relation("altLabel","alt_Label")                                 
         return df
         
-    def libelles_referentiel(self) -> pd.DataFrame:
+    def __eval_result(self,r) -> str:
+
+        label_fr = r["Label_fr"]
+        label_en = r["Label_en"]
+        label_es = r["Label_es"]
+        label = r["alt_Label"]
+
+        response = "Autre"
+        if (label_fr != "Autre") and (label_fr is not None):
+            response = 'A EXCLURE'
+        
+        if label_en != "Autre" and (label_en is not None):
+            response = 'A EXCLURE'
+        
+        if label_es != "Autre" and (label_es is not None):
+            response = 'A EXCLURE'
+            
+        if label != "Autre" and (label_es is not None):
+            response = 'A EXCLURE'
+
+        return response
+    
+    def __eval_comment(self,r) -> str:
+
+        label_fr = r["Label_fr"]
+        label_en = r["Label_en"]
+        label_es = r["Label_es"]
+        label = r["alt_Label"]
+
+        fr = ""
+        en = ""
+        es = ""
+        l = ""
+        
+        if (label_fr != "Autre") and (label_fr is not None):
+            fr = str(label_fr)+','
+        else:
+            fr = ""
+        
+        if label_en != "Autre" and (label_en is not None):
+            en = str(label_en)+','
+        else:
+            en = ""
+
+        if label_es != "Autre" and (label_es is not None):
+            es = str(label_es)+','
+        else:
+            es = ""
+            
+        if label != "Autre" and (label_es is not None):
+            l = es + str(label)
+        else:
+            l = ""
+        
+        return fr + en + es + l
+
+    def libelles_referentiel(self,directoryTmp:str) -> pd.DataFrame:
 
         print("Start process.............")
         print("Chercher information par chaque langue ['fr','en','es'] et synonymes .......")
@@ -160,8 +218,8 @@ class libelles(dataset):
         # 
         dfReferentiel = self.referentiel
         # Français
+        print(f"Résultat des labes en Français {df_fr.size}")
         if not df_fr.empty:
-            print(f"Résultat des labes en Français {df_fr.size}")
             df_fr.drop("prefLabel_fr",axis=1,inplace=True)
             #dfReferentiel = dfReferentiel.join(df_fr.set_index("Concept"),on="Concept")
             dfReferentiel = pd.merge(left=dfReferentiel,
@@ -169,12 +227,13 @@ class libelles(dataset):
                                 how="left",
                                 left_on="Concept",
                                 right_on="Concept")
+            dfReferentiel
         else:
-            dfReferentiel["label_jugement_fr"] = "A INCLURE"
+            dfReferentiel["Label_fr"] = "Autre"
             print(f"On n'a trouve pas des information dans la langue Français.")
-        # Anglais    
+        # Anglais   
+        print(f"Résultat des labes en Anglais {df_en.size}")
         if not df_en.empty:
-            print(f"Résultat des labes en Anglais {df_en.size}")
             df_en.drop("prefLabel_en", axis=1,inplace=True)
             dfReferentiel = pd.merge(left=dfReferentiel,
                                 right=df_en,
@@ -182,11 +241,11 @@ class libelles(dataset):
                                 left_on="Concept",
                                 right_on="Concept")
         else:
-            dfReferentiel["label_jugement_en"] = "A INCLURE"
+            dfReferentiel["Label_en"] = "Autre"
             print(f"On n'a trouve pas des information dans la langue Anglais.")
         # Espagnol
-        if not df_es.empty:
-            print(f"Résultat des labes en Français {df_fr.size}")
+        print(f"Résultat des labes en Français {df_fr.size}")
+        if not df_es.empty:            
             df_fr.drop("prefLabel_es",axis=1,inplace=True)
             dfReferentiel = pd.merge(left=dfReferentiel,
                                 right=df_es,
@@ -194,11 +253,11 @@ class libelles(dataset):
                                 left_on="Concept",
                                 right_on="Concept")         
         else:
-            dfReferentiel["label_jugement_es"] = "A INCLURE"
+            dfReferentiel["Label_es"] = "Autre"
             print(f"On n'a trouve pas des information dans la langue Espagnol.") 
-        # alt Label
+        # alt Label 
+        print(f"Résultat des synonymes {df_altLabel.size}")
         if not df_altLabel.empty:
-            print(f"Résultat des synonymes {df_altLabel.size}")
             df_altLabel.drop("altLabel",axis=1,inplace=True)
             dfReferentiel = pd.merge(left=dfReferentiel,
                                 right=df_altLabel,
@@ -206,7 +265,14 @@ class libelles(dataset):
                                 left_on="Concept",
                                 right_on="Concept")
         else:
-            dfReferentiel["label_jugement_fr"] = "A INCLURE"
+            dfReferentiel["alt_Label"] = "Autre"
 
-        #dfReferentiel.to_csv('Result_libelles.csv',index=False)
-        return dfReferentiel
+        # 
+        dfReferentiel["libelles"] = dfReferentiel.apply(self.__eval_result,axis=1)
+        dfReferentiel["libeles_doublons"] = dfReferentiel.apply(self.__eval_comment,axis=1)
+        dfReferentiel.to_csv(os.path.join(directoryTmp,'libelles_doublons.csv'),index=False)
+
+        # Créer le fichier de travaille
+        # Enlever les colonnes que ne seront pas à utiliser
+        dfOutput = dfReferentiel[["Concept","libelles","libeles_doublons"]]
+        return dfOutput

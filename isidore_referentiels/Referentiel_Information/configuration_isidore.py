@@ -32,6 +32,7 @@ class readConfiguration:
         #
         self.clean = self.conf["clean"]
         self.report = self.conf["report"]
+        self.integrate = self.conf["integrate"]
 
     def __remove_all(self,etape:str):
         if "clean" == etape:
@@ -95,3 +96,6 @@ class confReferentiel(readConfiguration):
     
     def get_Report(self) -> list:
         return self.conf["report"]
+    
+    def get_integrate(self) -> list:
+        return self.conf["integrate"]
