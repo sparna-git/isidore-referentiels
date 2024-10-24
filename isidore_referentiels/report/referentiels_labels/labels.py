@@ -1,13 +1,5 @@
 import pandas as pd
 import os
-import spacy
-
-from spacy.tokens import Doc
-
-# 
-#spacy.cli.download("en_core_web_lg")
-nlp_referentiel = spacy.load("en_core_web_lg")
-nlp_others_referentiel = spacy.load("en_core_web_lg")
 
 '''
 Créer les dataset du Referentiel et le dataset de tous les referentiels 
@@ -48,19 +40,6 @@ class dataset:
     def get_dataset_referentiels(self) -> pd.DataFrame:
         return self.__df_allReferentiel
 
-class semantique(dataset):
-
-    def __init__(self) -> None:
-        super().__init__()
-    
-    def __set_languisticque_documentation_refrentiel(sel,liste_mots:list) -> list:
-        return Doc(nlp_referentiel.vocab,words=liste_mots)        
-
-    def __list_mots(self,mots_list:list) -> list:
-
-        document = Doc(nlp_others_referentiel.vocab,words=mots_list)
-        return [mots for mots in document]
-
 class validate_referentiel:
 
     def __init__(self,datasetPivot:pd.DataFrame,dataset:pd.DataFrame,dataset_source:list):
@@ -92,7 +71,6 @@ class validate_referentiel:
         
         self.datasetPivot[label] =  self.datasetPivot[column_name].apply(self.__evaluate_linguistique)
         return self.datasetPivot
-
 
 """
 Generate les doublons du Referentiel 
