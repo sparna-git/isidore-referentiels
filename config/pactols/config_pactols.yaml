@@ -23,7 +23,7 @@ report:
     - output_report
   # Concepts
   algorithms:
-    - labels
+    - libelles
     - alignement
     - statistique
 integrate:

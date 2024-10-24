@@ -14,11 +14,13 @@ clean:
   sparql: 
     - config/geonames/sparql/insert_wikidata.ru
     - config/geonames/sparql/insert_skos.ru
+  # Répertore pour stoker le résultat
   output: 
     - output_clean
 report:
   data: 
     - output/geonames/output_clean
+  # Répertore pour stoker le résultat
   output: 
     - output_report
   algorithms:
@@ -29,6 +31,7 @@ integrate:
     - output/geonames/output_report
   data: 
     - output/geonames/output_clean
+  # Répertore pour stoker le résultat
   output: 
     - output_integrate
 merge: []

@@ -16,17 +16,19 @@ clean:
     - config/rameau/sparql/clean-aligned-with-geonames.ru
     - config/rameau/sparql/clean-combined-concepts.ru
     - config/rameau/sparql/clean-dict-concepts.ru
+  # Répertore pour stoker le résultat
   output: 
     - output_clean
 report:
   # Répertoire où se trouve le fichier après de l'etape de nettoyage .
   data: 
     - output/rameau/output_clean
+  # Répertore pour stoker le résultat
   output: 
     - output_report
   # Concepts
   algorithms:
-    - labels
+    - libelles
     - wikidata
     - statistique
 integrate:
@@ -34,6 +36,7 @@ integrate:
     - output/rameau/output_report
   data: 
     - output/rameau/output_clean
+  # Répertore pour stoker le résultat
   output: 
     - output_integrate
 merge: []

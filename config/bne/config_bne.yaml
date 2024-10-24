@@ -13,12 +13,14 @@ clean:
     - data/bne
   sparql:
     - config/bne/sparql/clean-combined-concepts.ru
+  # Répertore pour stoker le résultat
   output:
     - output_clean
 report:
   # Répertoire où se trouve le fichier après de l'etape de nettoyage .
   data: 
     - output/bne/output_clean
+  # Répertore pour stoker le résultat
   output: 
     - output_report
   # Concepts
@@ -30,6 +32,7 @@ integrate:
     - output/bne/output_report
   data: 
     - output/bne/output_clean
+  # Répertore pour stoker le résultat
   output: 
     - output_integrate
 merge: []
