@@ -11,7 +11,6 @@ def main():
     List_Of_Option = ['clean','report','integrate','merge']
     parser = argparse.ArgumentParser()
     parser.add_argument("--configuration",help="Fichier de configuration referentiel",type=Path,required=False)
-    parser.add_argument("--referentiel",help="Fichier des données",type=Path,required=False)
     parser.add_argument("--etape",help="Choisir une etape à lancer",choices=List_Of_Option,required=True)
     args = parser.parse_args()
 
@@ -20,9 +19,8 @@ def main():
         ref = referentiel.Information(open(args.configuration),args.etape)
         ref.print_referentiel_information()
 
-        if args.etape == "clean" and args.referentiel:
-            clean_referentiel(ref).execute_sparql_update()
-            #print("Etape Clean")
+        if args.etape == "clean":
+            clean_referentiel(ref).execute_sparql_update()            
         elif args.etape == "report":
             report(ref).generer_report()            
         elif args.etape == "integrate":

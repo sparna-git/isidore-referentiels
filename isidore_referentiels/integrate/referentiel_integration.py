@@ -4,6 +4,7 @@ import logging
 import shutil
 from pathlib import Path
 from isidore_referentiels.process.isidore_subprocess import cmd_subprocess
+from isidore_referentiels.process.Tools import tools
 from isidore_referentiels.report.concepts import concepts_referentiel
 import tempfile as tf
 
@@ -14,24 +15,23 @@ class integration:
         self.__referentiel = RefInfo.get_Referentiel()
         self.ref_directory = RefInfo.get_referentiel_directory()
         
-        tmp_directory = Path(RefInfo.get_TmpDirectory()).absolute()
-        dir_tmp = os.path.join(tmp_directory,"integrate")
-        if not os.path.exists(dir_tmp):
-            os.mkdir(dir_tmp)
-        else:
-            shutil.rmtree(dir_tmp)
-            os.mkdir(dir_tmp)
+        tmp_directory = Path(self.ref_directory).absolute()
+        dir_tmp = tools.new_directory(tmp_directory,"integrate")
         self.__tmp_directory = dir_tmp
-
+        # Répertoire de resultat
+        report_output = RefInfo.get_Outputdirectory()
+        
         integration_ref = RefInfo.get_integrate()
-        self.report = ''.join(integration_ref["report"]) # Récupérer le fichier csv        
-        filename = [file for file in os.listdir(Path(''.join(integration_ref["resource"])).absolute())][0] # Récupérer le fichier TTL du referentiel
-        self.resource = os.path.join(Path(''.join(integration_ref["resource"])).absolute(),filename)
-
-        output_file = Path(''.join(integration_ref["output"])).absolute()
-        if not os.path.exists(output_file):
-            os.makedirs(output_file)
-        self.output_integrate = output_file # Répertoire du fichier final
+        
+        # Récupérer le fichier csv
+        self.report = ''.join(integration_ref["report"])
+        # Récupérer le fichier TTL du referentiel
+        filename = [file for file in os.listdir(Path(''.join(integration_ref["data"])).absolute())][0] 
+        self.data = os.path.join(Path(''.join(integration_ref["data"])).absolute(),filename)
+        
+        output_file = tools.new_directory(report_output,''.join(integration_ref["output"]))
+        # Répertoire du fichier final
+        self.__Referentiel_resultat = output_file 
         
         self.logger = logging.getLogger(__name__)
 
@@ -84,33 +84,6 @@ class integration:
                     self.logger.warning(response.stderr)
         return tmp_file   
              
-    def __sparql_files(self,filename:str,uriResource:str,uriUpdate:str):
-        # Generate Sparql Quer
-        sparql_query = """
-            PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-            DELETE {
-                ?s ?p ?o .
-                ?otherSubject ?otherPredicate ?s .
-            } INSERT {
-                ?parent skos:narrower <"""+uriUpdate+"""> .
-                ?children skos:broader <"""+uriUpdate+"""> .
-                <"""+uriUpdate+"""> skos:related ?related .
-            } WHERE {
-                # supprimer tous les triplets dont l'URI est sujet
-                ?s ?p ?o
-                VALUES ?s { <"""+uriResource+"""> }
-                OPTIONAL { ?s skos:narrower|^skos:broader ?children . }
-                OPTIONAL { ?s skos:broader|^skos:narrower ?parent . }
-                OPTIONAL { ?s skos:related ?related . }
-                OPTIONAL { ?related_incomming skos:related ?s . }
-                # supprimer tous les triplets dont l'URI est objet
-                OPTIONAL { ?otherSubject ?otherPredicate ?s . }
-            }
-        """
-        file_sparql_query = open(filename,'w')
-        file_sparql_query.write(sparql_query)
-        file_sparql_query.close()
-
     def __generate_sparql_concept(self,df:pd.DataFrame) -> str:
         
         sparql_remove_path = os.path.join(self.__tmp_directory,'sparql_remove')
@@ -150,8 +123,51 @@ class integration:
         print(f"Répertoire de-s requête-s sparql {sparql_remove_path}")
         return sparql_remove_path
     
+    def __execute_process(self,sparqlQuery) -> str:
+
+        path_file = os.path.join(self.__tmp_directory,f'{self.__referentiel}.ttl')
+        print(path_file)
+        response = cmd_subprocess().execute_update_subprocess(self.data,sparqlQuery)
+        if response.stdout.__sizeof__() > 0:
+            with open(path_file,"wb") as f:
+                f.write(response.stdout)
+        
+        if response.stderr.__sizeof__() > 0:
+            self.logger.warning("Le processus de enlever des uris a trouve des erreurs.")
+            self.logger.warning(response.stderr)
+        
+        return path_file
+    
+    def __sparql_query(self,input:str) -> str:
+
+        pathFile = os.path.join(self.__tmp_directory,f'sparql_integrate_{self.__referentiel}.ru')
+        f = open(pathFile,'w')
+
+        # Generate Sparql Quer
+        sparql_query = """
+            PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+            DELETE {
+                ?s ?p ?o .
+                ?otherSubject ?otherPredicate ?s .
+            } INSERT {
+                ?parent skos:narrower ?children .
+                ?children skos:broader ?parent .                
+            } WHERE {
+                # supprimer tous les triplets dont l'URI est sujet
+                ?s ?p ?o
+                VALUES ?s { """+input+""" }
+                OPTIONAL { ?s skos:narrower|^skos:broader ?children . }
+                OPTIONAL { ?s skos:broader|^skos:narrower ?parent . }
+                # supprimer tous les triplets dont l'URI est objet
+                OPTIONAL { ?otherSubject ?otherPredicate ?s . }
+            }
+        """
+        f.write(sparql_query)
+        return pathFile
+    
     def __read_csv_file(self) -> pd.DataFrame:        
 
+        
         for root,directories,files in os.walk(self.report):
             for file in files:
                 pFile = os.path.join(root,file)
@@ -161,32 +177,30 @@ class integration:
                     if dfResource.size > 0:
                         # 
                         dfPrepare = dfResource[dfResource["juguement"] == "A EXCLURE"]
-                        path_sparql = self.__generate_sparql_concept(dfPrepare)
+                        if not dfPrepare.empty:
+                            list_uri_concepts = ' '.join([f"<{concept}>" for concept in dfPrepare.Concept])
+                            # Generer répositorie tmp 
+                            fichier_resultat = self.__execute_process(self.__sparql_query(list_uri_concepts))
+
+                            shutil.copy(fichier_resultat,self.__Referentiel_resultat)
+                            self.logger.info(f'Le fichier de résultat est stoke dans le répertoire {self.__Referentiel_resultat}')
+                            print(f'Le fichier de résultat est stoke dans le répertoire {self.__Referentiel_resultat}')
+
+                            # Generer les concepts alignement et labels
+                            getConcepts = concepts_referentiel.generate_concepts(fichier_resultat)
+                            alignement_directory = tools.new_directory(self.__tmp_directory,"alignement")
+                            getConcepts.get_alignement().to_csv(os.path.join(alignement_directory,'alignement.csv'),index=False)
+                            # Generate les concepts de labels
+                            labels_directory = tools.new_directory(self.__tmp_directory,"labels")
+                            getConcepts.get_labels().to_csv(os.path.join(labels_directory,'labels.csv'),index=False)
+                        else:
+                            shutil.copy(self.data,self.__Referentiel_resultat)
+                         #path_sparql = self.__generate_sparql_concept(dfPrepare)
                         #
                         # Lancemente des requêtes sparql
-                        output_file = self.__filter(path_sparql)
+                        #output_file = self.__filter(path_sparql)
                         # Copie le résultat dans le répertoire final
-                        shutil.copy(output_file,self.output_integrate)
-                        # Generer répositorie tmp 
-                        
-                        path_integrate = os.path.join(self.ref_directory,"integrate")
-                        if os.path.exists(path_integrate):
-                            shutil.rmtree(path_integrate)
-                            os.makedirs(path_integrate)
-                        else:
-                            os.makedirs(path_integrate)
-
-                        # Generer les concepts alignement et labels
-                        getConcepts = concepts_referentiel.generate_concepts(output_file)
-                        alignement_directory = os.path.join(path_integrate,"alignement")
-                        if not os.path.exists(alignement_directory):
-                            os.mkdir(alignement_directory)
-                        getConcepts.get_alignement().to_csv(os.path.join(alignement_directory,'alignement.csv'),index=False)
-                        # Generate les concepts de labels
-                        labels_directory = os.path.join(path_integrate,"labels")
-                        if not os.path.exists(labels_directory):
-                            os.mkdir(labels_directory)
-                        getConcepts.get_labels().to_csv(os.path.join(labels_directory,'labels.csv'),index=False)
+                       
                     else:
                         self.logger.warning(f"Le resource {pFile} n'est pas une resource attendre [csv,xls,xlsx]")
                         print(f"Le resource {pFile} n'est pas une resource attendre [csv,xls,xlsx]")
@@ -195,5 +209,7 @@ class integration:
 
         self.logger.info(f"* * * * Integration de referentiel {self.__referentiel.upper()} [Integration] * * * *")
         print(f"* * * * Integration de referentiel {self.__referentiel.upper()} [Integration] * * * *")
+
+        print(f"Répertoire de resultat de l'étape de report: {self.__Referentiel_resultat} ")
 
         self.__read_csv_file()

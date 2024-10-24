@@ -18,7 +18,6 @@ class Information(confReferentiel,cmd_subprocess):
         self.logger.info(f"======================== {self.get_Referentiel().upper()} ========================")
         print(f"======================== {self.get_Referentiel().upper()} ========================")
 
-        print(f"Resource : {self.get_Data()}")
         print(f"Répertoir de travail: {self.get_referentiel_directory()}")
         # Generate répertoire du Referentiel
         print(f"Répertoir de résultat: {self.get_Outputdirectory()}")

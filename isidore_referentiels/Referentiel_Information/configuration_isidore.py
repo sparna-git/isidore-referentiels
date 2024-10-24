@@ -10,25 +10,29 @@ class readConfiguration:
 
     def __init__(self, Data_yaml_Global,etape:str):
         self.conf = yaml.safe_load(Data_yaml_Global)
-        
+        #print(f'Configuration: {self.conf}')
         self.Referentiel = self.conf["id"]
+        #print(f'Referentiel: {self.Referentiel}')
         # Create directory Root
         ParentDirectory = Path().parent.cwd()
         self.WorkDir = os.path.join(ParentDirectory,self.conf["workDir"])
         self.WorkDirectory = self.__createDirectory(self.WorkDir)
+        #print(f'Work Directory: {self.WorkDirectory}')
         self.OutputDir = os.path.join(ParentDirectory,self.conf["outputDir"])
         self.OutputDirectory = self.__createDirectory(self.OutputDir)
-        # Create répertoire pour le referentiel
+        #print(f'Output Directory: {self.OutputDirectory}')
+
+        # Create répertoire de travail
         self.path_referentiel = os.path.join(self.WorkDir,self.Referentiel)
         self.__remove_all(etape)
         self.Referentiel_directory = self.__createDirectoryReferentiel(self.path_referentiel,etape)
-        
+        #print(f'Work Referentiel Directory: {self.WorkDirectory}')
+        # Créer le répertoire des résultat
+        self.referentiel_result = os.path.join(self.OutputDir,self.Referentiel)
+        self.Output_referentiel = self.__createDirectoryReferentiel(self.referentiel_result,etape)
+        #print(f'Work Referentiel Directory: {self.WorkDirectory}')
         # Créer Logging
         self.logger = self.__create_logging(etape)
-        #
-        # Répertoire Tmp
-        self.path_referentiel_tmp = os.path.join(self.path_referentiel,"tmp")
-        self.Referentiel_tmp_directory = self.__createDirectory(self.path_referentiel_tmp)
         #
         self.clean = self.conf["clean"]
         self.report = self.conf["report"]
@@ -52,8 +56,9 @@ class readConfiguration:
 
         try:            
             if not os.path.exists(directory):
-                newDirectory = os.mkdir(directory)
-                return f"Directory {directory} created successfully"
+                os.mkdir(directory)
+                return f"Directory {directory} created successfully"            
+
         except OSError:
             return f"Error: Failed to create directory {directory} - {OSError}"
         
@@ -76,23 +81,14 @@ class confReferentiel(readConfiguration):
     def get_Referentiel(self) -> str:
         return self.conf["id"]
     
-    def get_Data(self) -> str:
-        return ''.join(self.conf["data"])
-
-    def get_Clean(self) -> list:
-        return self.conf["clean"]
-    
-    def get_Workdirectory(self) -> str:
-        return self.WorkDir
-    
     def get_Outputdirectory(self) -> str:
-        return self.OutputDir
+        return self.referentiel_result
 
     def get_referentiel_directory(self) -> str:
         return self.path_referentiel
 
-    def get_TmpDirectory(self) -> str:
-        return self.path_referentiel_tmp
+    def get_Clean(self) -> list:
+        return self.conf["clean"]
     
     def get_Report(self) -> list:
         return self.conf["report"]

@@ -9,24 +9,13 @@ from .referentiel_alignement import getAlignement
 from isidore_referentiels.report.referentiels_labels.labels import libelles
 from isidore_referentiels.process.Tools import tools
 
-class algorithms_referentiels:
+class dataset_referentiels:
 
-    def __init__(self, RefInfo) -> None:
-
+    def __init__(self,RefInfo) -> None:
         # Répertoir 
-        self.Workdir = Path(RefInfo.get_Workdirectory()).absolute()
-
-        self.report = RefInfo.get_Report()
+        self.Workdir = Path(RefInfo.get_Outputdirectory()).parent.absolute()
         self.logger = logging.getLogger(__name__)
-        self.__Referentiel_Directory = RefInfo.get_referentiel_directory() # Exemple: Work\lcsh
-
-        # Répertoires de travail pour generer les reports
-        self.input_data = Path(''.join(self.report["data"])).absolute()
-        # Output
-        self.Output_report = Path(''.join(self.report["output"])).absolute()
-
-        self.algorithms = self.report["algorithms"]
-
+        
     def __set_algorithms_referentiels(self) -> list:
         # 
         df_DataSet = []
@@ -54,17 +43,28 @@ class algorithms_referentiels:
             df = pd.concat(list_labels)
         return df
 
-class report(algorithms_referentiels):
+class report(dataset_referentiels):
 
     def __init__(self, RefInfo) -> None:
         super().__init__(RefInfo)
         
         self.__Referentiel = RefInfo.get_Referentiel()
-        #
+        # Répertoire de travail
         self.__Referentiel_Directory = RefInfo.get_referentiel_directory() # Exemple: Work\lcsh
-        # Temp Directory
-        self.__Tmpdir = RefInfo.get_TmpDirectory()
-        self.__Tmp_Dir = None
+        # Répertoire de resultat
+        report_output = RefInfo.get_Outputdirectory()
+        
+
+        self.report = RefInfo.get_Report()
+        # Répertoires de travail pour generer les reports
+        self.input_data = Path(''.join(self.report["data"])).absolute()
+        self.algorithms = self.report["algorithms"]
+
+        # Créer le répertoire de l"étape
+        self.__report_directory = tools.new_directory(self.__Referentiel_Directory,"report")        #        
+        output_report = ''.join(self.report["output"])
+        self.__Referentiel_resultat = tools.new_directory(report_output,output_report)
+        
         # Resource du Referentiel à traiter 
         self.__getConcepts = generate_concepts(self.input_data)
         
@@ -99,26 +99,16 @@ class report(algorithms_referentiels):
     
     def __evaluation(self,row):
 
+
         Alignement = row["alignement"]
         Libelles = row["libelles"]
         
         reponse = "NEUTRE"
         if (Alignement == "A EXCLURE") or (Libelles == "A EXCLURE"):
             reponse = "A EXCLURE"
-        
-
-
         return reponse
 
     def __generate_resource(self):
-
-        tmp_report_directory = os.path.join(self.__Tmpdir,"Report")
-        if os.path.exists(tmp_report_directory):
-            shutil.rmtree(tmp_report_directory)
-            os.mkdir(tmp_report_directory)
-        else:
-            os.mkdir(tmp_report_directory)
-        self.__Tmp_Dir = tmp_report_directory
 
         dfReferentiel = self.__getConcepts.get_report()
         #   
@@ -130,7 +120,7 @@ class report(algorithms_referentiels):
             self.logger.info(f"Number de lignes trouve dans les autres referentiels {dfAlignement.size}")
             if dfAlignement.size > 0:
                 # Creer le fichier de résultat après de trouve les alignement entre tous les referentiels
-                filename_alignement = os.path.join(self.__Tmp_Dir,"alignement_doublons.csv")
+                filename_alignement = os.path.join(self.__report_directory,"alignement_doublons.csv")
                 dfAlignement.to_csv(filename_alignement,index=False)
                 # Intégrer le résultat dans le referentiel
                 dfReferentiel = pd.merge(left=dfReferentiel,
@@ -141,15 +131,14 @@ class report(algorithms_referentiels):
                                     )
             else:
                 print(f"ne se trouve pas information pour analizer <<Doublons d'Alignement>> avec le referentiel {self.__Referentiel}")
-                self.logger.info(f"ne se trouve pas information pour analizer <<Doublons d'Alignement>> avec le referentiel {self.__Referentiel}")
-                dfReferentiel["alignement"] = ""
+                self.logger.info(f"ne se trouve pas information pour analizer <<Doublons d'Alignement>> avec le referentiel {self.__Referentiel}")                
         
         if "labels" in self.algorithms:
             print("Chercher les doublons dans le concept <<Labels>>")            
             dfLabels = self.__get_doublons_labels() 
             if dfLabels.size > 0:
                 # Creer le fichier de résultat après de trouve les alignement entre tous les referentiels
-                filename_labels = os.path.join(self.__Tmp_Dir,"libelles_doublons.csv")
+                filename_labels = os.path.join(self.__report_directory,"libelles_doublons.csv")
                 dfLabels.to_csv(filename_labels,index=False)
                 # Intégrer le résultat dans le referentiel             
                 dfReferentiel = pd.merge(left=dfReferentiel,
@@ -160,25 +149,17 @@ class report(algorithms_referentiels):
                                 )
             else:
                 print(f"ne se trouve pas information pour analizer <<doublon de libellés>> avec le referentiel {self.__Referentiel}")
-                self.logger.info(f"ne se trouve pas information pour analizer <<doublons de libellés>> avec le referentiel {self.__Referentiel}")
-                dfReferentiel["libelles"] = ""
+                self.logger.info(f"ne se trouve pas information pour analizer <<doublons de libellés>> avec le referentiel {self.__Referentiel}")                
        
         if self.__alignement_dataset.size + self.__lables_dataset.size == 0:
             dfReferentiel["juguement"] = "Autre"
         else:
+            dfReferentiel.info()
             dfReferentiel["juguement"] = dfReferentiel.apply(self.__evaluation,axis=1)
 
-
-        if not os.path.exists(self.Output_report):
-            path_full = Path(self.Output_report).absolute()
-            os.mkdir(path_full)
-        else:
-            shutil.rmtree(self.Output_report)
-            os.makedirs(self.Output_report)
-            
         # Stoker le résultat dans le répertoir output
         output_file_name = f'Report_{self.__Referentiel}.csv'
-        output_result = os.path.join(self.Output_report,output_file_name)
+        output_result = os.path.join(self.__Referentiel_resultat,output_file_name)
         dfReferentiel.to_csv(output_result,index=False)
         print(f"Fichier de sortir: {output_result}")
         self.logger.info(f"Fichier de sortir: {output_result}")
@@ -187,6 +168,8 @@ class report(algorithms_referentiels):
 
         self.logger.info(f"* * * * Créer le report de {self.__Referentiel.upper()} [Report] * * * *")
         print(f"* * * * Créer le report de {self.__Referentiel.upper()} [Report] * * * *")
+
+        print(f"Répertoire de resultat de l'étape de report: {self.__Referentiel_resultat} ")
 
         # 
         self.__generate_resource()

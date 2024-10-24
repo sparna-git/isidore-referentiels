@@ -8,56 +8,55 @@ from isidore_referentiels.process.isidore_subprocess import cmd_subprocess
 class clean_referentiel():
 
     def __init__(self,RefInfo) -> None:
-        dir(RefInfo)
+        # Referentiel
         self.__Referentiel__ = RefInfo.get_Referentiel()
-        self.data = RefInfo.get_Data()
-        self.__Referentiel_data = None # Path après de merger les données
-        # 
-        __Referentiel_Clean = RefInfo.get_Clean()
-        self.__Referentiel_sparql = __Referentiel_Clean["sparql"]
-        self.path_output = Path(__Referentiel_Clean["output"]).absolute()
-        #
-        self.__Referentiel_Directory = RefInfo.get_referentiel_directory() # Exemple: Work\lcsh
+        # Répertoire après de fusionr les données
+        self.__Referentiel_data = None 
+        resultat = RefInfo.get_Outputdirectory()
         
-        # Temp Directory
-        self.__Tmp_Dir = tools.new_directory(RefInfo.get_TmpDirectory(),"clean")
-        # Tmp File
-        self.__Tmp_File = os.path.join(self.__Tmp_Dir,f"{self.__Referentiel__}.ttl")
+        # Récuperer tous les parametrage pour l'étape à nettoyer
+        __Referentiel_Clean = RefInfo.get_Clean()
+        # Répertoir des données 
+        self.data = Path(''.join(__Referentiel_Clean["data"])).absolute()
+        # Répertoir des requête sparql 
+        self.__Referentiel_sparql = __Referentiel_Clean["sparql"]
+        
+        # Repertoire de travail
+        self.__Referentiel_Directory = RefInfo.get_referentiel_directory()
+        
+        output_clean = ''.join(__Referentiel_Clean["output"])
+        self.__Referentiel_resultat = tools.new_directory(resultat,output_clean)
+        # Temp Directory - Exemple: Work/lcsh/clean
+        self.__Tmp_Dir = tools.new_directory(self.__Referentiel_Directory,"clean")
+        # Fichier temporale pour le résultat des requête sparql Tmp File
+        Tmp_Sparql = tools.new_directory(self.__Tmp_Dir,"resultat_sparql")
+        self.__Tmp_File = os.path.join(Tmp_Sparql,f"{self.__Referentiel__}.ttl")
         # Logging
         self.logger = logging.getLogger(__name__)
 
-    def __merge_referentiel_data(self):
+    def __fusion_referentiel_data(self):
 
         # 
         Path_data = tools.get_path_absoluted(self.data)
         
-        Parent_path = tools.get_path_Parent(self.__Tmp_Dir)
-        Directory_Merge = tools.new_directory(Parent_path,f"{self.__Referentiel__}_merge")
-        fileOutput = os.path.join(Directory_Merge,f"{self.__Referentiel__}_full.ttl")
-        Path_Result = tools.get_path_absoluted(fileOutput)
-        
+        Directory_fusion = tools.new_directory(self.__Tmp_Dir,f"{self.__Referentiel__}_fusion")
+        fileOutput = os.path.join(Directory_fusion,f"{self.__Referentiel__}_full.ttl")
+        Path_Result = tools.get_path_absoluted(fileOutput)        
         response = cmd_subprocess.merge_data(self,Path_data,Path_Result)
         if response.stderr.__sizeof__()> 0:
-            self.logger.warning("Error in the merge files")
+            self.logger.warning("Error dans la fusion des fichiers")
             self.logger.warning(response.stderr)
 
         self.__Referentiel_data = Path_Result
 
     def __set_output_clean(self, path_tmp_file:str) -> str:
 
-        # Créer le repértoire pour stocker le résultat
-        if not os.path.exists(self.path_output):
-            os.mkdir(self.path_output)
-
-        output_result = Path(self.path_output).absolute()
-        self.logger.info(f"Repértoire de résultat: {output_result}")
-        print(f"Repértoire de résultat: {output_result}")
-
+        # Stocker le résultat
         # Copy the result in the Clean Directory 
-        self.logger.info(f"Copie le résultat {path_tmp_file} au repértoire {output_result}")
-        shutil.copy(path_tmp_file,output_result)
+        self.logger.info(f"Copie le résultat {path_tmp_file} au repértoire {self.__Referentiel_resultat}")
+        shutil.copy(path_tmp_file,self.__Referentiel_resultat)
 
-        outptu_directory_result = output_result
+        outptu_directory_result = self.__Referentiel_resultat
         
         return outptu_directory_result
 
@@ -109,7 +108,7 @@ class clean_referentiel():
         # Fusion de tous les fichiers d'entrée
         print("Fusion des fichiers")
         self.logger.info("Fusion des fichiers")
-        self.__merge_referentiel_data()
+        self.__fusion_referentiel_data()
 
         path_result = None
         if len(self.__Referentiel_sparql) > 0:
@@ -118,9 +117,9 @@ class clean_referentiel():
             print("* * * * Nettoyer les données avec des requêtes Sparql [Clean] * * * *")
 
             # Lancer la requêtes sparql dans une jue des données et stocke le résultat dans une fichier temporale        
-            __file_output = self.__sparql_queries(self.__Tmp_File)
-            # Créer le répertoire de sortir output+etape (output_clean)
-            path_result = self.__set_output_clean(__file_output)
+            file_output = self.__sparql_queries(self.__Tmp_File)
+            # Créer le répertoire de sortir output
+            path_result = self.__set_output_clean(file_output)
             
         else:
             # Coller le fichier dans le répertoire correspondant

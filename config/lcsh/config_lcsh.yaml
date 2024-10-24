@@ -1,8 +1,6 @@
 id: lcsh
 downloadPage: 
   - https://id.loc.gov/download/     
-data: 
-  - data/lcsh
 # Répertoire où sont enregistrés les fichiers des référentiels après traitement
 outputDir: output
 # Répertoire où sont stockés les fichiers temporaires de travail du script
@@ -11,23 +9,26 @@ workDir: work
 logFile: isidore-referentiels_lcsh.log
 # Etapes
 clean:
+  data: 
+    - data/lcsh
   sparql:
     - config/lcsh/sparql/clean-combined-concepts.ru
     - config/lcsh/sparql/clean-anonymous-concepts.ru
-  output: work/lcsh/output_clean  
+  output: 
+    - output_clean  
 report:
   data: 
-    - work/lcsh/output_clean
+    - output/lcsh/output_clean
   output: 
-    - work/lcsh/output_report
+    - output_report
   algorithms:
     - alignement
     - labels
 integrate:
   report: 
-    - work/lcsh/output_report
-  resource: 
-    - work/lcsh/output_clean
+    - output/lcsh/output_report
+  data: 
+    - output/lcsh/output_clean
   output: 
-    - work/lcsh/output_integrate
+    - output_integrate
 merge: []

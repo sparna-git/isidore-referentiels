@@ -223,8 +223,8 @@ class libelles(dataset):
             print(f"On n'a trouve pas des information dans la langue Anglais.")
         # Espagnol
         print(f"Résultat des labes en Français {df_fr.size}")
-        if not df_es.empty:            
-            df_fr.drop("prefLabel_es",axis=1,inplace=True)
+        if not df_es.empty:
+            df_es.drop("prefLabel_es",axis=1,inplace=True)
             dfReferentiel = pd.merge(left=dfReferentiel,
                                 right=df_es,
                                 how="left",
@@ -252,5 +252,5 @@ class libelles(dataset):
 
         # Créer le fichier de travaille
         # Enlever les colonnes que ne seront pas à utiliser
-        dfOutput = dfReferentiel[["Concept","libelles","libeles_doublons"]]
+        dfOutput = dfReferentiel[["Concept","libelles","libelles_doublons"]]
         return dfOutput
