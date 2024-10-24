@@ -23,9 +23,8 @@ report:
     - output_report
   # Concepts
   algorithms:
-    - labels
     - alignement
-    - statistique
+    - libelles
 integrate:
   report: 
     - output/bne/output_report

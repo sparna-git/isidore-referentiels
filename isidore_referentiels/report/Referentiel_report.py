@@ -13,7 +13,8 @@ class dataset_referentiels:
 
     def __init__(self,RefInfo) -> None:
         # Répertoir 
-        self.Workdir = Path(RefInfo.get_Outputdirectory()).parent.absolute()
+        self.Workdir = Path(RefInfo.get_referentiel_directory()).parent.absolute()
+        print(f'Repository {self.Workdir}' )
         self.logger = logging.getLogger(__name__)
         
     def __set_algorithms_referentiels(self) -> list:
@@ -22,7 +23,7 @@ class dataset_referentiels:
         for resource in glob.glob(f'{self.Workdir}/**/*.csv', recursive=True):
             for aConfig in self.algorithms:
                 if aConfig in resource:
-                    df = pd.read_csv(resource)
+                    df = pd.read_csv(resource,dtype=str)
                     df_DataSet.append((aConfig,df))
         return df_DataSet
     
@@ -32,15 +33,16 @@ class dataset_referentiels:
         df = pd.DataFrame()
         if len(list_Alignement) > 0:
             df = pd.concat(list_Alignement)
-            df['NumberId'] = df.uriAlignement.str.split("/",expand=True)[max]
+            df['NumberId'] = df.uriAlignement.str.split("/",expand=True)[max]            
         return df
     
-    def get_Labels_dataset(self) -> pd.DataFrame:
+    def get_libelles_dataset(self) -> pd.DataFrame:
 
-        list_labels = [ labels[1] for labels in self.__set_algorithms_referentiels() if labels[0] == 'labels' ]
+        list_labels = [ labels[1] for labels in self.__set_algorithms_referentiels() if labels[0] == 'libelles' ]
         df = pd.DataFrame()
         if len(list_labels) > 0:
             df = pd.concat(list_labels)
+            df.to_csv('libelles_all',index=False)
         return df
 
 class report(dataset_referentiels):
@@ -61,17 +63,31 @@ class report(dataset_referentiels):
         self.algorithms = self.report["algorithms"]
 
         # Créer le répertoire de l"étape
-        self.__report_directory = tools.new_directory(self.__Referentiel_Directory,"report")        #        
-        output_report = ''.join(self.report["output"])
-        self.__Referentiel_resultat = tools.new_directory(report_output,output_report)
+        directory_report = os.path.join(self.__Referentiel_Directory,"report")
+        if not os.path.exists(directory_report):
+            os.mkdir(directory_report)
+        else:
+            shutil.rmtree(directory_report)
+            os.mkdir(directory_report)
+        self.__report_directory = directory_report   #        
+        
+        output_report = os.path.join(report_output,''.join(self.report["output"]))
+        if not os.path.exists(output_report):
+            os.mkdir(output_report)
+        else:
+            shutil.rmtree(output_report)
+            os.mkdir(output_report)
+        self.__Referentiel_resultat = output_report
         
         # Resource du Referentiel à traiter 
         self.__getConcepts = generate_concepts(self.input_data)
         
         # Données Alignement
         self.__alignement_dataset = self.get_alignement_dataset()
+        print(f'Dataset alignement: {self.__alignement_dataset.size}')
         # Données Labels
-        self.__lables_dataset = self.get_Labels_dataset()
+        self.__libelles_dataset = self.get_libelles_dataset()
+        print(f'Dataset libelles: {self.__alignement_dataset.size}')
         self.logger = logging.getLogger(__name__)
 
     def __set_doublons_alignement(self) -> pd.DataFrame:
@@ -87,11 +103,11 @@ class report(dataset_referentiels):
     
     def __set_doublons_labels(self) -> pd.DataFrame:
 
-        print(f"Resource Labels  {self.__lables_dataset.size}  ")
+        print(f"Resource Labels  {self.__libelles_dataset.size}  ")
         dfReferentiel_Labels = self.__getConcepts.get_labels()
         dfResultLabels = pd.DataFrame()
-        if self.__lables_dataset.size > 0:
-            dfResultLabels = libelles(dfReferentiel_Labels,self.__lables_dataset).libelles_referentiel(self.__Tmp_Dir)
+        if self.__libelles_dataset.size > 0:
+            dfResultLabels = libelles(dfReferentiel_Labels,self.__libelles_dataset).libelles_referentiel(self.__report_directory)
         return dfResultLabels
 
     def __get_doublons_labels(self) -> pd.DataFrame:
@@ -133,7 +149,7 @@ class report(dataset_referentiels):
                 print(f"ne se trouve pas information pour analizer <<Doublons d'Alignement>> avec le referentiel {self.__Referentiel}")
                 self.logger.info(f"ne se trouve pas information pour analizer <<Doublons d'Alignement>> avec le referentiel {self.__Referentiel}")                
         
-        if "labels" in self.algorithms:
+        if "libelles" in self.algorithms:
             print("Chercher les doublons dans le concept <<Labels>>")            
             dfLabels = self.__get_doublons_labels() 
             if dfLabels.size > 0:
@@ -151,10 +167,9 @@ class report(dataset_referentiels):
                 print(f"ne se trouve pas information pour analizer <<doublon de libellés>> avec le referentiel {self.__Referentiel}")
                 self.logger.info(f"ne se trouve pas information pour analizer <<doublons de libellés>> avec le referentiel {self.__Referentiel}")                
        
-        if self.__alignement_dataset.size + self.__lables_dataset.size == 0:
+        if self.__alignement_dataset.size + self.__libelles_dataset.size == 0:
             dfReferentiel["juguement"] = "Autre"
         else:
-            dfReferentiel.info()
             dfReferentiel["juguement"] = dfReferentiel.apply(self.__evaluation,axis=1)
 
         # Stoker le résultat dans le répertoir output

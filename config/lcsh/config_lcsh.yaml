@@ -23,7 +23,7 @@ report:
     - output_report
   algorithms:
     - alignement
-    - labels
+    - libelles
 integrate:
   report: 
     - output/lcsh/output_report

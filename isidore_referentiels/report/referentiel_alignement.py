@@ -36,9 +36,7 @@ class getAlignement:
         self.referentiel["alignement_doublons"] = self.referentiel.uriAlignement.apply(self.__eval_alignement)
         self.referentiel["alignement"] = self.referentiel["alignement_doublons"].apply(lambda x : 'Autre' if x is None else 'A EXCLURE')
         # 
-        dfOutput = self.referentiel[["Concept","alignement","alignement_doublons"]]
-
-        return dfOutput
+        return self.referentiel[["Concept","alignement","alignement_doublons"]]
     
     def get_information_alignement(self):
         return self.__set_referentiel()

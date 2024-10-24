@@ -24,7 +24,7 @@ class generate_concepts:
         response = cs.execute_query_subprocess(self,self.referentiel,SPARQLQuery,"CSV")
         if response:
             if response.stdout:
-                df = pd.read_csv(BytesIO(response.stdout))
+                df = pd.read_csv(BytesIO(response.stdout),dtype=str)
                 return df
             
             # Write in log Exceptions

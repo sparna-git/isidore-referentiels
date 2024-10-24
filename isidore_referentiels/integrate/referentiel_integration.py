@@ -191,8 +191,8 @@ class integration:
                             alignement_directory = tools.new_directory(self.__tmp_directory,"alignement")
                             getConcepts.get_alignement().to_csv(os.path.join(alignement_directory,'alignement.csv'),index=False)
                             # Generate les concepts de labels
-                            labels_directory = tools.new_directory(self.__tmp_directory,"labels")
-                            getConcepts.get_labels().to_csv(os.path.join(labels_directory,'labels.csv'),index=False)
+                            labels_directory = tools.new_directory(self.__tmp_directory,"libelles")
+                            getConcepts.get_labels().to_csv(os.path.join(labels_directory,'libelles.csv'),index=False)
                         else:
                             shutil.copy(self.data,self.__Referentiel_resultat)
                          #path_sparql = self.__generate_sparql_concept(dfPrepare)
