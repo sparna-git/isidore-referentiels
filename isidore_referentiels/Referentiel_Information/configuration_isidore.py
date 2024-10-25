@@ -45,13 +45,11 @@ class readConfiguration:
 
     def __create_logging(self,etape:str):
         
-        if "clean" == etape:
-            logger = logging
-            File_log = os.path.join(Path(self.path_referentiel).absolute(),self.conf["logFile"])
-            logger.basicConfig(filename=File_log,level=logging.DEBUG,format="{asctime} - {levelname} - {message}",style="{" ,datefmt="%d-%m-%Y %H:%M")
-            logger.info("Start........")
-            return logger
-
+        logger = logging
+        File_log = os.path.join(Path(self.path_referentiel).absolute(),self.conf["logFile"])
+        logger.basicConfig(filename=File_log,level=logging.DEBUG,format="{asctime} - {levelname} - {message}",style="{" ,datefmt="%d-%m-%Y %H:%M")
+        return logger
+        
     def __createDirectory(self,directory) -> str:
 
         try:            

@@ -60,9 +60,9 @@ class validate_referentiel:
             #description_output = input
             dffind_concepts = self.dataset[self.dataset[self.dataset.columns[1]].isin([qa_input])]
             if dffind_concepts.size > 1:
-                description_output = self.__get_concepts(dffind_concepts)
+                description_output = ''.join(self.__get_concepts(dffind_concepts))
             if dffind_concepts.size == 1:
-                description_output = dffind_concepts[dffind_concepts.columns[0]].iloc[0]
+                description_output = ''.join(dffind_concepts[dffind_concepts.columns[0]].iloc[0])
             if dffind_concepts.empty:
                 description_output = "Autre"
         return description_output
@@ -247,11 +247,12 @@ class libelles(dataset):
             dfReferentiel["alt_Label"] = "Autre"
 
         # 
-        print("here")
         dfReferentiel["libelles"] = dfReferentiel.apply(self.__eval_result,axis=1)
         dfReferentiel["libelles_doublons"] = dfReferentiel.apply(self.__eval_comment,axis=1)
         dfReferentiel.to_csv(os.path.join(directoryTmp,'libelles_match.csv'),index=False)
 
+        dfOutput = dfReferentiel[["Concept","libelles","libelles_doublons"]].drop_duplicates()
+
         # Créer le fichier de travaille
         # Enlever les colonnes que ne seront pas à utiliser
-        return dfReferentiel[["Concept","libelles","libelles_doublons"]]
+        return dfOutput

@@ -42,7 +42,6 @@ class dataset_referentiels:
         df = pd.DataFrame()
         if len(list_labels) > 0:
             df = pd.concat(list_labels)
-            df.to_csv('libelles_all',index=False)
         return df
 
 class report(dataset_referentiels):
@@ -88,11 +87,12 @@ class report(dataset_referentiels):
         # Données Labels
         self.__libelles_dataset = self.get_libelles_dataset()
         print(f'Dataset libelles: {self.__alignement_dataset.size}')
+        
+        # log
         self.logger = logging.getLogger(__name__)
 
     def __set_doublons_alignement(self) -> pd.DataFrame:
 
-        print(f"Resource Alignement  {self.__alignement_dataset.size}  ")
         dfResultAlignement = pd.DataFrame()
         if self.__alignement_dataset.size > 0:
             dfResultAlignement = getAlignement(self.__getConcepts.get_alignement(),self.__alignement_dataset).get_information_alignement()
@@ -130,14 +130,14 @@ class report(dataset_referentiels):
         #   
         print("Chercher les doublons dans le concept <<Alignement>>")
         self.logger.info("Chercher les doublons dans le concept <<Alignement>>")  
+        
         if "alignement" in self.algorithms:
             dfAlignement = self.__get_doublons_alignement()
-            print(f"Number de lignes trouve dans les autres referentiels {dfAlignement.size}")
-            self.logger.info(f"Number de lignes trouve dans les autres referentiels {dfAlignement.size}")
             if dfAlignement.size > 0:
                 # Creer le fichier de résultat après de trouve les alignement entre tous les referentiels
                 filename_alignement = os.path.join(self.__report_directory,"alignement_doublons.csv")
                 dfAlignement.to_csv(filename_alignement,index=False)
+                self.logger.info(f'Stoker le resultat de doublons de alignements dans le répertoire: {filename_alignement}')
                 # Intégrer le résultat dans le referentiel
                 dfReferentiel = pd.merge(left=dfReferentiel,
                                     right=dfAlignement,
@@ -149,13 +149,15 @@ class report(dataset_referentiels):
                 print(f"ne se trouve pas information pour analizer <<Doublons d'Alignement>> avec le referentiel {self.__Referentiel}")
                 self.logger.info(f"ne se trouve pas information pour analizer <<Doublons d'Alignement>> avec le referentiel {self.__Referentiel}")                
         
+        print("Chercher les doublons dans le concept <<Libellés>>")
+        self.logger.info("Chercher les doublons dans le concept <<Libellés>>")
         if "libelles" in self.algorithms:
-            print("Chercher les doublons dans le concept <<Labels>>")            
             dfLabels = self.__get_doublons_labels() 
             if dfLabels.size > 0:
                 # Creer le fichier de résultat après de trouve les alignement entre tous les referentiels
                 filename_labels = os.path.join(self.__report_directory,"libelles_doublons.csv")
                 dfLabels.to_csv(filename_labels,index=False)
+                self.logger.info(f'Stoker le resultat de doublons de libellés dans le répertoire: {filename_labels}')
                 # Intégrer le résultat dans le referentiel             
                 dfReferentiel = pd.merge(left=dfReferentiel,
                                 right=dfLabels,
@@ -184,7 +186,8 @@ class report(dataset_referentiels):
         self.logger.info(f"* * * * Créer le report de {self.__Referentiel.upper()} [Report] * * * *")
         print(f"* * * * Créer le report de {self.__Referentiel.upper()} [Report] * * * *")
 
-        print(f"Répertoire de resultat de l'étape de report: {self.__Referentiel_resultat} ")
+        print(f"Répertoire de resultat de l'étape de report: {self.__Referentiel_resultat}")
+        self.logger.info(f"Répertoire de resultat de l'étape de report: {self.__Referentiel_resultat}")
 
         # 
         self.__generate_resource()

@@ -19,6 +19,7 @@ report:
   # Répertoire où se trouve le fichier après de l'etape de nettoyage .
   data: 
     - output/pactols/output_clean
+  # Répertore pour stoker le résultat
   output: 
     - output_report
   # Concepts
@@ -31,6 +32,7 @@ integrate:
     - output/pactols/output_report
   data: 
     - output/pactols/output_clean
+  # Répertore pour stoker le résultat
   output: 
     - output_integrate
 merge: []
