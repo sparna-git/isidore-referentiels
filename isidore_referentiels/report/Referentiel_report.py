@@ -20,7 +20,7 @@ class dataset_referentiels:
     def __set_algorithms_referentiels(self) -> list:
         # 
         df_DataSet = []
-        for resource in glob.glob(f'{self.Workdir}/**/*.csv', recursive=True):
+        for resource in glob.glob(f'{self.Workdir}/**/integrate/**/*.csv', recursive=True):
             for aConfig in self.algorithms:
                 if aConfig in resource:
                     df = pd.read_csv(resource,dtype=str)
@@ -135,7 +135,7 @@ class report(dataset_referentiels):
             dfAlignement = self.__get_doublons_alignement()
             if dfAlignement.size > 0:
                 # Creer le fichier de résultat après de trouve les alignement entre tous les referentiels
-                filename_alignement = os.path.join(self.__report_directory,"alignement_doublons.csv")
+                filename_alignement = os.path.join(self.__report_directory,"alignement_doublons.xslx")
                 dfAlignement.to_csv(filename_alignement,index=False)
                 self.logger.info(f'Stoker le resultat de doublons de alignements dans le répertoire: {filename_alignement}')
                 # Intégrer le résultat dans le referentiel
@@ -155,7 +155,7 @@ class report(dataset_referentiels):
             dfLabels = self.__get_doublons_labels() 
             if dfLabels.size > 0:
                 # Creer le fichier de résultat après de trouve les alignement entre tous les referentiels
-                filename_labels = os.path.join(self.__report_directory,"libelles_doublons.csv")
+                filename_labels = os.path.join(self.__report_directory,"libelles_doublons.xslx")
                 dfLabels.to_csv(filename_labels,index=False)
                 self.logger.info(f'Stoker le resultat de doublons de libellés dans le répertoire: {filename_labels}')
                 # Intégrer le résultat dans le referentiel             

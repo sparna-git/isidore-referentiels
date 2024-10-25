@@ -249,7 +249,7 @@ class libelles(dataset):
         # 
         dfReferentiel["libelles"] = dfReferentiel.apply(self.__eval_result,axis=1)
         dfReferentiel["libelles_doublons"] = dfReferentiel.apply(self.__eval_comment,axis=1)
-        dfReferentiel.to_csv(os.path.join(directoryTmp,'libelles_match.csv'),index=False)
+        #dfReferentiel.to_csv(os.path.join(directoryTmp,'libelles_match.csv'),index=False)
 
         dfOutput = dfReferentiel[["Concept","libelles","libelles_doublons"]].drop_duplicates()
 
