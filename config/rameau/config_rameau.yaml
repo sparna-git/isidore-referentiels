@@ -16,6 +16,7 @@ clean:
     - config/rameau/sparql/clean-aligned-with-geonames.ru
     - config/rameau/sparql/clean-combined-concepts.ru
     - config/rameau/sparql/clean-dict-concepts.ru
+    - config/rameau/sparql/update-uri-wikidata.ru
   # Répertore pour stoker le résultat
   output: 
     - output_clean
@@ -29,7 +30,7 @@ report:
   # Concepts
   algorithms:
     - libelles
-    - wikidata
+    - alignement
     - statistique
 integrate:
   report: 
