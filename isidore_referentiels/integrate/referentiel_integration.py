@@ -6,7 +6,6 @@ from pathlib import Path
 from isidore_referentiels.process.isidore_subprocess import cmd_subprocess
 from isidore_referentiels.process.Tools import tools
 from isidore_referentiels.report.concepts import concepts_referentiel
-import tempfile as tf
 
 class integration:
 
@@ -16,8 +15,14 @@ class integration:
         self.ref_directory = RefInfo.get_referentiel_directory()
         
         tmp_directory = Path(self.ref_directory).absolute()
-        dir_tmp = tools.new_directory(tmp_directory,"integrate")
-        self.__tmp_directory = dir_tmp
+        integrate_directory = os.path.join(tmp_directory,'integrate')
+        if not os.path.exists(integrate_directory):
+            os.makedirs(integrate_directory)
+        else:
+            shutil.rmtree(integrate_directory)
+            os.makedirs(integrate_directory)
+
+        self.__tmp_directory = integrate_directory
         # Répertoire de resultat
         report_output = RefInfo.get_Outputdirectory()
         
@@ -44,84 +49,6 @@ class integration:
             dfOutput = pd.read_excel(resource)
         
         return dfOutput
-    
-    def __filter(self,enlever_concepts:str):
-
-        filter_directory = os.path.join(self.__tmp_directory,"result")
-        if not os.path.exists(filter_directory):
-            os.mkdir(filter_directory)
-        else:
-            shutil.rmtree(filter_directory)
-            os.mkdir(filter_directory)
-
-        tmp_file = os.path.join(filter_directory,f'{self.__referentiel}.ttl')
-        for root,directories,files in os.walk(enlever_concepts):
-            nCount = 0
-            print(files)
-            for f in files:
-                sparqlQuery = os.path.join(root,f)
-                print(f"Requête Sparql: {sparqlQuery}")                
-                #
-                input_resource = ""
-                if nCount == 0:
-                    input_resource = self.resource
-                    nCount += 1
-                else:
-                    input_resource = tmp_file
-                
-                # 
-                response = cmd_subprocess().execute_update_subprocess(input_resource,sparqlQuery)
-                print(f'taille de résultat {response.stdout.__sizeof__()}')
-                if response.stdout.__sizeof__() > 0:                    
-                    if os.path.exists(tmp_file):
-                        os.remove(tmp_file)
-
-                    with open(tmp_file,"wb") as f:
-                        f.write(response.stdout) 
-                
-                if response.stderr.__sizeof__() > 0:
-                    self.logger.warning("Le processus de enlever des uris a trouve des erreurs.")
-                    self.logger.warning(response.stderr)
-        return tmp_file   
-             
-    def __generate_sparql_concept(self,df:pd.DataFrame) -> str:
-        
-        sparql_remove_path = os.path.join(self.__tmp_directory,'sparql_remove')
-        if not os.path.exists(sparql_remove_path):
-            os.makedirs(sparql_remove_path)
-        else:
-            shutil.rmtree(sparql_remove_path)
-            os.makedirs(sparql_remove_path)
-
-        for index,line in df.iterrows():
-            
-            URIConcept = line["Concept"]
-            alignement = line["alignement_doublons"]
-            libelles = line["libelles_doublons"]
-
-            l_alignement = []
-            if not pd.isna(alignement):
-                str_concept = str(alignement).replace('[','').replace('],','').replace(' ','').replace('\'','')
-                concepts_uris = str_concept.split(",")
-                for i in concepts_uris:
-                    l_alignement.append((URIConcept,i))
-
-            l_libelles = []
-            if not pd.isna(libelles):
-                str_concept = str(libelles).replace('[','').replace('],','').replace(' ','').replace('\'','')
-                concepts = str_concept.split(",")
-                for i in concepts:
-                    l_libelles.append((URIConcept,i))
-                
-                libelles_concepts = list(dict.fromkeys(l_libelles))
-                for concept,uri in libelles_concepts:
-                    sparql_file_name = os.path.join(sparql_remove_path,f'libelles_{index}.ru')
-                    self.__sparql_files(sparql_file_name,concept,uri)
-        
-
-        self.logger.info(f"Répertoire de-s requête-s sparql {sparql_remove_path}")
-        print(f"Répertoire de-s requête-s sparql {sparql_remove_path}")
-        return sparql_remove_path
     
     def __execute_process(self,sparqlQuery) -> str:
 
@@ -166,7 +93,6 @@ class integration:
         return pathFile
     
     def __read_csv_file(self) -> pd.DataFrame:        
-
         
         for root,directories,files in os.walk(self.report):
             for file in files:
@@ -176,30 +102,31 @@ class integration:
                     dfResource = self.__generate_table(pFile,file_extension)
                     if dfResource.size > 0:
                         # 
+                        str_path_fichier = None
                         dfPrepare = dfResource[dfResource["juguement"] == "A EXCLURE"]
                         if not dfPrepare.empty:
                             list_uri_concepts = ' '.join([f"<{concept}>" for concept in dfPrepare.Concept])
                             # Generer répositorie tmp 
                             fichier_resultat = self.__execute_process(self.__sparql_query(list_uri_concepts))
 
+                            str_path_fichier = fichier_resultat
                             shutil.copy(fichier_resultat,self.__Referentiel_resultat)
-                            self.logger.info(f'Le fichier de résultat est stoke dans le répertoire {self.__Referentiel_resultat}')
-                            print(f'Le fichier de résultat est stoke dans le répertoire {self.__Referentiel_resultat}')
 
-                            # Generer les concepts alignement et labels
-                            getConcepts = concepts_referentiel.generate_concepts(fichier_resultat)
-                            alignement_directory = tools.new_directory(self.__tmp_directory,"alignement")
-                            getConcepts.get_alignement().to_csv(os.path.join(alignement_directory,'alignement.csv'),index=False)
-                            # Generate les concepts de labels
-                            labels_directory = tools.new_directory(self.__tmp_directory,"libelles")
-                            getConcepts.get_labels().to_csv(os.path.join(labels_directory,'libelles.csv'),index=False)
                         else:
+                            # récuperer le nom du fichier
+                            str_path_fichier =self.data
                             shutil.copy(self.data,self.__Referentiel_resultat)
-                         #path_sparql = self.__generate_sparql_concept(dfPrepare)
-                        #
-                        # Lancemente des requêtes sparql
-                        #output_file = self.__filter(path_sparql)
-                        # Copie le résultat dans le répertoire final
+                         
+                        self.logger.info(f'Le fichier de résultat est stoke dans le répertoire {self.__Referentiel_resultat}')
+                        print(f'Le fichier de résultat est stoke dans le répertoire {self.__Referentiel_resultat}')
+
+                        # Generer les concepts alignement et labels
+                        getConcepts = concepts_referentiel.generate_concepts(str_path_fichier)
+                        alignement_directory = tools.new_directory(self.__tmp_directory,"alignement")
+                        getConcepts.get_alignement().to_csv(os.path.join(alignement_directory,'alignement.csv'),index=False)
+                        # Generate les concepts de labels
+                        labels_directory = tools.new_directory(self.__tmp_directory,"libelles")
+                        getConcepts.get_labels().to_csv(os.path.join(labels_directory,'libelles.csv'),index=False)
                        
                     else:
                         self.logger.warning(f"Le resource {pFile} n'est pas une resource attendre [csv,xls,xlsx]")

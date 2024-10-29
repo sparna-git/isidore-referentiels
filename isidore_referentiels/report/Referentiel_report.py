@@ -20,11 +20,18 @@ class dataset_referentiels:
     def __set_algorithms_referentiels(self) -> list:
         # 
         df_DataSet = []
-        for resource in glob.glob(f'{self.Workdir}/**/integrate/**/*.csv', recursive=True):
-            for aConfig in self.algorithms:
-                if aConfig in resource:
-                    df = pd.read_csv(resource,dtype=str)
-                    df_DataSet.append((aConfig,df))
+        for (dirpath, dirnames, filenames) in os.walk(self.Workdir):
+            if 'integrate' in dirpath and len(filenames) > 0 :
+                for f in filenames:
+                    if 'csv' in f:
+                        path_file = os.path.join(dirpath,f)
+                        if os.path.isfile(path_file):
+                            print(f'lecture de fichier: {path_file}')
+                            for aConfig in self.algorithms:
+                                if aConfig in path_file:
+                                    df = pd.read_csv(path_file,dtype=str)
+                                    df_DataSet.append((aConfig,df))
+        
         return df_DataSet
     
     def get_alignement_dataset(self) -> pd.DataFrame:
@@ -33,7 +40,6 @@ class dataset_referentiels:
         df = pd.DataFrame()
         if len(list_Alignement) > 0:
             df = pd.concat(list_Alignement)
-            df['NumberId'] = df.uriAlignement.str.split("/",expand=True)[max]            
         return df
     
     def get_libelles_dataset(self) -> pd.DataFrame:
@@ -137,10 +143,12 @@ class report(dataset_referentiels):
                 # Creer le fichier de résultat après de trouve les alignement entre tous les referentiels
                 filename_alignement = os.path.join(self.__report_directory,"alignement_doublons.xslx")
                 dfAlignement.to_csv(filename_alignement,index=False)
+                #
+                dfDoublonsAlignement = dfAlignement[["Concept","alignement","alignement_doublons"]].drop_duplicates() 
                 self.logger.info(f'Stoker le resultat de doublons de alignements dans le répertoire: {filename_alignement}')
                 # Intégrer le résultat dans le referentiel
                 dfReferentiel = pd.merge(left=dfReferentiel,
-                                    right=dfAlignement,
+                                    right=dfDoublonsAlignement,
                                     how="left",
                                     left_on="Concept",
                                     right_on="Concept"
@@ -157,10 +165,12 @@ class report(dataset_referentiels):
                 # Creer le fichier de résultat après de trouve les alignement entre tous les referentiels
                 filename_labels = os.path.join(self.__report_directory,"libelles_doublons.xslx")
                 dfLabels.to_csv(filename_labels,index=False)
+                #
+                dfDoublonsLibelles = dfLabels[["Concept","libelles","libelles_doublons"]].drop_duplicates()
                 self.logger.info(f'Stoker le resultat de doublons de libellés dans le répertoire: {filename_labels}')
                 # Intégrer le résultat dans le referentiel             
                 dfReferentiel = pd.merge(left=dfReferentiel,
-                                right=dfLabels,
+                                right=dfDoublonsLibelles,
                                 how="left",
                                 left_on="Concept",
                                 right_on="Concept"

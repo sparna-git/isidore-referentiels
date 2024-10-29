@@ -24,8 +24,7 @@ def main():
         elif args.etape == "report":
             report(ref).generer_report()            
         elif args.etape == "integrate":
-            integration(ref).filter_referentiel()
-            print("integration")
+            integration(ref).filter_referentiel()            
         else:
             print("Pour lancer le processus, il y a besoin d'une Etape......")
 

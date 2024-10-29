@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import os
 
 '''
@@ -64,7 +65,7 @@ class validate_referentiel:
             if dffind_concepts.size == 1:
                 description_output = ''.join(dffind_concepts[dffind_concepts.columns[0]].iloc[0])
             if dffind_concepts.empty:
-                description_output = "Autre"
+                description_output = "AUTRE"
         return description_output
     
     def get_relation(self,column_name:str,label:str) -> pd.DataFrame:
@@ -132,18 +133,18 @@ class libelles(dataset):
         label_es = r["Label_es"]
         label = r["alt_Label"]
 
-        response = "Autre"
-        if (label_fr != "Autre") and (not pd.isna(label_fr)):
+        response = "AUTRE"
+        if (label_fr != "AUTRE") and (not pd.isna(label_fr)):
             response = 'A EXCLURE'
         
-        if label_en != "Autre" and (not pd.isna(label_en)):
+        if label_en != "AUTRE" and (not pd.isna(label_en)):
             response = 'A EXCLURE'
         
         if label_es is not None:
-            if label_es != "Autre":
+            if label_es != "AUTRE":
                 response = 'A EXCLURE'
             
-        if label != "Autre" and (not pd.isna(label)):
+        if label != "AUTRE" and (not pd.isna(label)):
             response = 'A EXCLURE'
 
         return response
@@ -160,22 +161,22 @@ class libelles(dataset):
         es = ""
         l = ""
         
-        if (label_fr != "Autre") and (not pd.isna(label_fr)):
+        if (label_fr != "AUTRE") and (not pd.isna(label_fr)):
             fr = str(label_fr)+','
         else:
             fr = ""
         
-        if label_en != "Autre" and (not pd.isna(label_en)):
+        if label_en != "AUTRE" and (not pd.isna(label_en)):
             en = str(label_en)+','
         else:
             en = ""
 
-        if label_es != "Autre" and label_es is not None:
+        if label_es != "AUTRE" and label_es is not None:
             es = str(label_es)+','
         else:
             es = ""
             
-        if label != "Autre" and (not pd.isna(label)):
+        if label != "AUTRE" and (not pd.isna(label)):
             l = es + str(label)
         else:
             l = ""
@@ -246,13 +247,11 @@ class libelles(dataset):
         else:
             dfReferentiel["alt_Label"] = "Autre"
 
+
+        dfReferentiel = dfReferentiel.where(pd.notnull(dfReferentiel),None)
+
         # 
         dfReferentiel["libelles"] = dfReferentiel.apply(self.__eval_result,axis=1)
         dfReferentiel["libelles_doublons"] = dfReferentiel.apply(self.__eval_comment,axis=1)
-        #dfReferentiel.to_csv(os.path.join(directoryTmp,'libelles_match.csv'),index=False)
 
-        dfOutput = dfReferentiel[["Concept","libelles","libelles_doublons"]].drop_duplicates()
-
-        # Créer le fichier de travaille
-        # Enlever les colonnes que ne seront pas à utiliser
-        return dfOutput
+        return dfReferentiel
