@@ -209,7 +209,7 @@ class libelles(dataset):
                                 right_on="Concept")
             dfReferentiel
         else:
-            dfReferentiel["Label_fr"] = "Autre"
+            dfReferentiel["Label_fr"] = "AUTRE"
             print(f"On n'a trouve pas des information dans la langue Français.")
         # Anglais   
         print(f"Résultat des labes en Anglais {df_en.size}")
@@ -221,7 +221,7 @@ class libelles(dataset):
                                 left_on="Concept",
                                 right_on="Concept")
         else:
-            dfReferentiel["Label_en"] = "Autre"
+            dfReferentiel["Label_en"] = "AUTRE"
             print(f"On n'a trouve pas des information dans la langue Anglais.")
         # Espagnol
         print(f"Résultat des labes en Français {df_fr.size}")
@@ -233,7 +233,7 @@ class libelles(dataset):
                                 left_on="Concept",
                                 right_on="Concept")         
         else:
-            dfReferentiel["Label_es"] = "Autre"
+            dfReferentiel["Label_es"] = "AUTRE"
             print(f"On n'a trouve pas des information dans la langue Espagnol.") 
         # alt Label 
         print(f"Résultat des synonymes {df_altLabel.size}")
@@ -245,7 +245,7 @@ class libelles(dataset):
                                 left_on="Concept",
                                 right_on="Concept")
         else:
-            dfReferentiel["alt_Label"] = "Autre"
+            dfReferentiel["alt_Label"] = "AUTRE"
 
 
         dfReferentiel = dfReferentiel.where(pd.notnull(dfReferentiel),None)

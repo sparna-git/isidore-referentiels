@@ -5,6 +5,21 @@ import shutil
 from isidore_referentiels.process.Tools import tools
 from isidore_referentiels.process.isidore_subprocess import cmd_subprocess
 
+"""
+Objectif : faire diminuer la taille des référentiels 
+
+L’objectif de cette étape est de faire diminuer de façon significative le nombre d’entrées de chaque référentiel par des requêtes de suppression. 
+Les requêtes s’appuient sur une connaissance de la structure de chaque référentiel. 
+
+
+L'implementation
+
+- Lire le contenu d'un réferentiel
+- Appliquer une série de requête Sparql sur le réferentiel
+- Stoker le résultat dans un répertoire paramétre dans le fichier de configuraton
+
+"""
+
 class clean_referentiel():
 
     def __init__(self,RefInfo) -> None:
@@ -34,6 +49,9 @@ class clean_referentiel():
         # Logging
         self.logger = logging.getLogger(__name__)
 
+    """
+    Fusion le contenu d'une répertoir dans un seule fichier
+    """
     def __fusion_referentiel_data(self):
 
         # 
@@ -49,9 +67,9 @@ class clean_referentiel():
 
         self.__Referentiel_data = Path_Result
 
+    """ Stocker le résultat """
     def __set_output_clean(self, path_tmp_file:str) -> str:
 
-        # Stocker le résultat
         # Copy the result in the Clean Directory 
         self.logger.info(f"Copie le résultat {path_tmp_file} au repértoire {self.__Referentiel_resultat}")
         shutil.copy(path_tmp_file,self.__Referentiel_resultat)
@@ -60,6 +78,7 @@ class clean_referentiel():
         
         return outptu_directory_result
 
+    """ Appliquer des requêtes au réferentiel """
     def __sparql_queries(self,tmp_file:str) -> str:
 
         # Read sparql files
@@ -103,6 +122,7 @@ class clean_referentiel():
 
         return path_tmp_file
     
+    """ Lancement du processus de nettoyage """
     def execute_sparql_update(self):
 
         # Fusion de tous les fichiers d'entrée

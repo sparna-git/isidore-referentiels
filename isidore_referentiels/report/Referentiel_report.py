@@ -3,12 +3,33 @@ import pandas as pd
 import logging
 import shutil
 from pathlib import Path
-import glob
 from .concepts.concepts_referentiel import generate_concepts
 from .referentiel_alignement import getAlignement
 from isidore_referentiels.report.referentiels_labels.labels import libelles
 from isidore_referentiels.process.Tools import tools
 
+"""
+Génération d'un rapport d'analyse
+
+L’objectif de cette étape est de produire un rapport d’analyse sur un référentiel, en utilisant notamment des techniques de détection de doublons par rapport aux référentiels. 
+Le rapport contiendra la liste de chaque concept du référentiel
+
+Implementation
+
+- Lire le contenu d'un réferentiel [Fichier Turtle]
+- Executer dessus une série d'analyse
+    * Avec le premier réferentiel on n'a pas des données de détection de doublons.
+- Producir un rapport d'analyse
+"""
+
+"""
+Chercher dans le repertoire de travail, tous les fichiers csv (libellé et alignement) de l'étape d'integration pour chaque réferentiel
+
+Arguments:
+    - fichier de configuration d'un réferentiel
+Returns:
+    - Dataframe pour chaque algorithmes d'integration
+"""
 class dataset_referentiels:
 
     def __init__(self,RefInfo) -> None:
@@ -16,7 +37,13 @@ class dataset_referentiels:
         self.Workdir = Path(RefInfo.get_referentiel_directory()).parent.absolute()
         print(f'Repository {self.Workdir}' )
         self.logger = logging.getLogger(__name__)
-        
+    
+    """
+    Chercher dans le répertoir de travail tous les fichiers csv qui se trouve dans le répertoire d'integration
+    * Dans le répertoire on va trouver seulement deux répertore cible:
+        - 1. répertoire Libellé 
+        - 2. répertoire Alignement
+    """
     def __set_algorithms_referentiels(self) -> list:
         # 
         df_DataSet = []
@@ -50,6 +77,29 @@ class dataset_referentiels:
             df = pd.concat(list_labels)
         return df
 
+
+"""
+Produir le rapport d'analyse 
+
+Arguments:
+    - fichier de configuration d'un réferentiel
+Returns:
+    - Rapport csv avec la suivin structure
+    ===================================================================================
+    Concept: Concept du réferentiel
+    prefLabel_fr: preflabel en français
+    prefLabel_en: preflabel en anglais
+    prefLabel_es: preflabel en espagnol
+    altLabel: 
+    definition:
+    ParentLabel:
+    alignement: juguement d'alignement
+    alignement_doublons: concept au concepts où se trouve le doublon
+    libelles: juguement de libellés
+    libelles_doublons: concept au concepts où se trouve le doublon
+    juguement: decision finale
+    ===================================================================================
+"""
 class report(dataset_referentiels):
 
     def __init__(self, RefInfo) -> None:
@@ -97,6 +147,7 @@ class report(dataset_referentiels):
         # log
         self.logger = logging.getLogger(__name__)
 
+    """ Evaluer les alignement du réferentiel vs réferentiel déjà intégrés """
     def __set_doublons_alignement(self) -> pd.DataFrame:
 
         dfResultAlignement = pd.DataFrame()
@@ -107,6 +158,9 @@ class report(dataset_referentiels):
     def __get_doublons_alignement(self) -> pd.DataFrame:
         return self.__set_doublons_alignement()
     
+    """ Evaluer les libellé du réferentiel vs réferentiel déjà intégrés
+        - Pour chaque concept on va récuperer les prefLabel avec la langue et le altLabel et on va comparer avec les réferentiels déjà intégrés
+    """
     def __set_doublons_labels(self) -> pd.DataFrame:
 
         print(f"Resource Labels  {self.__libelles_dataset.size}  ")
@@ -119,8 +173,8 @@ class report(dataset_referentiels):
     def __get_doublons_labels(self) -> pd.DataFrame:
         return self.__set_doublons_labels()
     
+    """ fonction pour remplir la column jugement avec le résultat finale """
     def __evaluation(self,row):
-
 
         Alignement = row["alignement"]
         Libelles = row["libelles"]
@@ -179,10 +233,21 @@ class report(dataset_referentiels):
                 print(f"ne se trouve pas information pour analizer <<doublon de libellés>> avec le referentiel {self.__Referentiel}")
                 self.logger.info(f"ne se trouve pas information pour analizer <<doublons de libellés>> avec le referentiel {self.__Referentiel}")                
        
+        
         if self.__alignement_dataset.size + self.__libelles_dataset.size == 0:
-            dfReferentiel["juguement"] = "Autre"
+            #
+            if "alignement" not in self.algorithms:
+                dfReferentiel["alignement"] = "AUTRE"
+            if "libelles" not in self.algorithms:
+                dfReferentiel["libelles"] = "AUTRE"
+            dfReferentiel["jugement"] = "AUTRE"
         else:
-            dfReferentiel["juguement"] = dfReferentiel.apply(self.__evaluation,axis=1)
+            #
+            if "alignement" not in self.algorithms:
+                dfReferentiel["alignement"] = "AUTRE"
+            if "libelles" not in self.algorithms:
+                dfReferentiel["libelles"] = "AUTRE"
+            dfReferentiel["jugement"] = dfReferentiel.apply(self.__evaluation,axis=1)
 
         # Stoker le résultat dans le répertoir output
         output_file_name = f'Report_{self.__Referentiel}.csv'
