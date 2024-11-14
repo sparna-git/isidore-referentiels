@@ -20,12 +20,24 @@ class getAlignement:
         else:
             getConcepts = ''.join(dfAgg["Concept"].iloc[0])
             """
-        return ''.join(sConcepts)
+        return '|'.join(sConcepts)
 
     def __eval_alignement(self,uriAlignement) -> str:
         
         str_reponse = None
         dfReponse = self.__alignement_dataset[self.__alignement_dataset.uriAlignement.isin([uriAlignement])]
+        if dfReponse.shape[0] > 1:
+            description_output = self.__get_concepts(dfReponse)
+            str_reponse = description_output
+        if dfReponse.shape[0] == 1:
+            description_output = ''.join(dfReponse["Concept"].iloc[0])
+            str_reponse = description_output
+        return str_reponse
+    
+    def __eval_doublons(self,urisAlignements:list) -> str:
+        
+        str_reponse = None
+        dfReponse = self.__alignement_dataset[self.__alignement_dataset.uriAlignement.isin(urisAlignements)]
         if dfReponse.shape[0] > 1:
             description_output = self.__get_concepts(dfReponse)
             str_reponse = description_output
@@ -42,6 +54,35 @@ class getAlignement:
         self.referentiel["alignement"] = self.referentiel["alignement_doublons"].apply(lambda x : 'AUTRE' if x is None else 'A EXCLURE')
 
         return self.referentiel
-    
+
+
+    def __dataset_referentiel(self) -> pd.DataFrame:
+
+        dataset = pd.DataFrame()
+        concepts = pd.Series(self.referentiel.Concept).drop_duplicates().to_list()
+        data = []
+        for concept in concepts:
+            df = self.referentiel[self.referentiel["Concept"].isin([concept])]
+            #
+            alignements = pd.Series(df.uriAlignement).drop_duplicates().to_list()
+            alignements.append(concept)
+
+            #
+            iConcept = concept
+            alignement_doublons = self.__eval_doublons(alignements)
+            jugement = None
+            if alignement_doublons is not None: 
+                jugement = 'A EXCLURE' 
+            else:
+                jugement =  'AUTRE'
+            alignement = jugement
+
+            data.append((iConcept,alignement,alignement_doublons))
+        
+        if len(data) > 0:
+            dataset = pd.DataFrame(data,columns=['Concept','alignement','alignement_doublons'])
+        
+        return dataset
+
     def get_information_alignement(self):
-        return self.__set_referentiel()
+        return self.__dataset_referentiel() #__set_referentiel()

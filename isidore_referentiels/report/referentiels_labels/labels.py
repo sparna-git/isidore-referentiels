@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import os
+import logging
 
 '''
 Créer les dataset du Referentiel et le dataset de tous les referentiels 
@@ -61,9 +62,9 @@ class validate_referentiel:
             #description_output = input
             dffind_concepts = self.dataset[self.dataset[self.dataset.columns[1]].isin([qa_input])]
             if dffind_concepts.size > 1:
-                description_output = ''.join(self.__get_concepts(dffind_concepts))
+                description_output = '|'.join(self.__get_concepts(dffind_concepts))
             if dffind_concepts.size == 1:
-                description_output = ''.join(dffind_concepts[dffind_concepts.columns[0]].iloc[0])
+                description_output = '|'.join(dffind_concepts[dffind_concepts.columns[0]].iloc[0])
             if dffind_concepts.empty:
                 description_output = "AUTRE"
         return description_output
@@ -71,6 +72,7 @@ class validate_referentiel:
     def get_relation(self,column_name:str,label:str) -> pd.DataFrame:
         
         self.datasetPivot[label] =  self.datasetPivot[column_name].apply(self.__evaluate_linguistique)
+        
         return self.datasetPivot
 
 """
@@ -84,6 +86,7 @@ class libelles(dataset):
         super().__init__(referentiel, dfallReferentiel)
         self.referentiel = self.get_Referentiel()
         self.dataset = self.get_dataset_referentiels()
+        self.logger = logging.getLogger(__name__)
 
     def __generate_prefLabel_fr(self) -> pd.DataFrame:
         df = pd.DataFrame()
@@ -91,13 +94,12 @@ class libelles(dataset):
             dfInput = self.referentiel[["Concept","prefLabel_fr"]]
             dfOper = dfInput[~dfInput["prefLabel_fr"].isna()].copy()
             if dfOper.size > 0:
-
                 val = validate_referentiel(dfOper,self.dataset[["Concept","prefLabel_fr"]],self.get_preflabel_fr_dataset())
                 df = val.get_relation("prefLabel_fr","Label_fr")
         return df
             
     def __generate_prefLabel_en(self) -> pd.DataFrame:
-        df = None
+        df = pd.DataFrame()
         if len(self.get_preflabel_en_dataset()) > 0:
             dfInput = self.referentiel[["Concept","prefLabel_en"]]
             dfOper = dfInput[~dfInput["prefLabel_en"].isna()].copy()
@@ -183,7 +185,70 @@ class libelles(dataset):
         
         return fr + en + es + l
 
-    def libelles_referentiel(self,directoryTmp:str) -> pd.DataFrame:
+    def __preprocessing(self,df:pd.DataFrame) -> pd.DataFrame:
+
+        self.logger.info("Preprocessing le résult des libellés")
+        dfOutput = pd.DataFrame()
+        bDuplicate = pd.Series(df["Concept"]).duplicated()
+        bResult = bDuplicate.unique()
+        self.logger.info(f"Trouver doublons de concepts {bResult}")
+        if True in bResult:
+            # 
+            df.fillna('',inplace=True)
+            Concepts = df["Concept"].drop_duplicates().to_list()
+            data = []
+            for concept in Concepts:
+                
+                result = None
+                dfOper = df[df["Concept"] == concept]
+                # 
+                if dfOper.shape[0] == 1:
+                    data.append((concept,dfOper["prefLabel_fr"].iloc[0],dfOper["prefLabel_en"].iloc[0],dfOper["prefLabel_es"].iloc[0],dfOper["altLabel"].iloc[0],dfOper["Label_fr"].iloc[0],dfOper["Label_en"].iloc[0],dfOper["Label_es"].iloc[0],dfOper["alt_Label"].iloc[0],dfOper["libelles"].iloc[0],dfOper["libelles_doublons"].iloc[0]))
+                if dfOper.shape[0] > 1:
+        
+                    df_Concept = dfOper.replace(np.nan,'',regex=True).copy()
+
+                    pref_labelFR = df_Concept["prefLabel_fr"].drop_duplicates().to_list()
+                    pref_labelEN = df_Concept["prefLabel_en"].drop_duplicates().to_list()
+                    pref_labelES = df_Concept["prefLabel_es"].drop_duplicates().to_list()
+                    alt_label = df_Concept["altLabel"].drop_duplicates().to_list()
+
+                    preflabelFR = df_Concept["Label_fr"].drop_duplicates().to_list()
+                    preflabelEN = df_Concept["Label_en"].drop_duplicates().to_list()
+                    preflabelES = df_Concept["Label_es"].drop_duplicates().to_list()
+                    altlabel = df_Concept["alt_Label"].drop_duplicates().to_list()
+                    libelle = df_Concept["libelles"].drop_duplicates().to_list()
+                    libelle_doublon = df_Concept["libelles_doublons"].drop_duplicates().to_list()
+
+                    if len(libelle) > 1:
+                        if "A EXCLURE" in libelle:
+                            #
+                            dfExclude = df_Concept[df_Concept["libelles"] == "A EXCLURE"]
+
+                            pref_labelFR = dfExclude["prefLabel_fr"].drop_duplicates().to_list()
+                            pref_labelEN = dfExclude["prefLabel_en"].drop_duplicates().to_list()
+                            pref_labelES = dfExclude["prefLabel_es"].drop_duplicates().to_list()
+                            alt_label = dfExclude["altLabel"].drop_duplicates().to_list()
+
+                            preflabelFR = dfExclude["Label_fr"].drop_duplicates().to_list()
+                            preflabelEN = dfExclude["Label_en"].drop_duplicates().to_list()
+                            preflabelES = dfExclude["Label_es"].drop_duplicates().to_list()
+                            altlabel = dfExclude["alt_Label"].drop_duplicates().to_list()
+                            libelle = dfExclude["libelles"].drop_duplicates().to_list()
+                            libelle_doublon = dfExclude["libelles_doublons"].drop_duplicates().to_list()
+              
+                            data.append((concept,'|'.join(pref_labelFR),'|'.join(pref_labelEN),'|'.join(pref_labelES),'|'.join(alt_label),'|'.join(preflabelFR),'|'.join(preflabelEN),'|'.join(preflabelES),'|'.join(altlabel),''.join(libelle),''.join(libelle_doublon)))
+                    else:
+                        data.append((concept,'|'.join(pref_labelFR),'|'.join(pref_labelEN),'|'.join(pref_labelES),'|'.join(alt_label),'|'.join(preflabelFR),'|'.join(preflabelEN),'|'.join(preflabelES),'|'.join(altlabel),''.join(libelle),''.join(libelle_doublon)))
+
+            dfOutput = pd.DataFrame(data,columns=["Concept","prefLabel_fr","prefLabel_en","prefLabel_es","altLabel","Label_fr","Label_en","Label_es","alt_Label","libelles","libelles_doublons"])
+                
+        else:
+          dfOutput = df  
+
+        return dfOutput
+
+    def libelles_referentiel(self) -> pd.DataFrame:
 
         print("Start process.............")
         print("Chercher information par chaque langue ['fr','en','es'] et synonymes .......")
@@ -202,8 +267,11 @@ class libelles(dataset):
         print(f"Résultat des labes en Français {df_fr.size}")
         if not df_fr.empty:
             df_fr.drop("prefLabel_fr",axis=1,inplace=True)
+
+            df_result = df_fr.drop_duplicates()
+
             dfReferentiel = pd.merge(left=dfReferentiel,
-                                right=df_fr,
+                                right=df_result,
                                 how="left",
                                 left_on="Concept",
                                 right_on="Concept")
@@ -215,8 +283,9 @@ class libelles(dataset):
         print(f"Résultat des labes en Anglais {df_en.size}")
         if not df_en.empty:
             df_en.drop("prefLabel_en", axis=1,inplace=True)
+            df_result = df_en.drop_duplicates()
             dfReferentiel = pd.merge(left=dfReferentiel,
-                                right=df_en,
+                                right=df_result,
                                 how="left",
                                 left_on="Concept",
                                 right_on="Concept")
@@ -227,8 +296,9 @@ class libelles(dataset):
         print(f"Résultat des labes en Français {df_fr.size}")
         if not df_es.empty:
             df_es.drop("prefLabel_es",axis=1,inplace=True)
+            df_result = df_es.drop_duplicates()
             dfReferentiel = pd.merge(left=dfReferentiel,
-                                right=df_es,
+                                right=df_result,
                                 how="left",
                                 left_on="Concept",
                                 right_on="Concept")         
@@ -239,19 +309,22 @@ class libelles(dataset):
         print(f"Résultat des synonymes {df_altLabel.size}")
         if not df_altLabel.empty:
             df_altLabel.drop("altLabel",axis=1,inplace=True)
+            df_result = df_altLabel.drop_duplicates()
             dfReferentiel = pd.merge(left=dfReferentiel,
-                                right=df_altLabel,
+                                right=df_result,
                                 how="left",
                                 left_on="Concept",
                                 right_on="Concept")
         else:
             dfReferentiel["alt_Label"] = "AUTRE"
 
-
-        dfReferentiel = dfReferentiel.where(pd.notnull(dfReferentiel),None)
-
+        # Replace nan values
+        dfOutput = dfReferentiel.replace(np.nan,'AUTRE',regex=True).copy()
         # 
-        dfReferentiel["libelles"] = dfReferentiel.apply(self.__eval_result,axis=1)
-        dfReferentiel["libelles_doublons"] = dfReferentiel.apply(self.__eval_comment,axis=1)
+        dfOutput["libelles"] = dfOutput.apply(self.__eval_result,axis=1)
+        dfOutput["libelles_doublons"] = dfOutput.apply(self.__eval_comment,axis=1)
 
-        return dfReferentiel
+        # preprocessing
+        
+        df = self.__preprocessing(dfOutput)
+        return df
