@@ -49,9 +49,20 @@ class generate_concepts:
 
         return dfLibelles
     
+    def __set_generate_report(self) -> pd.DataFrame:
+        # Lire le fichier de requête pour générer une jeu de données
+        sparql_report = Path(__file__).with_name('sparql_report.rq')
+        # Stocker le résultat dans une dataframe 
+        dfReport = self.__get_data(sparql_report)
+
+        return dfReport
+    
     def get_report(self) -> pd.DataFrame:
         return self.__set_generate_labels()
     
+    def get_report_referentiel(self) -> pd.DataFrame:
+        return self.__set_generate_report()
+
     def get_labels(self) -> pd.DataFrame:
         dfLabels = self.__set_generate_labels()
         df = dfLabels[["Concept","prefLabel_fr","prefLabel_en","prefLabel_es","altLabel"]]

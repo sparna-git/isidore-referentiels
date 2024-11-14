@@ -97,7 +97,7 @@ class integration:
                 path_file = path_resource
             
             
-            if response.stderr.__sizeof__() > 3:
+            if response.stderr:
                 self.logger.warning("Le processus de enlever des uris a trouve des erreurs.")
                 self.logger.warning(response.stderr)
         
