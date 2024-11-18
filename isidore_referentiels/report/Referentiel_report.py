@@ -196,8 +196,8 @@ class report(dataset_referentiels):
 
         dfReferentiel = self.__report
         #   
-        print("Chercher les doublons dans le concept <<Alignement>>")
-        self.logger.info("Chercher les doublons dans le concept <<Alignement>>")  
+        print("Chercher les doublons de concepts <<Alignement>>")
+        self.logger.info("Chercher les doublons de concepts <<Alignement>>")  
         
         if "alignement" in self.algorithms:
             dfAlignement = self.__get_doublons_alignement()
@@ -207,7 +207,7 @@ class report(dataset_referentiels):
                 dfAlignement.to_csv(result_alignement,index=False)
                 #
                 #dfDoublonsAlignement = dfAlignement[["Concept","alignement","alignement_doublons"]].drop_duplicates() 
-                self.logger.info(f'Stoker le resultat de doublons de alignements dans le répertoire: {result_alignement}')
+                self.logger.info(f'Stocker le résultat de l\'analyse des alignements dans le répertoire: {result_alignement}')
                 # Intégrer le résultat dans le referentiel
                 dfReferentiel = pd.merge(left=dfReferentiel,
                                     right=dfAlignement,
@@ -217,11 +217,11 @@ class report(dataset_referentiels):
                                     )
             else:
                 dfReferentiel["alignement"] = "AUTRE"
-                print(f"ne se trouve pas information pour analizer <<Doublons d'Alignement>> avec le referentiel {self.__Referentiel}")
-                self.logger.info(f"ne se trouve pas information pour analizer <<Doublons d'Alignement>> avec le referentiel {self.__Referentiel}")                
+                print(f"Aucun alignement pour analiser <<Doublons d'Alignement>> avec le referentiel {self.__Referentiel}")
+                self.logger.info(f"Aucun alignement pour analizer <<Doublons d'Alignement>> avec le referentiel {self.__Referentiel}")                
         
-        print("Chercher les doublons dans le concept <<Libellés>>")
-        self.logger.info("Chercher les doublons dans le concept <<Libellés>>")
+        print("Chercher les doublons de concepts <<Libellés>>")
+        self.logger.info("Chercher les doublons de concepts <<Libellés>>")
         if "libelles" in self.algorithms:
             dfLabels = self.__get_doublons_labels() 
             if dfLabels.size > 0:
@@ -230,7 +230,7 @@ class report(dataset_referentiels):
                 dfLabels.to_csv(result_libelle,index=False)
                 #
                 dfDoublonsLibelles = dfLabels[["Concept","libelles","libelles_doublons"]]
-                self.logger.info(f'Stoker le resultat de doublons de libellés dans le répertoire: {result_libelle}')
+                self.logger.info(f'Stocker le resultat de l\'analyse des libellés dans le répertoire: {result_libelle}')
                 # Intégrer le résultat dans le referentiel             
                 dfReferentiel = pd.merge(left=dfReferentiel,
                                 right=dfDoublonsLibelles,
@@ -240,8 +240,8 @@ class report(dataset_referentiels):
                                 )
             else:
                 dfReferentiel["libelles"] = "AUTRE"
-                print(f"ne se trouve pas information pour analizer <<doublon de libellés>> avec le referentiel {self.__Referentiel}")
-                self.logger.info(f"ne se trouve pas information pour analizer <<doublons de libellés>> avec le referentiel {self.__Referentiel}")
+                print(f"Aucun libellé pour analiser <<doublon de libellés>> avec le referentiel {self.__Referentiel}")
+                self.logger.info(f"Aucun libellé pour analiser <<doublons de libellés>> avec le referentiel {self.__Referentiel}")
         
         #
         dfReferentiel["jugement"] = dfReferentiel.apply(self.__evaluation,axis=1)
@@ -250,13 +250,13 @@ class report(dataset_referentiels):
         output_result = os.path.join(self.__Referentiel_resultat,f'Report_{self.__Referentiel}.csv')
         dfReferentiel.to_csv(output_result,index=False)
         
-        print(f"Fichier de sortir: {output_result}")
-        self.logger.info(f"Fichier de sortir: {output_result}")
+        print(f"Fichier de sortie: {output_result}")
+        self.logger.info(f"Fichier de sortie: {output_result}")
 
     def generer_report(self):
 
-        self.logger.info(f"* * * * Créer le report de {self.__Referentiel.upper()} [Report] * * * *")
-        print(f"* * * * Créer le report de {self.__Referentiel.upper()} [Report] * * * *")
+        self.logger.info(f"* * * * Créer le rapport de {self.__Referentiel.upper()} [Report] * * * *")
+        print(f"* * * * Créer le rapport de {self.__Referentiel.upper()} [Report] * * * *")
 
         print(f"Répertoire de resultat de l'étape de report: {self.__Referentiel_resultat}")
         self.logger.info(f"Répertoire de resultat de l'étape de report: {self.__Referentiel_resultat}")

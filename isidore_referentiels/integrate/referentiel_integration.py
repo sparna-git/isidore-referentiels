@@ -98,7 +98,7 @@ class integration:
             
             
             if response.stderr:
-                self.logger.warning("Le processus de enlever des uris a trouve des erreurs.")
+                self.logger.warning("Le processus de suppression d'URI a rencontré des erreurs.")
                 self.logger.warning(response.stderr)
         
         return path_file
@@ -203,8 +203,8 @@ class integration:
                             shutil.copy(self.data,self.__Referentiel_resultat)
                         
                         if str_path_fichier is not None:
-                            self.logger.info(f'Le fichier de résultat est stoke dans le répertoire {self.__Referentiel_resultat}')
-                            print(f'Le fichier de résultat est stoke dans le répertoire {self.__Referentiel_resultat}')
+                            self.logger.info(f'Le fichier de résultat est stocké dans le répertoire {self.__Referentiel_resultat}')
+                            print(f'Le fichier de résultat est stocké dans le répertoire {self.__Referentiel_resultat}')
 
                             # Generer les concepts alignement et labels
                             getConcepts = concepts_referentiel.generate_concepts(str_path_fichier)
@@ -214,18 +214,18 @@ class integration:
                             labels_directory = tools.new_directory(self.__tmp_directory,"libelles")
                             getConcepts.get_labels().to_csv(os.path.join(labels_directory,'libelles.csv'),index=False)
                         else:
-                            print("Le processus d'integration n'est pas générer les resources")
-                            self.logger.warning("Le processus d'integration n'est pas générer les resources")
+                            print("Erreur lors de la génération des ressources (libellés + alignements)")
+                            self.logger.warning("Erreur lors de la génération des ressources (libellés + alignements)")
                        
                     else:
-                        self.logger.warning(f"Le resource {pFile} n'est pas une resource attendre [csv,xls,xlsx]")
-                        print(f"Le resource {pFile} n'est pas une resource attendre [csv,xls,xlsx]")
+                        self.logger.warning(f"La ressource {pFile} n'a pas le format attendu [csv,xls,xlsx]")
+                        print(f"La ressource {pFile} n'a pas le format attendu [csv,xls,xlsx]")
                    
     def filter_referentiel(self):
 
-        self.logger.info(f"* * * * Integration de referentiel {self.__referentiel.upper()} [Integration] * * * *")
-        print(f"* * * * Integration de referentiel {self.__referentiel.upper()} [Integration] * * * *")
+        self.logger.info(f"* * * * Intégration du référentiel {self.__referentiel.upper()} [Integration] * * * *")
+        print(f"* * * * Intégration du référentiel {self.__referentiel.upper()} [Integration] * * * *")
 
-        print(f"Répertoire de resultat de l'étape de report: {self.__Referentiel_resultat} ")
+        print(f"Répertoire de résultat de l'étape de report: {self.__Referentiel_resultat} ")
 
         self.__read_csv_file()

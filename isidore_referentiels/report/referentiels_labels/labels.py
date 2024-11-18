@@ -251,20 +251,20 @@ class libelles(dataset):
     def libelles_referentiel(self) -> pd.DataFrame:
 
         print("Start process.............")
-        print("Chercher information par chaque langue ['fr','en','es'] et synonymes .......")
-        print("Créer information en Français")
+        print("Traitement des libellés préférentiels et synonymes pour chaque langue ['fr','en','es'] ...")
+        print("Traitement en Français...")
         df_fr = self.__generate_prefLabel_fr()
-        print("Créer information en Anglais")
+        print("Traitement en Anglais...")
         df_en = self.__generate_prefLabel_en()
-        print("Créer information en langue Espagnol")
+        print("Traitement en Espagnol...")
         df_es = self.__generate_prefLabel_es()
-        print("Créer information des synonymes")
+        print("Traitement des synonymes...")
         df_altLabel = self.__generate_altLabel()
 
         # 
         dfReferentiel = self.referentiel
         # Français
-        print(f"Résultat des labes en Français {df_fr.size}")
+        print(f"Nombre de libellés qui ont matché en français {df_fr.size}")
         if not df_fr.empty:
             df_fr.drop("prefLabel_fr",axis=1,inplace=True)
 
@@ -275,12 +275,12 @@ class libelles(dataset):
                                 how="left",
                                 left_on="Concept",
                                 right_on="Concept")
-            dfReferentiel
         else:
             dfReferentiel["Label_fr"] = "AUTRE"
-            print(f"On n'a trouve pas des information dans la langue Français.")
+            print(f"Aucun libellé n'a matché en Français.")
+        
         # Anglais   
-        print(f"Résultat des labes en Anglais {df_en.size}")
+        print(f"Nombre de libellés qui ont matché en anglais {df_en.size}")
         if not df_en.empty:
             df_en.drop("prefLabel_en", axis=1,inplace=True)
             df_result = df_en.drop_duplicates()
@@ -291,9 +291,10 @@ class libelles(dataset):
                                 right_on="Concept")
         else:
             dfReferentiel["Label_en"] = "AUTRE"
-            print(f"On n'a trouve pas des information dans la langue Anglais.")
+            print(f"Aucun libellé n'a matché en Anglais.")
+        
         # Espagnol
-        print(f"Résultat des labes en Français {df_fr.size}")
+        print(f"Résultat des labels en espagnol {df_es.size}")
         if not df_es.empty:
             df_es.drop("prefLabel_es",axis=1,inplace=True)
             df_result = df_es.drop_duplicates()
@@ -304,7 +305,8 @@ class libelles(dataset):
                                 right_on="Concept")         
         else:
             dfReferentiel["Label_es"] = "AUTRE"
-            print(f"On n'a trouve pas des information dans la langue Espagnol.") 
+            print(f"Aucun libellé n'a matché en Espagnol.") 
+        
         # alt Label 
         print(f"Résultat des synonymes {df_altLabel.size}")
         if not df_altLabel.empty:
