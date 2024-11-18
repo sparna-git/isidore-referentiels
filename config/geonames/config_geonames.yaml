@@ -34,4 +34,3 @@ integrate:
   # Répertore pour stoker le résultat
   output: 
     - output_integrate
-merge: []

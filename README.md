@@ -99,18 +99,82 @@ Les données à analyser sont lues depuis le répertoire `../data` et les rappor
 Le synopsis de lancement de l'étape 1 est le suivant:
 
 ```
-poetry run isidore_referentiels --etape clean --configuration {fichier_de_config.yaml} --referentiel {repertoire_de_data}
+poetry run isidore_referentiels --etape clean --configuration {fichier_de_config.yaml}
 ```
 
 Par exemple :
 
 ```
-poetry run isidore_referentiels --etape clean --configuration config/lcsh/config_lcsh.yaml --referentiel ./data/lcsh 
-poetry run isidore_referentiels --etape clean --configuration config/bne/config_bne.yaml --referentiel ./data/bne
-poetry run isidore_referentiels --etape clean --configuration config/rameau/config_rameau.yaml --referentiel ./data/rameau
-poetry run isidore_referentiels --etape clean --configuration config/pactols/config_pactols.yaml --referentiel ./data/pactols
+poetry run isidore_referentiels --etape clean --configuration config/geonames/config_geonames.yaml
+poetry run isidore_referentiels --etape report --configuration config/geonames/config_geonames.yaml
+poetry run isidore_referentiels --etape integrate --configuration config/geonames/config_geonames.yaml
+
+poetry run isidore_referentiels --etape clean --configuration config/lcsh/config_lcsh.yaml
+poetry run isidore_referentiels --etape report --configuration config/lcsh/config_lcsh.yaml
+poetry run isidore_referentiels --etape integrate --configuration config/lcsh/config_lcsh.yaml
 ```
 
 
 ### Fichier de config config.yaml
 
+Il y a un fichier de config par référentiel à intégrer. Ces fichiers sont dans le répertoire `config`. Ils ont tous la structure suivante:
+
+```yaml
+# ID du référentiel qui est utilisé pour créer des sous-répertoires sous $workDir et $outputDir
+id: geonames
+# Page de download du référentiel. Ce paramètre est purement informatif et n'est pas utilisé dans les scripts
+downloadPage: 
+  - https://www.geonames.org/ 
+# Répertoire où sont enregistrés les fichiers de résultat de chaque étape de traitement
+outputDir: output
+# Répertoire où sont stockés les fichiers temporaires de travail
+# Ce répertoire peut être supprimé après chaque exécution du script
+workDir: work
+# Nom du fichier de log qui sera créé dans $workDir/${id_referentiel}
+logFile: isidore-referentiels_geonames.log
+
+# Etape 1 : "clean" : nettoyage ou enrichissement des données par requêtes SPARQL
+clean:
+  # Répertoire source des données, qui doit contenir le ou les fichiers RDF du référentiel
+  data: 
+    - data/geonames
+  # Liste des fichiers contenant chacun une requête SPARQL d'update a exécuter
+  sparql: 
+    - config/geonames/sparql/insert_wikidata.ru
+    - config/geonames/sparql/insert_skos.ru
+  # Répertoire de résultat qui sera créé sous $outputDir/${id_referentiel} (par exemple output/geonames/output_clean)
+  output: 
+    - output_clean
+
+# Etape 2 : "report" : analyse du référentiel et détection des doublons par rapport aux autres référentiels
+report:
+  # Répertoire source des données, qui est le répertoire d'output de l'étape précédente
+  data: 
+    - output/geonames/output_clean
+  # Répertoire de résultat qui sera créé sous $outputDir/${id_referentiel} (par exemple output/geonames/output_report)
+  output: 
+    - output_report
+  # Listes des algorithmes de détection de doublon à appliquer. Les valeurs possibles sont `alignement` ou `libelles`.
+  # Par exemple si on met seulement "alignement" il ne fera que le traitement de détection des doublons d'alignement mais pas sur les libellés
+  algorithms:
+    - alignement
+    - libelles
+
+# Etape 3 : "integrate" : lit le rapport d'analyse de l'étape précédente et supprime les concepts qui sont marqués "A EXCLURE"
+integrate:
+  # Répertoire source des données, qui est le répertoire d'output de l'étape clean 
+  data: 
+    - output/geonames/output_clean
+  # Répertoire source contenant le rapport, qui est le répertoire d'output de l'étape précédente
+  # Le répertoire doit contenir des fichiers csv, xls ou xlsx.
+  # Les noms de fichier n'ont pas d'importance.
+  # Tous les fichiers du répertoire sont lus
+  #
+  # Dans ces fichiers, le script lit la colonne "jugement" (peu importe sa position) et repère toutes les
+  # lignes qui sont marquées "A EXCLURE"
+  report: 
+    - output/geonames/output_report
+  # Répertoire pour stoker le résultat RDF final
+  output: 
+    - output_integrate
+``` 
