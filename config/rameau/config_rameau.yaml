@@ -12,9 +12,8 @@ clean:
     - data/rameau
   sparql:
     - config/rameau/sparql/keep-only_isPartOf.ru
-    - config/rameau/sparql/clean-domaines.ru
-    - config/rameau/sparql/clean-aligned-with-geonames.ru
     - config/rameau/sparql/clean-combined-concepts.ru
+    - config/rameau/sparql/clean-domaines.ru
     - config/rameau/sparql/clean-dict-concepts.ru
     - config/rameau/sparql/update-uri-wikidata.ru
     - config/rameau/sparql/delete-dcterms-subject.ru

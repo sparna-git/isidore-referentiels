@@ -94,8 +94,8 @@ class clean_referentiel():
             else:
                 src_path_File = tmp_file
             
-            self.logger.info(f"Exécuter la requête Sparql: {path_sparql}")
-            print(f"Exécuter la requête Sparql: {path_sparql}")
+            self.logger.info(f"Exécuter la requête SPARQL: {path_sparql}")
+            print(f"Exécuter la requête SPARQL: {path_sparql}")
             
             response = cmd_subprocess().execute_update_subprocess(src_path_File,path_sparql)
             
