@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "referentiels"
+version = "0.1.0"
+description = "referentiels isidore: calenda et hal"
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+packages = [
+    { include = "calenda_skos/*.py" },
+    { include = "hal_shs/*.py" },
+    { include = "Geonames/geonames/*.py" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+[tool.poetry.scripts]
+calenda = "calenda_skos.convert_calenda_skos:main"
+hal = "hal_shs.telecharger_HAL_SHS:main"
+geonames = "Geonames.geonames.init:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
