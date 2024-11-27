@@ -1,22 +1,24 @@
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-SELECT ?Concept 
-	(GROUP_CONCAT(DISTINCT STR(?pLabel_fr); separator=", ") as ?prefLabel_fr) 
-	(GROUP_CONCAT(DISTINCT STR(?pLabel_en); separator=", ") as ?prefLabel_en) 
-	(GROUP_CONCAT(DISTINCT STR(?pLabel_es); separator=", ") AS ?prefLabel_es) 
-	(GROUP_CONCAT(DISTINCT CONCAT(?label,"@",LANG(?label)); separator=", ") AS ?altLabel) 
-	(GROUP_CONCAT(DISTINCT CONCAT(?def,"@",LANG(?def)); separator=", ") AS ?definition) 
-	(GROUP_CONCAT(DISTINCT STR(?parent_label); separator=", ") AS ?ParentLabel)
+SELECT ?concept 
+	(GROUP_CONCAT(DISTINCT STR(?pLabel_fr); separator="| ") as ?prefLabel_fr) 
+	(GROUP_CONCAT(DISTINCT STR(?pLabel_en); separator="| ") as ?prefLabel_en) 
+	(GROUP_CONCAT(DISTINCT STR(?pLabel_es); separator="| ") AS ?prefLabel_es) 
+	(GROUP_CONCAT(DISTINCT CONCAT(?label,"@",LANG(?label)); separator="| ") AS ?altLabel) 
+	(GROUP_CONCAT(DISTINCT CONCAT(?def,"@",LANG(?def)); separator="| ") AS ?definition) 
+	(GROUP_CONCAT(DISTINCT STR(?parent_label); separator="| ") AS ?ParentLabel)
 where {
-    ?Concept a skos:Concept .
-    optional { ?Concept skos:prefLabel ?pLabel_fr . FILTER (LANG(?pLabel_fr)="fr") }
-    optional { ?Concept skos:prefLabel ?pLabel_en . FILTER (LANG(?pLabel_en)="en") }
-    optional { ?Concept skos:prefLabel ?pLabel_es . FILTER (LANG(?pLabel_es)="es") }
-    optional { ?Concept skos:altLabel ?label . }
-    optional { ?Concept skos:definition ?def . }   
-    optional { ?Concept skos:broader ?parent . ?parent skos:prefLabel ?parent_label . FILTER(LANG(?parent_label) ="fr") }
-    #FILTER(?Concept = <https://datos.bne.es/resource/XX4576227>)
+    ?concept a skos:Concept .
+    optional { ?concept skos:prefLabel ?pLabel_fr . FILTER (LANG(?pLabel_fr)="fr") }
+    optional { ?concept skos:prefLabel ?pLabel_en . FILTER (LANG(?pLabel_en)="en") }
+    optional { ?concept skos:prefLabel ?pLabel_es . FILTER (LANG(?pLabel_es)="es") }
+    optional { ?concept skos:altLabel ?label . }
+    optional { ?concept skos:definition ?def . }   
+    optional { ?concept skos:broader ?parent . 
+               ?parent skos:prefLabel ?parent_label . 
+               FILTER(LANG(?parent_label) ="fr") 
+             }
 }
-Group by ?Concept
-Order by ?Concept
+Group by ?concept
+Order by ?concept

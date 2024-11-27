@@ -1,0 +1,20 @@
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+select ?concept ?label ?langue ?typeLabel
+where {
+    ?concept a skos:Concept .
+    {
+        ?concept skos:prefLabel ?prefLabel .
+        BIND(str(?prefLabel) as ?label)
+        BIND(LANG(?prefLabel) as ?langue)
+        BIND(concat("prefLabel","_",str(LANG(?prefLabel))) as ?typeLabel)
+    }
+    UNION
+    {
+    	?concept skos:altLabel ?altLabel .
+        BIND(str(?altLabel) as ?label)
+    	BIND(LANG(?altLabel) as ?langue)
+        BIND("altLabel" as ?typeLabel)
+    }
+    FILTER(?langue in ("fr","en","es"))
+}
+Order by ?concept ?langue

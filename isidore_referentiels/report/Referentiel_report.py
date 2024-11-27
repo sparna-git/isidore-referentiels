@@ -1,11 +1,12 @@
 import os
 import pandas as pd
+import numpy as np
 import logging
 import shutil
 from pathlib import Path
 from .concepts.concepts_referentiel import generate_concepts
 from .referentiel_alignement import getAlignement
-from isidore_referentiels.report.referentiels_labels.labels import libelles
+from isidore_referentiels.report.referentiels_labels.libelles import libelles_doublons
 from isidore_referentiels.process.Tools import tools
 
 """
@@ -34,8 +35,7 @@ class dataset_referentiels:
 
     def __init__(self,RefInfo) -> None:
         # Répertoir 
-        self.Workdir = Path(RefInfo.get_referentiel_directory()).parent.absolute()
-        print(f'Repository {self.Workdir}' )
+        self.CSVdir = Path(RefInfo.get_Outputdirectory()).parent.absolute()
         self.logger = logging.getLogger(__name__)
     
     """
@@ -47,7 +47,7 @@ class dataset_referentiels:
     def __set_algorithms_referentiels(self) -> list:
         # 
         df_DataSet = []
-        for (dirpath, dirnames, filenames) in os.walk(self.Workdir):
+        for (dirpath, dirnames, filenames) in os.walk(self.CSVdir):
             if 'integrate' in dirpath and len(filenames) > 0 :
                 for f in filenames:
                     if 'csv' in f:
@@ -126,7 +126,7 @@ class report(dataset_referentiels):
             os.mkdir(directory_report)
         self.__report_directory = directory_report   #        
         
-        output_report = os.path.join(report_output,''.join(self.report["output"]))
+        output_report = ''.join(self.report["output"])
         if not os.path.exists(output_report):
             os.mkdir(output_report)
         else:
@@ -134,13 +134,13 @@ class report(dataset_referentiels):
             os.mkdir(output_report)
         self.__Referentiel_resultat = output_report
         
+        self.logger.info(f"Resource: {self.input_data}")
         # Resource du Referentiel à traiter 
         self.__getConcepts = generate_concepts(self.input_data)        
         self.__alignement_referentile = self.__getConcepts.get_alignement()
         self.__libelle_referentile = self.__getConcepts.get_labels()
         self.__report = self.__getConcepts.get_report_referentiel()
-
-
+        
         # Données Alignement
         self.__alignement_dataset = self.get_alignement_dataset()
         print(f'Dataset alignement: {self.__alignement_dataset.size}')
@@ -155,8 +155,8 @@ class report(dataset_referentiels):
     def __set_doublons_alignement(self) -> pd.DataFrame:
 
         dfResultAlignement = pd.DataFrame()
-        if self.__alignement_dataset.size > 0:
-            #
+        #
+        if self.__alignement_referentile.size > 0:
             filename_alignement = os.path.join(self.__report_directory,f"alignement_{self.__Referentiel}_doublons.xslx")
             self.__alignement_referentile.to_csv(filename_alignement,index=False)
             dfResultAlignement = getAlignement(self.__alignement_referentile,self.__alignement_dataset).get_information_alignement()
@@ -172,14 +172,16 @@ class report(dataset_referentiels):
 
         print(f"Resource Libelles  {self.__libelles_dataset.size}  ")
         dfResultLabels = pd.DataFrame()
-        if self.__libelles_dataset.size > 0:
+        
+        if self.__libelle_referentile.size > 0:
             filename_libelle = os.path.join(self.__report_directory,f"libelles_{self.__Referentiel}_doublons.xslx")
             self.__libelle_referentile.to_csv(filename_libelle,index=False)
-            dfResultLabels = libelles(self.__libelle_referentile,self.__libelles_dataset).libelles_referentiel()
+            dfResultLabels = libelles_doublons(self.__libelle_referentile,self.__libelles_dataset).resources_libelles()
         return dfResultLabels
 
     def __get_doublons_labels(self) -> pd.DataFrame:
         return self.__set_doublons_labels()
+    
     
     """ fonction pour remplir la column jugement avec le résultat finale """
     def __evaluation(self,row):
@@ -187,9 +189,19 @@ class report(dataset_referentiels):
         Alignement = row["alignement"]
         Libelles = row["libelles"]
         
-        reponse = "NEUTRE"
-        if (Alignement == "A EXCLURE") or (Libelles == "A EXCLURE"):
+        reponse = ""
+        if Alignement == "A EXCLURE":
             reponse = "A EXCLURE"
+        if Libelles == "A EXCLURE":
+            reponse = "A EXCLURE"
+        if (Alignement == "RIEN") and (Libelles == "RIEN"):
+            reponse = "RIEN"
+        if (Alignement == "AUTRE") and (Libelles == "AUTRE"):
+            reponse = "AUTRE"
+        if (Alignement == "RIEN") and (Libelles == "AUTRE"):
+            reponse = "AUTRE"
+        if (Alignement == "AUTRE") and (Libelles == "RIEN"):
+            reponse = "AUTRE"
         return reponse
 
     def __generate_resource(self):
@@ -199,10 +211,10 @@ class report(dataset_referentiels):
         print("Chercher les doublons de concepts <<Alignement>>")
         self.logger.info("Chercher les doublons de concepts <<Alignement>>")  
         
-        if "alignement" in self.algorithms:
-            dfAlignement = self.__get_doublons_alignement()
-            if dfAlignement.size > 0:
-                # Creer le fichier de résultat après de trouve les alignement entre tous les referentiels
+        if "alignement" in self.algorithms and self.__alignement_dataset.size > 0:
+            dfAlignement,dfResult = self.__get_doublons_alignement()
+            if dfResult.size > 0:
+
                 result_alignement = os.path.join(self.__report_directory,"alignement_doublons.xslx")
                 dfAlignement.to_csv(result_alignement,index=False)
                 #
@@ -210,41 +222,49 @@ class report(dataset_referentiels):
                 self.logger.info(f'Stocker le résultat de l\'analyse des alignements dans le répertoire: {result_alignement}')
                 # Intégrer le résultat dans le referentiel
                 dfReferentiel = pd.merge(left=dfReferentiel,
-                                    right=dfAlignement,
+                                    right=dfResult,
                                     how="left",
-                                    left_on="Concept",
-                                    right_on="Concept"
+                                    left_on="concept",
+                                    right_on="concept"
                                     )
+
+                dfReferentiel["alignement"] = dfReferentiel["alignement"].fillna("RIEN")
             else:
-                dfReferentiel["alignement"] = "AUTRE"
+                dfReferentiel["alignement"] = "RIEN"
                 print(f"Aucun alignement pour analiser <<Doublons d'Alignement>> avec le referentiel {self.__Referentiel}")
                 self.logger.info(f"Aucun alignement pour analizer <<Doublons d'Alignement>> avec le referentiel {self.__Referentiel}")                
-        
+        else:
+            dfReferentiel["alignement"] = "RIEN"
+
         print("Chercher les doublons de concepts <<Libellés>>")
         self.logger.info("Chercher les doublons de concepts <<Libellés>>")
-        if "libelles" in self.algorithms:
-            dfLabels = self.__get_doublons_labels() 
-            if dfLabels.size > 0:
+        if "libelles" in self.algorithms and self.__libelles_dataset.size > 0:
+            dfLibelles,dfResult = self.__get_doublons_labels() 
+            if dfResult.size > 0:
                 # Creer le fichier de résultat après de trouve les alignement entre tous les referentiels
                 result_libelle = os.path.join(self.__report_directory,"libelles_doublons.xslx")
-                dfLabels.to_csv(result_libelle,index=False)
+                dfLibelles.to_csv(result_libelle,index=False)
                 #
-                dfDoublonsLibelles = dfLabels[["Concept","libelles","libelles_doublons"]]
                 self.logger.info(f'Stocker le resultat de l\'analyse des libellés dans le répertoire: {result_libelle}')
                 # Intégrer le résultat dans le referentiel             
                 dfReferentiel = pd.merge(left=dfReferentiel,
-                                right=dfDoublonsLibelles,
+                                right=dfResult,
                                 how="left",
-                                left_on="Concept",
-                                right_on="Concept"
+                                left_on="concept",
+                                right_on="concept"
                                 )
+                
+                dfReferentiel["libelles"] = dfReferentiel["libelles"].fillna("RIEN")
             else:
-                dfReferentiel["libelles"] = "AUTRE"
+                dfReferentiel["libelles"] = "RIEN"
                 print(f"Aucun libellé pour analiser <<doublon de libellés>> avec le referentiel {self.__Referentiel}")
                 self.logger.info(f"Aucun libellé pour analiser <<doublons de libellés>> avec le referentiel {self.__Referentiel}")
-        
+        else:
+            dfReferentiel["libelles"] = "RIEN"
+
         #
         dfReferentiel["jugement"] = dfReferentiel.apply(self.__evaluation,axis=1)
+        
 
         # Stoker le résultat dans le répertoir output
         output_result = os.path.join(self.__Referentiel_resultat,f'Report_{self.__Referentiel}.csv')
