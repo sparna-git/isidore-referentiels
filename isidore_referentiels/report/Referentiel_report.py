@@ -154,12 +154,9 @@ class report(dataset_referentiels):
     """ Evaluer les alignement du réferentiel vs réferentiel déjà intégrés """
     def __set_doublons_alignement(self) -> pd.DataFrame:
 
-        dfResultAlignement = pd.DataFrame()
-        #
-        if self.__alignement_referentile.size > 0:
-            filename_alignement = os.path.join(self.__report_directory,f"alignement_{self.__Referentiel}_doublons.xslx")
-            self.__alignement_referentile.to_csv(filename_alignement,index=False)
-            dfResultAlignement = getAlignement(self.__alignement_referentile,self.__alignement_dataset).get_information_alignement()
+        filename_alignement = os.path.join(self.__report_directory,f"alignement_{self.__Referentiel}_doublons.xslx")
+        self.__alignement_referentile.to_csv(filename_alignement,index=False)
+        dfResultAlignement = getAlignement(self.__alignement_referentile,self.__alignement_dataset).get_information_alignement()
         return dfResultAlignement 
     
     def __get_doublons_alignement(self) -> pd.DataFrame:
@@ -170,18 +167,15 @@ class report(dataset_referentiels):
     """
     def __set_doublons_labels(self) -> pd.DataFrame:
 
-        print(f"Resource Libelles  {self.__libelles_dataset.size}  ")
         dfResultLabels = pd.DataFrame()
-        
-        if self.__libelle_referentile.size > 0:
-            filename_libelle = os.path.join(self.__report_directory,f"libelles_{self.__Referentiel}_doublons.xslx")
-            self.__libelle_referentile.to_csv(filename_libelle,index=False)
-            dfResultLabels = libelles_doublons(self.__libelle_referentile,self.__libelles_dataset).resources_libelles()
+        filename_libelle = os.path.join(self.__report_directory,f"libelles_{self.__Referentiel}_doublons.xslx")
+        self.__libelle_referentile.to_csv(filename_libelle,index=False)
+        dfResultLabels = libelles_doublons(self.__libelle_referentile,self.__libelles_dataset).resources_libelles()
         return dfResultLabels
 
     def __get_doublons_labels(self) -> pd.DataFrame:
         return self.__set_doublons_labels()
-    
+   
     
     """ fonction pour remplir la column jugement avec le résultat finale """
     def __evaluation(self,row):
@@ -211,10 +205,9 @@ class report(dataset_referentiels):
         print("Chercher les doublons de concepts <<Alignement>>")
         self.logger.info("Chercher les doublons de concepts <<Alignement>>")  
         
-        if "alignement" in self.algorithms and self.__alignement_dataset.size > 0:
+        if "alignement" in self.algorithms and self.__alignement_dataset.size > 0 and self.__alignement_referentile.size > 0:
             dfAlignement,dfResult = self.__get_doublons_alignement()
             if dfResult.size > 0:
-
                 result_alignement = os.path.join(self.__report_directory,"alignement_doublons.xslx")
                 dfAlignement.to_csv(result_alignement,index=False)
                 #
@@ -238,7 +231,7 @@ class report(dataset_referentiels):
 
         print("Chercher les doublons de concepts <<Libellés>>")
         self.logger.info("Chercher les doublons de concepts <<Libellés>>")
-        if "libelles" in self.algorithms and self.__libelles_dataset.size > 0:
+        if "libelles" in self.algorithms and self.__libelles_dataset.size > 0 and self.__libelle_referentile.size > 0:
             dfLibelles,dfResult = self.__get_doublons_labels() 
             if dfResult.size > 0:
                 # Creer le fichier de résultat après de trouve les alignement entre tous les referentiels
