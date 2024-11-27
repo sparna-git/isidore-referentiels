@@ -16,12 +16,12 @@ clean:
     - config/lcsh/sparql/clean-anonymous-concepts.ru
     - config/lcsh/sparql/clean-notes-concepts.ru
   output: 
-    - output_clean  
+    - output/lcsh/output_clean  
 report:
   data: 
     - output/lcsh/output_clean
   output: 
-    - output_report
+    - output/lcsh/output_report
   algorithms:
     - alignement
     - libelles
@@ -31,5 +31,4 @@ integrate:
   data: 
     - output/lcsh/output_clean
   output: 
-    - output_integrate
-merge: []
+    - output/lcsh/output_integrate
