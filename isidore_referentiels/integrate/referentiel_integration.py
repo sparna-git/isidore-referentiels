@@ -1,14 +1,14 @@
 import pandas as pd
+import numpy as np
 import os
 import logging
 import shutil
-import sys
 from pathlib import Path
 from isidore_referentiels.process.isidore_subprocess import cmd_subprocess
 from isidore_referentiels.process.Tools import tools
 from isidore_referentiels.report.concepts import concepts_referentiel
 import time
-
+import numba
 
 #
 t = time.time()
@@ -42,14 +42,12 @@ class integration:
         filename = [file for file in os.listdir(Path(''.join(integration_ref["data"])).absolute())][0] 
         self.data = os.path.join(Path(''.join(integration_ref["data"])).absolute(),filename)
         
-        output_file = os.path.join(report_output,''.join(integration_ref["output"]))
-        print(output_file)
+        output_file = Path(''.join(integration_ref["output"])).absolute()
         if not os.path.exists(output_file):
             os.makedirs(output_file)
         else:
             shutil.rmtree(output_file)
             os.makedirs(output_file)
-
         # Répertoire du fichier final
         self.__Referentiel_resultat = output_file 
         
@@ -70,7 +68,7 @@ class integration:
         path_file = os.path.join(self.__tmp_directory,f'{self.__referentiel}.ttl')
         nCount = 0
         for sparql in sparqlQuery:
-
+                
             path_sparql = Path(sparql).absolute()
             self.logger.info(f'Requête sparql: {sparql}')
             print(f'Requête sparql: {sparql}')
@@ -100,6 +98,37 @@ class integration:
             if response.stderr:
                 self.logger.warning("Le processus de suppression d'URI a rencontré des erreurs.")
                 self.logger.warning(response.stderr)
+        
+        return path_file
+    
+    def __execute_process_vectorize(self,sparqlQuery,path_file) -> str:
+        
+        print(f'Requête sparql: {sparqlQuery}')
+        self.logger.info(f'Requête sparql: {sparqlQuery}')
+
+        path_resource = None
+        if "_1.ru" in sparqlQuery:
+            path_resource = self.data            
+        else: 
+            path_resource = path_file
+        #
+        response = cmd_subprocess().execute_update_subprocess(path_resource,sparqlQuery)
+        
+        # Ecrir dans un fichier
+        if response.stdout:
+            if os.path.exists(path_file):
+                os.remove(path_file)
+
+            with open(path_file,"wb") as f:
+                f.write(response.stdout)
+                f.close()
+            self.logger.info(f'Taille du fichier: {response.stdout.__sizeof__()}')
+        else:
+            path_file = path_resource        
+        
+        if response.stderr:
+            self.logger.warning("Le processus de suppression d'URI a rencontré des erreurs.")
+            self.logger.warning(response.stderr)
         
         return path_file
     
@@ -150,7 +179,7 @@ class integration:
                 f.write(sparql_query)
                 path_sparql_fles.append(pathFile)
         else:
-            pathFile = os.path.join(path_sparql,f'sparql_integrate_{self.__referentiel}.ru')
+            pathFile = os.path.join(path_sparql,f'sparql_integrate_{self.__referentiel}_1.ru')
             f = open(pathFile,'w')
             list_uri_concepts = ' '.join([f"<{concept}>" for concept in input])
             # Generate Sparql Quer
@@ -186,16 +215,25 @@ class integration:
                     file_name, file_extension = os.path.splitext(file)
                     dfResource = self.__generate_table(pFile,file_extension)
                     if dfResource.size > 0:
-                        # 
                         str_path_fichier = None
                         dfPrepare = dfResource[dfResource["jugement"] == "A EXCLURE"]
                         if not dfPrepare.empty:
+                            list_sparql_query = self.__sparql_query(dfPrepare.concept.drop_duplicates().to_list())
+                            #fichier_resultat = self.__execute_process(list_sparql_query)
 
-                            list_sparql_query = self.__sparql_query(dfPrepare.Concept.drop_duplicates().to_list())
+                            # Test Vectorize
                             
-                            fichier_resultat = self.__execute_process(list_sparql_query)
-                            str_path_fichier = fichier_resultat
-                            shutil.copy(fichier_resultat,self.__Referentiel_resultat)
+                            path_file = os.path.join(self.__tmp_directory,f'{self.__referentiel}.ttl')
+                            fileOutput = np.vectorize(self.__execute_process_vectorize,otypes=[list])(list_sparql_query,path_file)
+                            path_output = None
+                            if len(fileOutput) == 1:
+                                path_output = "".join(fileOutput)
+                            else:
+                                unique = set(fileOutput)
+                                path_output = "".join(unique)
+
+                            str_path_fichier = path_output
+                            shutil.copy(path_output,self.__Referentiel_resultat)
                         else:
                             # récuperer le nom du fichier
                             str_path_fichier =self.data
@@ -208,10 +246,10 @@ class integration:
 
                             # Generer les concepts alignement et labels
                             getConcepts = concepts_referentiel.generate_concepts(str_path_fichier)
-                            alignement_directory = tools.new_directory(self.__tmp_directory,"alignement")
+                            alignement_directory = tools.new_directory(self.__Referentiel_resultat,"alignement")
                             getConcepts.get_alignement().to_csv(os.path.join(alignement_directory,'alignement.csv'),index=False)
                             # Generate les concepts de labels
-                            labels_directory = tools.new_directory(self.__tmp_directory,"libelles")
+                            labels_directory = tools.new_directory(self.__Referentiel_resultat,"libelles")
                             getConcepts.get_labels().to_csv(os.path.join(labels_directory,'libelles.csv'),index=False)
                         else:
                             print("Erreur lors de la génération des ressources (libellés + alignements)")
