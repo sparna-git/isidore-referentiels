@@ -4,6 +4,7 @@ import logging
 import shutil
 from isidore_referentiels.process.Tools import tools
 from isidore_referentiels.process.isidore_subprocess import cmd_subprocess
+import numpy as np
 
 """
 Objectif : faire diminuer la taille des référentiels 
@@ -40,7 +41,12 @@ class clean_referentiel():
         self.__Referentiel_Directory = RefInfo.get_referentiel_directory()
         
         output_clean = ''.join(__Referentiel_Clean["output"])
-        self.__Referentiel_resultat = tools.new_directory(resultat,output_clean)
+        if not os.path.exists(output_clean):
+            os.makedirs(output_clean)
+        else:
+            shutil.rmtree(output_clean)
+            os.makedirs(output_clean)
+        self.__Referentiel_resultat = output_clean #tools.new_directory(resultat,output_clean)
         # Temp Directory - Exemple: Work/lcsh/clean
         self.__Tmp_Dir = tools.new_directory(self.__Referentiel_Directory,"clean")
         # Fichier temporale pour le résultat des requête sparql Tmp File
@@ -61,7 +67,8 @@ class clean_referentiel():
         fileOutput = os.path.join(Directory_fusion,f"{self.__Referentiel__}_full.ttl")
         Path_Result = tools.get_path_absoluted(fileOutput)        
         response = cmd_subprocess.merge_data(self,Path_data,Path_Result)
-        if response.stderr.__sizeof__()> 0:
+        
+        if response.stderr:
             self.logger.warning("Error dans la fusion des fichiers")
             self.logger.warning(response.stderr)
 
@@ -78,9 +85,48 @@ class clean_referentiel():
         
         return outptu_directory_result
 
+    def __execute_query(self,sparqlQuery,tmp_file) -> str:
+        
+        self.logger.info(f"Exécution de la requête SPARQL: {sparqlQuery}")
+        print(f"Exécution de la requête SPARQL: {sparqlQuery}")
+
+        src_path_File = None
+        if self.__Referentiel_sparql.index(sparqlQuery) == 0:
+            src_path_File = self.__Referentiel_data            
+        else:
+            src_path_File = tmp_file
+        
+        response = cmd_subprocess().execute_update_subprocess(src_path_File,sparqlQuery)
+        
+        print(f"Taille de la sortie console: {response.stdout.__sizeof__()}")
+        self.logger.info(f"Taille de la sortie console: {response.stdout.__sizeof__()}")
+        
+        # Ecrir dans le log les erreures 
+        if response.stderr:
+            self.logger.info(f"Erreurs de la requête SPARQL {sparqlQuery}")
+            self.logger.info(response.stderr)
+
+        # Ecrir dans un fichier tmp le résultat de la requete
+        if response.stdout:                
+            if os.path.exists(tmp_file):
+                os.remove(tmp_file)
+            # Write Tmp File
+            with open(tmp_file,'wb') as newfile:
+                newfile.write(response.stdout)                    
+            self.logger.info(f"Le résultat est dans le fichier: {tmp_file}")
+        else:
+            tmp_file = src_path_File
+        return tmp_file
+
     """ Appliquer des requêtes au réferentiel """
     def __sparql_queries(self,tmp_file:str) -> str:
 
+        # Vectorize
+        v_update = np.vectorize(self.__execute_query,otypes=[list])
+        v_update(self.__Referentiel_sparql,tmp_file)
+
+
+        """
         # Read sparql files
         nCount = 0
         path_tmp_file = None
@@ -103,7 +149,7 @@ class clean_referentiel():
             self.logger.info(f"Taille de la sortie console: {response.stdout.__sizeof__()}")
             
             # Ecrir dans le log les erreures 
-            if response.stderr.__sizeof__() > 0:
+            if response.stderr:
                 self.logger.info(f"Erreurs de la requête SPARQL {path_sparql}")
                 self.logger.info(response.stderr)
 
@@ -119,8 +165,9 @@ class clean_referentiel():
             else:
                 tmp_file = src_path_File
                 path_tmp_file = src_path_File
+        """
 
-        return path_tmp_file
+        return tmp_file
     
     """ Lancement du processus de nettoyage """
     def execute_sparql_update(self):
