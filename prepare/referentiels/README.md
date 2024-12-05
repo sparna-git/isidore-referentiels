@@ -19,7 +19,7 @@ poetry run calenda --input <répértoir> --output <Répértoir>
 Par exemple:
 
 ```
-poetry run geonames --input calenda --output data\calenda\calenda.ttl
+poetry run calenda --input prepare/calenda --output data/calenda
 ```
 
 ### HAL SHS
@@ -31,5 +31,5 @@ poetry run hal --output <Répértoir>
 Par exemple:
 
 ```
-poetry run hal --output data\hal\calenda.ttl
+poetry run hal --output data/hal
 ```
