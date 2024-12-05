@@ -5,6 +5,7 @@ import shutil
 from isidore_referentiels.process.Tools import tools
 from isidore_referentiels.process.isidore_subprocess import cmd_subprocess
 import numpy as np
+from datetime import datetime
 
 """
 Objectif : faire diminuer la taille des référentiels 
@@ -54,6 +55,8 @@ class clean_referentiel():
         self.__Tmp_File = os.path.join(Tmp_Sparql,f"{self.__Referentiel__}.ttl")
         # Logging
         self.logger = logging.getLogger(__name__)
+        # Ecrir dans le log de tous les référentiels
+        self.rapport = RefInfo.set_referentiels_log()
 
     """
     Fusion le contenu d'une répertoir dans un seule fichier
@@ -125,48 +128,6 @@ class clean_referentiel():
         v_update = np.vectorize(self.__execute_query,otypes=[list])
         v_update(self.__Referentiel_sparql,tmp_file)
 
-
-        """
-        # Read sparql files
-        nCount = 0
-        path_tmp_file = None
-        for sparql_file in self.__Referentiel_sparql:
-            path_sparql = Path(sparql_file).absolute()
-
-            src_path_File = None
-            if nCount == 0:
-                src_path_File = self.__Referentiel_data
-                nCount += 1
-            else:
-                src_path_File = tmp_file
-            
-            self.logger.info(f"Exécution de la requête SPARQL: {path_sparql}")
-            print(f"Exécution de la requête SPARQL: {path_sparql}")
-            
-            response = cmd_subprocess().execute_update_subprocess(src_path_File,path_sparql)
-            
-            print(f"Taille de la sortie console: {response.stdout.__sizeof__()}")
-            self.logger.info(f"Taille de la sortie console: {response.stdout.__sizeof__()}")
-            
-            # Ecrir dans le log les erreures 
-            if response.stderr:
-                self.logger.info(f"Erreurs de la requête SPARQL {path_sparql}")
-                self.logger.info(response.stderr)
-
-            # Ecrir dans un fichier tmp le résultat de la requete
-            if response.stdout:                
-                if os.path.exists(tmp_file):
-                    os.remove(tmp_file)
-                # Write Tmp File
-                with open(tmp_file,'wb') as newfile:
-                    newfile.write(response.stdout)                    
-                path_tmp_file = tmp_file  
-                self.logger.info(f"Le résultat est dans le fichier: {tmp_file}")
-            else:
-                tmp_file = src_path_File
-                path_tmp_file = src_path_File
-        """
-
         return tmp_file
     
     """ Lancement du processus de nettoyage """
@@ -191,5 +152,17 @@ class clean_referentiel():
         else:
             # Coller le fichier dans le répertoire correspondant
             path_result = self.__set_output_clean(self.__Referentiel_data)
+
+        # Long
+        file_output = Path(os.path.join(path_result,f"{self.__Referentiel__}.ttl")).absolute()
+        path_Query = Path("isidore_referentiels/process/sparql_nb_Concepts.rq").absolute()
+        nbConcepts = cmd_subprocess().execute_query_concepts(file_output,path_Query,"CSV")
+        # Ecrir dans le long
+        
+        objTime = datetime.now().strftime("%d/%m/%Y %H:%M")
+        sLogReferentiel = f"{objTime}|{self.__Referentiel__}|clean|{path_result}|{nbConcepts}"
+        with open(self.rapport,"a+") as fLog:
+            fLog.write("\n")
+            fLog.write(sLogReferentiel)
 
         return path_result

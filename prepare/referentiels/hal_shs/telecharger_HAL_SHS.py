@@ -28,16 +28,17 @@ def main():
 
     parser = argparse.ArgumentParser(allow_abbrev=False)
     parser.add_argument("--output",help="Répértoire pour stocker le fichier",type=Path,required=True)
-
     args = parser.parse_args()
+
+    print(args.output)
 
     response = telecharger()
     if response.status == 200:
-        output_file = os.path.join(args.output,'hal_shs.ttl')
-        if os.path.exists(args.output):
-            shutil.rmtree(args.output)
-        os.makedirs(args.output)
-
+        path_output_file = Path(args.output).absolute()
+        if os.path.exists(path_output_file):
+            shutil.rmtree(path_output_file)
+        os.makedirs(path_output_file)
+        output_file = os.path.join(path_output_file,'hal_shs.ttl')
         stocker_fichier(output_file,response.data)
     else:
         print(f"Erreur: Le lien de téléchargement à presente une erreur {response}")

@@ -54,3 +54,20 @@ class cmd_subprocess:
             self.logger.warning(f"Standard error was {e.output}")
 
         return response
+    
+    def execute_query_concepts(self,data_result:str,QuerySource:str,format:str) -> str:
+
+        arguments = ["sparql",f"--data={data_result}",f"--query={QuerySource}",f"--results={format}"]
+        print(arguments)
+        response = None
+        try:
+            response = run(' '.join(arguments),shell=True,stdout=PIPE,stderr=PIPE)            
+        except CalledProcessError as e:
+            print(f"Standard error was {e.output}")
+
+        output = None
+        if response.stdout:
+            r = response.stdout.decode("utf-8").replace("nbConcepts",'')
+            output = r.strip()
+
+        return output

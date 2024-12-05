@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import logging
 import shutil
+from datetime import datetime
 from pathlib import Path
 from .concepts.concepts_referentiel import generate_concepts
 from .referentiel_alignement import getAlignement
@@ -150,6 +151,8 @@ class report(dataset_referentiels):
         
         # log
         self.logger = logging.getLogger(__name__)
+        # Ecrir dans le log de tous les référentiels
+        self.rapport = RefInfo.set_referentiels_log()
 
     """ Evaluer les alignement du réferentiel vs réferentiel déjà intégrés """
     def __set_doublons_alignement(self) -> pd.DataFrame:
@@ -265,6 +268,14 @@ class report(dataset_referentiels):
         
         print(f"Fichier de sortie: {output_result}")
         self.logger.info(f"Fichier de sortie: {output_result}")
+
+        # Long
+        # Ecrir dans le long        
+        objTime = datetime.now().strftime("%d/%m/%Y %H:%M")
+        sLogReferentiel = f"{objTime}|{self.__Referentiel}|report|{output_result}|0"
+        with open(self.rapport,"a+") as fLog:
+            fLog.write("\n")
+            fLog.write(sLogReferentiel)
 
     def generer_report(self):
 

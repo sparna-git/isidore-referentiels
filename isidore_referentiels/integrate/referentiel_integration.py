@@ -8,7 +8,7 @@ from isidore_referentiels.process.isidore_subprocess import cmd_subprocess
 from isidore_referentiels.process.Tools import tools
 from isidore_referentiels.report.concepts import concepts_referentiel
 import time
-import numba
+from datetime import datetime
 
 #
 t = time.time()
@@ -52,6 +52,8 @@ class integration:
         self.__Referentiel_resultat = output_file 
         
         self.logger = logging.getLogger(__name__)
+        # Ecrir dans le log de tous les référentiels
+        self.rapport = RefInfo.set_referentiels_log()
 
     def __generate_table(self,resource:str,fextension:str) -> pd.DataFrame:
 
@@ -237,7 +239,6 @@ class integration:
                         else:
                             # récuperer le nom du fichier
                             str_path_fichier =self.data
-                            bValidation = True
                             shutil.copy(self.data,self.__Referentiel_resultat)
                         
                         if str_path_fichier is not None:
@@ -251,6 +252,18 @@ class integration:
                             # Generate les concepts de labels
                             labels_directory = tools.new_directory(self.__Referentiel_resultat,"libelles")
                             getConcepts.get_labels().to_csv(os.path.join(labels_directory,'libelles.csv'),index=False)
+
+                            # Long
+                            file_output = Path(os.path.join(self.__Referentiel_resultat,f"{self.__referentiel}.ttl")).absolute()
+                            path_Query = Path("isidore_referentiels/process/sparql_nb_Concepts.rq").absolute()
+                            nbConcepts = cmd_subprocess().execute_query_concepts(file_output,path_Query,"CSV")
+                            # Ecrir dans le long        
+                            objTime = datetime.now().strftime("%d/%m/%Y %H:%M")
+                            sLogReferentiel = f"{objTime}|{self.__referentiel}|integrate|{self.__Referentiel_resultat}|{nbConcepts}"
+                            with open(self.rapport,"a+") as fLog:
+                                fLog.write("\n")
+                                fLog.write(sLogReferentiel)
+
                         else:
                             print("Erreur lors de la génération des ressources (libellés + alignements)")
                             self.logger.warning("Erreur lors de la génération des ressources (libellés + alignements)")

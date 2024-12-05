@@ -10,33 +10,40 @@ class readConfiguration:
 
     def __init__(self, Data_yaml_Global,etape:str):
         self.conf = yaml.safe_load(Data_yaml_Global)
-        #print(f'Configuration: {self.conf}')
+        
         self.Referentiel = self.conf["id"]
-        #print(f'Referentiel: {self.Referentiel}')
+        
         # Create directory Root
         ParentDirectory = Path().parent.cwd()
         self.WorkDir = os.path.join(ParentDirectory,self.conf["workDir"])
         self.WorkDirectory = self.__createDirectory(self.WorkDir)
-        #print(f'Work Directory: {self.WorkDirectory}')
+        
         self.OutputDir = os.path.join(ParentDirectory,self.conf["outputDir"])
         self.OutputDirectory = self.__createDirectory(self.OutputDir)
-        #print(f'Output Directory: {self.OutputDirectory}')
-
+        
         # Create répertoire de travail
         self.path_referentiel = os.path.join(self.WorkDir,self.Referentiel)
         self.__remove_all(etape)
         self.Referentiel_directory = self.__createDirectoryReferentiel(self.path_referentiel,etape)
-        #print(f'Work Referentiel Directory: {self.WorkDirectory}')
+        
         # Créer le répertoire des résultat
         self.referentiel_result = os.path.join(self.OutputDir,self.Referentiel)
         self.Output_referentiel = self.__createDirectoryReferentiel(self.referentiel_result,etape)
-        #print(f'Work Referentiel Directory: {self.WorkDirectory}')
+        
         # Créer Logging
         self.logger = self.__create_logging(etape)
         #
         self.clean = self.conf["clean"]
         self.report = self.conf["report"]
         self.integrate = self.conf["integrate"]
+
+        # Créer le fichier tmp pour savoir le log de execution de chaque processus
+        path_log = os.path.join(self.WorkDir,"referentiel_rapport.csv")
+        if not os.path.exists(path_log):
+           f = open(path_log,"w")
+           f.write("date|referentiel|etape|path_result|description")
+        self.wLogReferentiels = path_log
+
 
     def __remove_all(self,etape:str):
         if "clean" == etape:
@@ -93,3 +100,6 @@ class confReferentiel(readConfiguration):
     
     def get_integrate(self) -> list:
         return self.conf["integrate"]
+    
+    def set_referentiels_log(self):
+        return self.wLogReferentiels
