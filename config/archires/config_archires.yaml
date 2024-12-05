@@ -23,7 +23,9 @@ report:
   output: 
     - output/archires/output_report
   # Concepts
-  algorithms: []
+  algorithms:
+    - alignement
+    - libelles
 integrate:
   report: 
     - output/archires/output_report

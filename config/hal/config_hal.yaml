@@ -23,7 +23,9 @@ report:
   output: 
     - output/hal/output_report
   # Concepts
-  algorithms: []
+  algorithms:
+    - alignement
+    - libelles
 integrate:
   report: 
     - output/hal/output_report

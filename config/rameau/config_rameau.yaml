@@ -17,6 +17,7 @@ clean:
     - config/rameau/sparql/clean-dict-concepts.ru
     - config/rameau/sparql/update-uri-wikidata.ru
     - config/rameau/sparql/delete-dcterms-subject.ru
+    - config/rameau/sparql/update-uri_lcsh.ru
   # Répertore pour stoker le résultat
   output: 
     - output/rameau/output_clean  
