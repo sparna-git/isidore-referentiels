@@ -17,21 +17,21 @@ clean:
     - config/rameau/sparql/clean-dict-concepts.ru
     - config/rameau/sparql/update-uri-wikidata.ru
     - config/rameau/sparql/delete-dcterms-subject.ru
+    - config/rameau/sparql/update-uri_lcsh.ru
   # Répertore pour stoker le résultat
   output: 
-    - output_clean
+    - output/rameau/output_clean  
 report:
   # Répertoire où se trouve le fichier après de l'etape de nettoyage .
   data: 
     - output/rameau/output_clean
   # Répertore pour stoker le résultat
   output: 
-    - output_report
+    - output/rameau/output_report
   # Concepts
   algorithms:
     - libelles
     - alignement
-    - statistique
 integrate:
   report: 
     - output/rameau/output_report
@@ -39,5 +39,5 @@ integrate:
     - output/rameau/output_clean
   # Répertore pour stoker le résultat
   output: 
-    - output_integrate
+    - output/rameau/output_integrate
 merge: []

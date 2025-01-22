@@ -14,19 +14,18 @@ clean:
   sparql:
     - config/pactols/sparql/clean-anthroponymes-and-oeuvres.ru
   output: 
-    - output_clean
+    - output/pactols/output_clean
 report:
   # Répertoire où se trouve le fichier après de l'etape de nettoyage .
   data: 
     - output/pactols/output_clean
   # Répertore pour stoker le résultat
   output: 
-    - output_report
+    - output/pactols/output_report
   # Concepts
   algorithms:
     - libelles
     - alignement
-    - statistique
 integrate:
   report: 
     - output/pactols/output_report
@@ -34,5 +33,5 @@ integrate:
     - output/pactols/output_clean
   # Répertore pour stoker le résultat
   output: 
-    - output_integrate
+    - output/pactols/output_integrate
 merge: []

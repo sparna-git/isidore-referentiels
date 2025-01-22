@@ -1,14 +1,7 @@
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-Select ?Concept ?uriAlignement
+Select ?concept ?uriAlignement
 Where {
-    #{
-    ?Concept skos:exactMatch|skos:closeMatch|<http://www.loc.gov/mads/rdf/v1#hasCloseExternalAuthority> ?uriAlignement .
-    FILTER(isIRI(?uriAlignement))
-    #}
-    #    UNION
-    #{
-    #?Concept a skos:Concept .
-    #    BIND(?Concept as ?uriAlignement)
-	#}
+    ?concept skos:exactMatch|skos:closeMatch|<http://www.loc.gov/mads/rdf/v1#hasCloseExternalAuthority> ?uriAlignement .
+    FILTER(isIRI(?uriAlignement))    
 }

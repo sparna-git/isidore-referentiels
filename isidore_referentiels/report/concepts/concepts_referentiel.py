@@ -21,17 +21,16 @@ class generate_concepts:
 
     def __get_data(self,SPARQLQuery:str) -> pd.DataFrame:
 
+        df = pd.DataFrame()
         response = cs.execute_query_subprocess(self,self.referentiel,SPARQLQuery,"CSV")
-        if response:
-            if response.stdout:
-                df = pd.read_csv(BytesIO(response.stdout),dtype=str)
-                return df
+        if response.stdout:
+            df = pd.read_csv(BytesIO(response.stdout),dtype=str)
             
-            # Write in log Exceptions
-            if response.stderr:
-                self.logger.error("Error:")
-                self.logger.warning(response.stderr)
-        return
+        # Write in log Exceptions
+        if response.stderr:
+            self.logger.error("Error:")
+            self.logger.warning(response.stderr)
+        return df
     
     def __set_generate_alignement(self) -> pd.DataFrame:
         # Lire le fichier de requête pour générer une jeu de données
@@ -43,7 +42,7 @@ class generate_concepts:
     
     def __set_generate_labels(self) -> pd.DataFrame:
         # Lire le fichier de requête pour générer une jeu de données
-        sparql_labels = Path(__file__).with_name('sparql_analyze_referentiel.rq')
+        sparql_labels = Path(__file__).with_name('sparql_libelles.rq')
         # Stocker le résultat dans une dataframe 
         dfLibelles = self.__get_data(sparql_labels)
 
@@ -64,9 +63,7 @@ class generate_concepts:
         return self.__set_generate_report()
 
     def get_labels(self) -> pd.DataFrame:
-        dfLabels = self.__set_generate_labels()
-        df = dfLabels[["Concept","prefLabel_fr","prefLabel_en","prefLabel_es","altLabel"]]
-        return df
+        return self.__set_generate_labels()
     
     def get_alignement(self) -> pd.DataFrame:
         return self.__set_generate_alignement()

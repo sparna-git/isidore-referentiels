@@ -1,0 +1,25 @@
+10/15/2024 11:14:56 AM Starting new HTTP connection (1): api.geonames.org:80
+10/15/2024 11:14:56 AM http://api.geonames.org:80 "GET /childrenJSON?geonameId=6295630&username=jaquino HTTP/11" 401 0
+10/15/2024 11:14:56 AM ========================= GEONAMES =========================
+10/15/2024 11:14:56 AM Starting new HTTPS connection (1): sws.geonames.org:443
+10/15/2024 11:14:56 AM https://sws.geonames.org:443 "GET /6295630/about.rdf HTTP/11" 200 None
+10/15/2024 11:14:56 AM Donwload RDF File: Mother Earth
+10/15/2024 11:14:56 AM The C:\Users\thoma\Documents\GitHub\isidore_referentiel_102024\isidore-referentiels\Geonames\Test\mother_earth.rdf file was created 
+10/15/2024 11:14:56 AM *************** Download Continents *************** 
+10/15/2024 11:16:09 AM Starting new HTTP connection (1): api.geonames.org:80
+10/15/2024 11:16:10 AM http://api.geonames.org:80 "GET /childrenJSON?geonameId=6295630&username=jaquino HTTP/11" 401 0
+10/15/2024 11:16:10 AM ========================= GEONAMES =========================
+10/15/2024 11:16:10 AM Starting new HTTPS connection (1): sws.geonames.org:443
+10/15/2024 11:16:10 AM https://sws.geonames.org:443 "GET /6295630/about.rdf HTTP/11" 200 None
+10/15/2024 11:16:10 AM Donwload RDF File: Mother Earth
+10/15/2024 11:16:10 AM [Errno 2] No such file or directory: 'C:\\Users\\thoma\\Documents\\GitHub\\isidore_referentiel_102024\\isidore-referentiels\\Geonames\\Test\\mother_earth.rdf'
+10/15/2024 11:16:10 AM The C:\Users\thoma\Documents\GitHub\isidore_referentiel_102024\isidore-referentiels\Geonames\Test\mother_earth.rdf file was created 
+10/15/2024 11:16:10 AM *************** Download Continents *************** 
+10/15/2024 11:16:38 AM Starting new HTTP connection (1): api.geonames.org:80
+10/15/2024 11:16:38 AM http://api.geonames.org:80 "GET /childrenJSON?geonameId=6295630&username=jaquino HTTP/11" 401 0
+10/15/2024 11:16:38 AM ========================= GEONAMES =========================
+10/15/2024 11:16:38 AM Starting new HTTPS connection (1): sws.geonames.org:443
+10/15/2024 11:16:38 AM https://sws.geonames.org:443 "GET /6295630/about.rdf HTTP/11" 200 None
+10/15/2024 11:16:38 AM Donwload RDF File: Mother Earth
+10/15/2024 11:16:38 AM The C:\Users\thoma\Documents\GitHub\isidore_referentiel_102024\isidore-referentiels\Geonames\Test\mother_earth.rdf file was created 
+10/15/2024 11:16:38 AM *************** Download Continents *************** 
