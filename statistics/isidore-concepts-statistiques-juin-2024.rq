@@ -1,0 +1,19 @@
+# Comptage d'utilisation des concepts dans l'indexation
+# Isidore Juin 2024 avec pref label des concepts
+# SPARQL endpoint : https://gdb.huma-num.fr:7200/sparql
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+select ?concept ?prefLabel (COUNT(?doc) AS ?count)
+where { 
+    GRAPH <http://isidore.science/vocabularies> {
+        ?concept a skos:Concept .
+        OPTIONAL { ?concept skos:prefLabel ?prefLabelFr FILTER(lang(?prefLabelFr) = "fr") }
+        OPTIONAL { ?concept skos:prefLabel ?prefLabelEn FILTER(lang(?prefLabelEn) = "en") }
+        OPTIONAL { ?concept skos:prefLabel ?prefLabelEs FILTER(lang(?prefLabelEs) = "es") }
+        BIND(COALESCE(?prefLabelFr, ?prefLabelEn, ?prefLabelEs) AS ?prefLabel)
+    }
+    OPTIONAL { ?doc dcterms:subject ?concept . }
+}
+GROUP BY ?concept ?prefLabel
+ORDER BY DESC(?count)
+

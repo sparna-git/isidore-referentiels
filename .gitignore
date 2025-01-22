@@ -9,8 +9,6 @@ analyze/rdf2xls-app.log
 
 analyze/shacl-play-app.log
 
-data/
-
 /isidore_referentiels/__pycache__/
 /isidore_referentiels/Clean/__pycache__
 /isidore_referentiels/clean/__pycache__
