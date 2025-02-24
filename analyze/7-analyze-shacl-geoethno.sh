@@ -1,5 +1,5 @@
-export IN=../data/pactols
-export OUT=analysis/pactols
+export IN=../output/geoethno/output_integrate/geoethno.ttl
+export OUT=analysis/geoethno_integrate
 mkdir -p $OUT
 
 # 1. Generate the SHACL profile for the dataset

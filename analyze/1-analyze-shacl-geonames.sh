@@ -1,5 +1,5 @@
-export IN=../data/lcsh
-export OUT=analysis/lcsh
+export IN=../output/geonames/output_integrate/geonames.ttl
+export OUT=analysis/geonames
 mkdir -p $OUT
 
 # 1. Generate the SHACL profile for the dataset

@@ -1,4 +1,4 @@
-export IN=../data/bne
+export IN=../output/bne/output_clean
 export OUT=analysis/bne
 mkdir -p $OUT
 
