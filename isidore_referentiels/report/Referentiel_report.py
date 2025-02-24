@@ -37,7 +37,9 @@ class dataset_referentiels:
 
     def __init__(self,RefInfo) -> None:
         # Répertoir 
-        self.CSVdir = Path(RefInfo.get_Outputdirectory()).parent.absolute()
+        self.report = RefInfo.get_Report()
+        self.CSVdir = Path(''.join(self.report["output"])).parent.parent.absolute()
+        print(f"Parent : {self.CSVdir}")
         self.logger = logging.getLogger(__name__)
     
     """
@@ -110,10 +112,7 @@ class report(dataset_referentiels):
         self.__Referentiel = RefInfo.get_Referentiel()
         # Répertoire de travail
         self.__Referentiel_Directory = RefInfo.get_referentiel_directory() # Exemple: Work\lcsh
-        # Répertoire de resultat
-        report_output = RefInfo.get_Outputdirectory()
         
-
         self.report = RefInfo.get_Report()
         # Répertoires de travail pour generer les reports
         self.input_data = Path(''.join(self.report["data"])).absolute()

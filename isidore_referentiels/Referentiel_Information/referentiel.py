@@ -25,5 +25,5 @@ class Information(confReferentiel,cmd_subprocess):
 
         print(f"Répertoir de travail: {self.get_referentiel_directory()}")
         # Generate répertoire du Referentiel
-        print(f"Répertoir de résultat: {self.get_Outputdirectory()}")
+        #print(f"Répertoir de résultat: {self.get_Outputdirectory()}")
        

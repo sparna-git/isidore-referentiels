@@ -18,8 +18,8 @@ class readConfiguration:
         self.WorkDir = os.path.join(ParentDirectory,self.conf["workDir"])
         self.WorkDirectory = self.__createDirectory(self.WorkDir)
         
-        self.OutputDir = os.path.join(ParentDirectory,self.conf["outputDir"])
-        self.OutputDirectory = self.__createDirectory(self.OutputDir)
+        #self.OutputDir = os.path.join(ParentDirectory,self.conf["outputDir"])
+        #self.OutputDirectory = self.__createDirectory(self.OutputDir)
         
         # Create répertoire de travail
         self.path_referentiel = os.path.join(self.WorkDir,self.Referentiel)
@@ -27,8 +27,8 @@ class readConfiguration:
         self.Referentiel_directory = self.__createDirectoryReferentiel(self.path_referentiel,etape)
         
         # Créer le répertoire des résultat
-        self.referentiel_result = os.path.join(self.OutputDir,self.Referentiel)
-        self.Output_referentiel = self.__createDirectoryReferentiel(self.referentiel_result,etape)
+        #self.referentiel_result = os.path.join(self.OutputDir,self.Referentiel)
+        #self.Output_referentiel = self.__createDirectoryReferentiel(self.referentiel_result,etape)
         
         # Créer Logging
         self.logger = self.__create_logging(etape)
@@ -86,8 +86,8 @@ class confReferentiel(readConfiguration):
     def get_Referentiel(self) -> str:
         return self.conf["id"]
     
-    def get_Outputdirectory(self) -> str:
-        return self.referentiel_result
+   # def get_Outputdirectory(self) -> str:
+   #     return self.referentiel_result
 
     def get_referentiel_directory(self) -> str:
         return self.path_referentiel
