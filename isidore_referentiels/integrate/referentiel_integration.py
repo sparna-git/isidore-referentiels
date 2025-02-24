@@ -31,8 +31,6 @@ class integration:
             os.makedirs(integrate_directory)
 
         self.__tmp_directory = integrate_directory
-        # Répertoire de resultat
-        report_output = RefInfo.get_Outputdirectory()
         
         integration_ref = RefInfo.get_integrate()
         
@@ -210,6 +208,8 @@ class integration:
     
     def __read_csv_file(self) -> pd.DataFrame:        
         
+        objTimeStart = datetime.now().strftime("%d/%m/%Y %H:%M")
+
         for root,directories,files in os.walk(self.report):
             for file in files:
                 pFile = os.path.join(root,file)
@@ -221,10 +221,8 @@ class integration:
                         dfPrepare = dfResource[dfResource["jugement"] == "A EXCLURE"]
                         if not dfPrepare.empty:
                             list_sparql_query = self.__sparql_query(dfPrepare.concept.drop_duplicates().to_list())
-                            #fichier_resultat = self.__execute_process(list_sparql_query)
 
-                            # Test Vectorize
-                            
+                            # Vectorize                            
                             path_file = os.path.join(self.__tmp_directory,f'{self.__referentiel}.ttl')
                             fileOutput = np.vectorize(self.__execute_process_vectorize,otypes=[list])(list_sparql_query,path_file)
                             path_output = None
@@ -258,8 +256,8 @@ class integration:
                             path_Query = Path("isidore_referentiels/process/sparql_nb_Concepts.rq").absolute()
                             nbConcepts = cmd_subprocess().execute_query_concepts(file_output,path_Query,"CSV")
                             # Ecrir dans le long        
-                            objTime = datetime.now().strftime("%d/%m/%Y %H:%M")
-                            sLogReferentiel = f"{objTime}|{self.__referentiel}|integrate|{self.__Referentiel_resultat}|{nbConcepts}"
+                            objTimeEnd = datetime.now().strftime("%d/%m/%Y %H:%M")
+                            sLogReferentiel = f"{objTimeStart} => {objTimeEnd}|{self.__referentiel}|integrate|{self.__Referentiel_resultat}|{nbConcepts}"
                             with open(self.rapport,"a+") as fLog:
                                 fLog.write("\n")
                                 fLog.write(sLogReferentiel)
