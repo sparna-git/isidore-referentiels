@@ -12,20 +12,23 @@ clean:
   data: 
     - data/geonames
   sparql: 
-    - config/geonames/sparql/insert_wikidata.ru
-    - config/geonames/sparql/insert_skos.ru
+    - config/1-geonames/sparql/insert_wikidata.ru
+    - config/1-geonames/sparql/insert_skos.ru
   # Répertore pour stoker le résultat
   output: 
     - output/geonames/output_clean
 report:
   data: 
     - output/geonames/output_clean
+  dataStatistique:
+    - data/statistics
   # Répertore pour stoker le résultat
   output: 
     - output/geonames/output_report
   algorithms:
     - alignement
     - libelles
+    - statistique
 integrate:
   report: 
     - output/geonames/output_report

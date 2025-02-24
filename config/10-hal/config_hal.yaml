@@ -1,4 +1,4 @@
-id: calenda
+id: hal
 downloadPage: []
   #- https://www.archires.archi.fr/
   #- https://www.archires.archi.fr/
@@ -7,30 +7,31 @@ outputDir: output
 # Répertoire où sont stockés les fichiers temporaires de travail du script
 workDir: work
 # Nom du fichier de log qui sera créé dans $workDir
-logFile: isidore-referentiels_calenda.log
+logFile: isidore-referentiels_hal.log
 clean:
   data: 
-    - data/calenda
+    - data/hal
   sparql: []
   # Répertore pour stoker le résultat
   output:
-    - output/calenda/output_clean
+    - output/hal/output_clean
 report:
   # Répertoire où se trouve le fichier après de l'etape de nettoyage .
   data: 
-    - output/calenda/output_clean
+    - output/hal/output_clean
   # Répertore pour stoker le résultat
   output: 
-    - output/calenda/output_report
+    - output/hal/output_report
   # Concepts
   algorithms:
     - alignement
     - libelles
+    - statistique
 integrate:
   report: 
-    - output/calenda/output_report
+    - output/hal/output_report
   data: 
-    - output/calenda/output_clean
+    - output/hal/output_clean
   # Répertore pour stoker le résultat
   output: 
-    - output/calenda/output_integrate
+    - output/hal/output_integrate

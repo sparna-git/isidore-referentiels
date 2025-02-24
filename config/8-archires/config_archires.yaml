@@ -1,37 +1,37 @@
-id: pactols
+id: archires
 downloadPage:
-  - https://github.com/frantiq/PACTOLS
-  - https://github.com/frantiq/PACTOLS/tree/master/pactols-latest-version/pactols_sujets_al
+  - https://www.archires.archi.fr/
+  - https://www.archires.archi.fr/
 # Répertoire où sont enregistrés les fichiers des référentiels après traitement
 outputDir: output
 # Répertoire où sont stockés les fichiers temporaires de travail du script
 workDir: work
 # Nom du fichier de log qui sera créé dans $workDir
-logFile: isidore-referentiels_pactols.log
+logFile: isidore-referentiels_archires.log
 clean:
   data: 
-    - data/pactols
-  sparql:
-    - config/pactols/sparql/clean-anthroponymes-and-oeuvres.ru
-  output: 
-    - output/pactols/output_clean
+    - data/archires
+  sparql: []
+  # Répertore pour stoker le résultat
+  output:
+    - output/archires/output_clean
 report:
   # Répertoire où se trouve le fichier après de l'etape de nettoyage .
   data: 
-    - output/pactols/output_clean
+    - output/archires/output_clean
   # Répertore pour stoker le résultat
   output: 
-    - output/pactols/output_report
+    - output/archires/output_report
   # Concepts
   algorithms:
-    - libelles
     - alignement
+    - libelles
+    - statistique
 integrate:
   report: 
-    - output/pactols/output_report
+    - output/archires/output_report
   data: 
-    - output/pactols/output_clean
+    - output/archires/output_clean
   # Répertore pour stoker le résultat
   output: 
-    - output/pactols/output_integrate
-merge: []
+    - output/archires/output_integrate

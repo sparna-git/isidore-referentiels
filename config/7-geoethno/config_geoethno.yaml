@@ -26,6 +26,7 @@ report:
   algorithms:
     - alignement
     - libelles
+    - statistique
 integrate:
   report: 
     - output/geoethno/output_report

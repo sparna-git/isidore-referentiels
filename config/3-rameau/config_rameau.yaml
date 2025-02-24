@@ -11,13 +11,13 @@ clean:
   data: 
     - data/rameau
   sparql:
-    - config/rameau/sparql/keep-only_isPartOf.ru
-    - config/rameau/sparql/clean-combined-concepts.ru
-    - config/rameau/sparql/clean-domaines.ru
-    - config/rameau/sparql/clean-dict-concepts.ru
-    - config/rameau/sparql/update-uri-wikidata.ru
-    - config/rameau/sparql/delete-dcterms-subject.ru
-    - config/rameau/sparql/update-uri_lcsh.ru
+    - config/3-rameau/sparql/keep-only_isPartOf.ru
+    - config/3-rameau/sparql/clean-combined-concepts.ru
+    - config/3-rameau/sparql/clean-domaines.ru
+    - config/3-rameau/sparql/clean-dict-concepts.ru
+    - config/3-rameau/sparql/update-uri-wikidata.ru
+    - config/3-rameau/sparql/delete-dcterms-subject.ru
+    - config/3-rameau/sparql/update-uri_lcsh.ru
   # Répertore pour stoker le résultat
   output: 
     - output/rameau/output_clean  
@@ -32,6 +32,7 @@ report:
   algorithms:
     - libelles
     - alignement
+    - statistique
 integrate:
   report: 
     - output/rameau/output_report
@@ -40,4 +41,3 @@ integrate:
   # Répertore pour stoker le résultat
   output: 
     - output/rameau/output_integrate
-merge: []

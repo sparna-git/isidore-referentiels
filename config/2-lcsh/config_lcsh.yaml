@@ -12,19 +12,22 @@ clean:
   data: 
     - data/lcsh
   sparql:
-    - config/lcsh/sparql/clean-combined-concepts.ru
-    - config/lcsh/sparql/clean-anonymous-concepts.ru
-    - config/lcsh/sparql/clean-notes-concepts.ru
+    - config/2-lcsh/sparql/clean-combined-concepts.ru
+    - config/2-lcsh/sparql/clean-anonymous-concepts.ru
+    - config/2-lcsh/sparql/clean-notes-concepts.ru
   output: 
     - output/lcsh/output_clean  
 report:
   data: 
     - output/lcsh/output_clean
+  dataStatistique:
+    - data/statistics
   output: 
     - output/lcsh/output_report
   algorithms:
     - alignement
     - libelles
+    - statistique
 integrate:
   report: 
     - output/lcsh/output_report

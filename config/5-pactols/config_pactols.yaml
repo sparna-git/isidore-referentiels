@@ -1,4 +1,4 @@
-id: bne
+id: pactols
 downloadPage:
   - https://github.com/frantiq/PACTOLS
   - https://github.com/frantiq/PACTOLS/tree/master/pactols-latest-version/pactols_sujets_al
@@ -7,32 +7,30 @@ outputDir: output
 # Répertoire où sont stockés les fichiers temporaires de travail du script
 workDir: work
 # Nom du fichier de log qui sera créé dans $workDir
-logFile: isidore-referentiels_bne.log
+logFile: isidore-referentiels_pactols.log
 clean:
   data: 
-    - data/bne
+    - data/pactols
   sparql:
-    - config/bne/sparql/clean-combined-concepts.ru
-  # Répertore pour stoker le résultat
-  output:
-    - output/bne/output_clean
+    - config/5-pactols/sparql/clean-anthroponymes-and-oeuvres.ru
+  output: 
+    - output/pactols/output_clean
 report:
   # Répertoire où se trouve le fichier après de l'etape de nettoyage .
   data: 
-    - output/bne/output_clean
+    - output/pactols/output_clean
   # Répertore pour stoker le résultat
   output: 
-    - output/bne/output_report
+    - output/pactols/output_report
   # Concepts
   algorithms:
-    - alignement
     - libelles
+    - alignement
 integrate:
   report: 
-    - output/bne/output_report
+    - output/pactols/output_report
   data: 
-    - output/bne/output_clean
+    - output/pactols/output_clean
   # Répertore pour stoker le résultat
   output: 
-    - output/bne/output_integrate
-merge: []
+    - output/pactols/output_integrate
