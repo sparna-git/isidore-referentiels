@@ -36,5 +36,5 @@ riot --output=NTriples $RAMEAU_DIR/databnf_rameau/* > $RAMEAU_DIR/rameau_full.nt
 
 ## 4. copy to final destination
 echo "RAMEAU copy to data dir..."
-mkdir -p $RAMEAU_DIR/rameau
+mkdir -p $DATA_DIR/rameau
 cp $RAMEAU_DIR/rameau_full.nt $DATA_DIR/rameau
