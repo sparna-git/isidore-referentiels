@@ -1,12 +1,15 @@
-#!/bin/bash
+
 . ./env.sh
+
 # BNE
+
+export URL=http://datos.bne.es/datadump/materias.nt.bz2 
+
 ## 1. Download
 echo "BNE Download..."
-export BNE_DIR=./$WORK_DIR/bne
+export BNE_DIR=$WORK_DIR/bne
 rm -rf $BNE_DIR
 mkdir -p $BNE_DIR
-export URL=http://datos.bne.es/datadump/materias.nt.bz2 
 wget --no-check-certificate $URL 
 mv materias.nt.bz2 $BNE_DIR
 

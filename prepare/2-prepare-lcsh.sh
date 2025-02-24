@@ -1,18 +1,21 @@
-#!/bin/bash
+
 . ./env.sh
+
 # LCSH
+
+export URL=https://id.loc.gov/download/authorities/subjects.skosrdf.nt.gz 
+export URL_ALIGNEMENTS=https://id.loc.gov/download/externallinks.nt.zip
+
 ## 1. Download
 echo "LCSH Subjects Download..."
-export LCSH_DIR=./$WORK_DIR/lcsh
-echo $LCSH_DIR
+export LCSH_DIR=$WORK_DIR/lcsh
 rm -rf $LCSH_DIR
 mkdir -p $LCSH_DIR
-export URL=https://id.loc.gov/download/authorities/subjects.skosrdf.nt.gz 
 wget --no-check-certificate $URL 
 mv subjects.skosrdf.nt.gz $LCSH_DIR
 
 echo "LCSH Externallinks Download..."
-export URL_ALIGNEMENTS=https://id.loc.gov/download/externallinks.nt.zip
+
 wget --no-check-certificate $URL_ALIGNEMENTS 
 mv externallinks.nt.zip $LCSH_DIR
 
