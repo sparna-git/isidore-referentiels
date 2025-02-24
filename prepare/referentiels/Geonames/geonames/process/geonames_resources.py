@@ -38,9 +38,10 @@ class Tools:
         resp = None
         try:
             url = f"http://api.geonames.org/childrenJSON?geonameId={geonameId}&username={GeonamesUser}"
-            resp = request("GET",url)            
+            self.logger.info(f"URL json resource: {url}")
+            resp = request("GET",url)
         except exceptions.ResponseError as e:
-            print(f"Error: {e}")            
+            self.logger.info(f"Error: {e}")            
         return resp
 
     def download_rdf_resource(self,geonameId):
@@ -49,15 +50,16 @@ class Tools:
 
         self.nCount += 1
 
-        if self.nCount == 800:
+        if self.nCount == 100:
             time.sleep(10)
             self.nCount = 0
 
         try:
-            url = f"https://sws.geonames.org/{geonameId}/about.rdf"      
+            url = f"https://sws.geonames.org/{geonameId}/about.rdf"
+            self.logger.info(f"Télécharger le RDF dans le url: {url}")
             resp = request("GET",url)            
         except exceptions.HTTPError as e:
-            print(f"Error: {e}")
+            self.logger.info(f"Error: {e}")
             resp = None
         return resp
 
@@ -67,18 +69,16 @@ class Tools:
             with open(filename,'wb') as f:
                 f.write(data)
                 self.logger.info(f"The {filename} file was created ")
-                print(f"The {filename} file was created ")
         except os.error as e:
             self.logger.info(e)
             self.logger.info(f"The {filename} file was created ")
-            print(f"The {filename} file was created ")
 
 class Geonames_RDF(Tools):
 
     def __init__(self,WorkDirectory:str,GeonamesUser:str) -> None:
         super().__init__(WorkDirectory)
         
-        self.Work_Dir = self.directory
+        self.Work_Dir = Path(self.directory).absolute()
         self.GeonamesUser = GeonamesUser
         self.__list_of_continent = self.__continent()
         self.__continent_countries = {}
@@ -103,7 +103,7 @@ class Geonames_RDF(Tools):
     def __continent(self) -> list:
         
         resp_OK = self.download_json_resource("6295630",self.GeonamesUser)
-        print(resp_OK)
+        self.logger.info(resp_OK)
         if resp_OK:
             return self.__get_geonames_id(resp_OK.json())
                 
@@ -129,7 +129,8 @@ class Geonames_RDF(Tools):
 
         self.logger.info("*************** Download Continents *************** ")
         print("*************** Download Continents  ***************")
-        print(self.__list_of_continent)
+        self.logger.info(f"List of continent: {self.__list_of_continent}")
+
         for Continent_Name, geonamesId in self.__list_of_continent:
             #
             resp_OK = self.download_rdf_resource(geonamesId)
@@ -151,6 +152,8 @@ class Geonames_RDF(Tools):
 
         self.logger.info("*************** Download Countries *************** ")
         print("*************** Download Countries  ***************")
+
+        self.logger.info(f"List of continent: {self.__list_of_continent}")
         
         for Continent_Name,Continent_geonamesID in self.__list_of_continent:
             Countries = []
@@ -183,6 +186,8 @@ class Geonames_RDF(Tools):
 
         self.logger.info("*************** Download Division  ***************")
         print("*************** Download Division  ***************")
+
+        self.logger.info(f"List of counetries: {self.__continent_countries.items()}")
         
         for Continent,Pays in self.__continent_countries.items():
            for NameOfPays, geonameId in Pays:
