@@ -1,8 +1,6 @@
 id: geonames
 downloadPage: 
   - https://www.geonames.org/ 
-# Répertoire où sont enregistrés les fichiers des référentiels après traitement
-outputDir: output
 # Répertoire où sont stockés les fichiers temporaires de travail du script
 workDir: work
 # Nom du fichier de log qui sera créé dans $workDir

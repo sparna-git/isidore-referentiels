@@ -2,8 +2,6 @@ id: pactols
 downloadPage:
   - https://github.com/frantiq/PACTOLS
   - https://github.com/frantiq/PACTOLS/tree/master/pactols-latest-version/pactols_sujets_al
-# Répertoire où sont enregistrés les fichiers des référentiels après traitement
-outputDir: output
 # Répertoire où sont stockés les fichiers temporaires de travail du script
 workDir: work
 # Nom du fichier de log qui sera créé dans $workDir

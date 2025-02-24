@@ -1,8 +1,6 @@
 id: rameau
 downloadPage:
   - https://pef.bnf.fr/link/539d6d59-c2e3-4e17-b24c-d8a83ca11944#
-# Répertoire où sont enregistrés les fichiers des référentiels après traitement
-outputDir: output
 # Répertoire où sont stockés les fichiers temporaires de travail du script
 workDir: work
 # Nom du fichier de log qui sera créé dans $workDir
