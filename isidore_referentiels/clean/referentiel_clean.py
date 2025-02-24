@@ -29,7 +29,6 @@ class clean_referentiel():
         self.__Referentiel__ = RefInfo.get_Referentiel()
         # Répertoire après de fusionr les données
         self.__Referentiel_data = None 
-        resultat = RefInfo.get_Outputdirectory()
         
         # Récuperer tous les parametrage pour l'étape à nettoyer
         __Referentiel_Clean = RefInfo.get_Clean()
@@ -47,7 +46,8 @@ class clean_referentiel():
         else:
             shutil.rmtree(output_clean)
             os.makedirs(output_clean)
-        self.__Referentiel_resultat = output_clean #tools.new_directory(resultat,output_clean)
+        
+        self.__Referentiel_resultat = Path(output_clean).absolute()
         # Temp Directory - Exemple: Work/lcsh/clean
         self.__Tmp_Dir = tools.new_directory(self.__Referentiel_Directory,"clean")
         # Fichier temporale pour le résultat des requête sparql Tmp File
@@ -99,7 +99,7 @@ class clean_referentiel():
         else:
             src_path_File = tmp_file
         
-        response = cmd_subprocess().execute_update_subprocess(src_path_File,sparqlQuery)
+        response = cmd_subprocess().execute_update_subprocess(src_path_File,Path(sparqlQuery).absolute())
         
         print(f"Taille de la sortie console: {response.stdout.__sizeof__()}")
         self.logger.info(f"Taille de la sortie console: {response.stdout.__sizeof__()}")
@@ -133,6 +133,8 @@ class clean_referentiel():
     """ Lancement du processus de nettoyage """
     def execute_sparql_update(self):
 
+        objTimeStart = datetime.now().strftime("%d/%m/%Y %H:%M")
+        
         # Fusion de tous les fichiers d'entrée
         print("Fusion des fichiers")
         self.logger.info("Fusion des fichiers")
@@ -153,14 +155,14 @@ class clean_referentiel():
             # Coller le fichier dans le répertoire correspondant
             path_result = self.__set_output_clean(self.__Referentiel_data)
 
-        # Long
+        # Log
         file_output = Path(os.path.join(path_result,f"{self.__Referentiel__}.ttl")).absolute()
         path_Query = Path("isidore_referentiels/process/sparql_nb_Concepts.rq").absolute()
         nbConcepts = cmd_subprocess().execute_query_concepts(file_output,path_Query,"CSV")
-        # Ecrir dans le long
+        # Ecrir dans le log
         
-        objTime = datetime.now().strftime("%d/%m/%Y %H:%M")
-        sLogReferentiel = f"{objTime}|{self.__Referentiel__}|clean|{path_result}|{nbConcepts}"
+        objTimeEnd = datetime.now().strftime("%d/%m/%Y %H:%M")
+        sLogReferentiel = f"{objTimeStart} => {objTimeEnd}|{self.__Referentiel__}|clean|{path_result}|{nbConcepts}"
         with open(self.rapport,"a+") as fLog:
             fLog.write("\n")
             fLog.write(sLogReferentiel)
