@@ -50,13 +50,11 @@ class Tools:
 
         self.nCount += 1
 
-        if self.nCount == 100:
-            time.sleep(10)
-            self.nCount = 0
+        time.sleep(10)
 
         try:
             url = f"https://sws.geonames.org/{geonameId}/about.rdf"
-            self.logger.info(f"Télécharger le RDF dans le url: {url}")
+            self.logger.info(f"{self.nCount} Télécharger le RDF dans le url: {url}")
             resp = request("GET",url)            
         except exceptions.HTTPError as e:
             self.logger.info(f"Error: {e}")
