@@ -7,6 +7,7 @@ from datetime import datetime
 from pathlib import Path
 from .concepts.concepts_referentiel import generate_concepts
 from .referentiel_alignement import getAlignement
+from .referentiels_statistique import generateStatistique
 from isidore_referentiels.report.referentiels_labels.libelles import libelles_doublons
 from isidore_referentiels.process.Tools import tools
 
@@ -118,6 +119,14 @@ class report(dataset_referentiels):
         self.input_data = Path(''.join(self.report["data"])).absolute()
         self.algorithms = self.report["algorithms"]
 
+        # Répértoire du fichier Statistique
+        pathFileStatistic = Path(''.join(self.report["dataStatistique"])).absolute()
+        self.input_data_statistique = ""
+        if os.path.exists(pathFileStatistic):
+            for r,d,f in os.walk(pathFileStatistic):
+                if len(f) == 1:
+                    self.input_data_statistique = Path.joinpath(pathFileStatistic,f[0])
+
         # Créer le répertoire de l"étape
         directory_report = os.path.join(self.__Referentiel_Directory,"report")
         if not os.path.exists(directory_report):
@@ -125,7 +134,7 @@ class report(dataset_referentiels):
         else:
             shutil.rmtree(directory_report)
             os.mkdir(directory_report)
-        self.__report_directory = directory_report   #        
+        self.__report_directory = directory_report      
         
         output_report = ''.join(self.report["output"])
         if not os.path.exists(output_report):
@@ -170,7 +179,6 @@ class report(dataset_referentiels):
     """
     def __set_doublons_labels(self) -> pd.DataFrame:
 
-        dfResultLabels = pd.DataFrame()
         filename_libelle = os.path.join(self.__report_directory,f"libelles_{self.__Referentiel}_doublons.xslx")
         self.__libelle_referentile.to_csv(filename_libelle,index=False)
         dfResultLabels = libelles_doublons(self.__libelle_referentile,self.__libelles_dataset).resources_libelles()
@@ -179,7 +187,19 @@ class report(dataset_referentiels):
     def __get_doublons_labels(self) -> pd.DataFrame:
         return self.__set_doublons_labels()
    
-    
+    """ Statistique processus """
+    def __set_statistique(self) -> pd.DataFrame:
+
+        dfStatistique = pd.DataFrame()
+        # Convert file to dataframe
+        if (self.input_data_statistique != ""):
+            dfStatistique = pd.read_csv(self.input_data_statistique,dtype="str")
+            dfStatistique = generateStatistique(self.__report,dfStatistique).get_information_statistique()
+        return dfStatistique
+
+    def __get_statistique(self) -> pd.DataFrame:
+        return self.__set_statistique()
+
     """ fonction pour remplir la column jugement avec le résultat finale """
     def __evaluation(self,row):
 
@@ -203,6 +223,7 @@ class report(dataset_referentiels):
 
     def __generate_resource(self):
 
+        objTimeStart = datetime.now().strftime("%d/%m/%Y %H:%M")
         dfReferentiel = self.__report
         #   
         print("Chercher les doublons de concepts <<Alignement>>")
@@ -258,10 +279,25 @@ class report(dataset_referentiels):
         else:
             dfReferentiel["libelles"] = "RIEN"
 
+        print("Chercher le concept dans le statistique")
+        self.logger.info("Chercher le concept dans le statistique")
+        if "statistique" in self.algorithms:
+            dfResultStatistique = self.__get_statistique()
+            if dfResultStatistique.size > 0:
+                # Intégrer le résultat dans le referentiel             
+                dfReferentiel = pd.merge(left=dfReferentiel,
+                                right=dfResultStatistique,
+                                how="left",
+                                left_on="concept",
+                                right_on="concept"
+                                )
+                dfReferentiel["statistique"] = dfReferentiel["statistique"].fillna("RIEN")            
+        else:
+            dfReferentiel["statistique"] = "RIEN"
+        
         #
         dfReferentiel["jugement"] = dfReferentiel.apply(self.__evaluation,axis=1)
         
-
         # Stoker le résultat dans le répertoir output
         output_result = os.path.join(self.__Referentiel_resultat,f'Report_{self.__Referentiel}.csv')
         dfReferentiel.to_csv(output_result,index=False)
@@ -271,8 +307,8 @@ class report(dataset_referentiels):
 
         # Long
         # Ecrir dans le long        
-        objTime = datetime.now().strftime("%d/%m/%Y %H:%M")
-        sLogReferentiel = f"{objTime}|{self.__Referentiel}|report|{output_result}|0"
+        objTimeEnd = datetime.now().strftime("%d/%m/%Y %H:%M")
+        sLogReferentiel = f"{objTimeStart} => {objTimeEnd}|{self.__Referentiel}|report|{output_result}|0"
         with open(self.rapport,"a+") as fLog:
             fLog.write("\n")
             fLog.write(sLogReferentiel)
