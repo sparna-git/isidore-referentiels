@@ -7,6 +7,7 @@ import time
 import json
 import logging
 #
+import sys
 
 headers = HTTPHeaderDict()
 
@@ -15,8 +16,6 @@ def create_directory(DirectoryResource:str):
     pathDir = DirectoryResource
     if not os.path.exists(pathDir):
         os.makedirs(pathDir)
-    else:
-        shutil.rmtree(pathDir)
 
     return pathDir
 
@@ -30,7 +29,6 @@ class Tools:
         self.directory = create_directory(directory_work)
         # Create log
         self.logger = logging
-        LogDirectory = os.path.join(self.directory,)
         self.logger.basicConfig(filename="geonames.log",level=logging.DEBUG,format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
     def download_json_resource(self,geonameId,GeonamesUser:str):        
@@ -73,7 +71,9 @@ class Tools:
 
 class Geonames_RDF(Tools):
 
-    def __init__(self,WorkDirectory:str,GeonamesUser:str) -> None:
+    nDonwload = 0
+
+    def __init__(self,WorkDirectory:str,GeonamesUser:str, maxDownload:int) -> None:
         super().__init__(WorkDirectory)
         
         self.Work_Dir = Path(self.directory).absolute()
@@ -81,10 +81,17 @@ class Geonames_RDF(Tools):
         self.__list_of_continent = self.__continent()
         self.__continent_countries = {}
 
+        self.MaxDownload = maxDownload
+
         self.logger = logging.getLogger(__name__)
         self.logger.info("========================= GEONAMES =========================")
 
 
+    def stopDownload(self):
+        if self.MaxDownload > 0:
+            if self.MaxDownload == self.nDonwload:
+                sys.exit(f"Le processus à telecharger le totale demande: {self.MaxDownload}")
+    
     """
         Recuperer les cles pour chaque Geonames
     """
@@ -130,6 +137,10 @@ class Geonames_RDF(Tools):
         self.logger.info(f"List of continent: {self.__list_of_continent}")
 
         for Continent_Name, geonamesId in self.__list_of_continent:
+
+            #
+            self.nDonwload += 1
+            self.stopDownload()
             #
             resp_OK = self.download_rdf_resource(geonamesId)
             if resp_OK and (resp_OK.headers["Content-Type"] == "application/rdf+xml;charset=UTF-8"):
@@ -165,6 +176,10 @@ class Geonames_RDF(Tools):
                     print(f"- Continent: {Continent_Name}/Pays {County_name}/Geonames Id {County_geonamesID}")
                 
                     response_country_ok = self.download_rdf_resource(County_geonamesID)
+                    
+                    self.nDonwload += 1
+                    self.stopDownload()
+                    
                     if response_country_ok and (response_country_ok.headers["Content-Type"] == "application/rdf+xml;charset=UTF-8"):
                         output_dir = os.path.join(self.Work_Dir,f"{Continent_Name}_{County_name}_{County_geonamesID}.rdf")
                         self.save_file(output_dir,response_country_ok.data)
@@ -197,6 +212,10 @@ class Geonames_RDF(Tools):
                         for Division_name,Division_GeonamesId in GeonamesId_division:            
                             start_get_response_rdf = time.time()
                             resp_Division_OK = self.download_rdf_resource(Division_GeonamesId)
+
+                            self.nDonwload += 1
+                            self.stopDownload()
+
                             end_get_response_rdf = time.time()
                             if resp_Division_OK and (resp_Division_OK.headers["Content-Type"] == "application/rdf+xml;charset=UTF-8"):
                                 elapse_time = end_get_response_rdf - start_get_response_rdf
