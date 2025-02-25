@@ -5,6 +5,8 @@ export OUTPUT=../data/geonames
 
 rm -rf $OUTPUT
 mkdir -p $OUTPUT
+
+rm -rf geonames.log
 poetry run geonames --user humanumRef --output $OUTPUT
 
-echo "Le fichier a été stocker dans le répertoire: " $OUTPUT
+echo "Les fichiers ont été stockés dans le répertoire: " $OUTPUT
