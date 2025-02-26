@@ -36,8 +36,9 @@ class Tools:
         resp = None
         try:
             url = f"http://api.geonames.org/childrenJSON?geonameId={geonameId}&username={GeonamesUser}"
-            self.logger.info(f"URL json resource: {url}")
+            self.logger.info(f"{self.nCount} Appel de l'API depuis : {url} ...")
             resp = request("GET",url)
+            time.sleep(10) 
         except exceptions.ResponseError as e:
             self.logger.info(f"Error: {e}")            
         return resp
@@ -48,12 +49,11 @@ class Tools:
 
         self.nCount += 1
 
-        time.sleep(10)
-
         try:
             url = f"https://sws.geonames.org/{geonameId}/about.rdf"
-            self.logger.info(f"{self.nCount} Télécharger le RDF dans le url: {url}")
-            resp = request("GET",url)            
+            self.logger.info(f"{self.nCount} Téléchargement du RDF depuis : {url} ...")
+            resp = request("GET",url) 
+            time.sleep(10)           
         except exceptions.HTTPError as e:
             self.logger.info(f"Error: {e}")
             resp = None
