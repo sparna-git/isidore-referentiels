@@ -27,6 +27,7 @@ class Tools:
 
         directory_work = Path(directory).absolute()
         self.directory = create_directory(directory_work)
+        
         # Create log
         self.logger = logging
         self.logger.basicConfig(filename="geonames.log",level=logging.DEBUG,format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
@@ -43,7 +44,7 @@ class Tools:
             self.logger.info(f"Error: {e}")            
         return resp
 
-    def download_rdf_resource(self,geonameId):
+    def download_rdf_resource(self,geonameId,delay:int):
         headers.add("Accept", "application/rdf+xml;charset=UTF-8")        
         resp = None
 
@@ -53,7 +54,7 @@ class Tools:
             url = f"https://sws.geonames.org/{geonameId}/about.rdf"
             self.logger.info(f"{self.nCount} Téléchargement du RDF depuis : {url} ...")
             resp = request("GET",url) 
-            time.sleep(10)           
+            time.sleep(delay)           
         except exceptions.HTTPError as e:
             self.logger.info(f"Error: {e}")
             resp = None
@@ -73,7 +74,7 @@ class Geonames_RDF(Tools):
 
     nDonwload = 0
 
-    def __init__(self,WorkDirectory:str,GeonamesUser:str, maxDownload:int) -> None:
+    def __init__(self,WorkDirectory:str,GeonamesUser:str, maxDownload:int, delay:int) -> None:
         super().__init__(WorkDirectory)
         
         self.Work_Dir = Path(self.directory).absolute()
@@ -82,6 +83,7 @@ class Geonames_RDF(Tools):
         self.__continent_countries = {}
 
         self.MaxDownload = maxDownload
+        self.delay = delay
 
         self.logger = logging.getLogger(__name__)
         self.logger.info("========================= GEONAMES =========================")
@@ -117,7 +119,7 @@ class Geonames_RDF(Tools):
     """
     def __download_mother_earth_rdf(self):
         
-        resp_OK = self.download_rdf_resource("6295630")
+        resp_OK = self.download_rdf_resource("6295630",self.delay)
         if resp_OK and (resp_OK.headers["Content-Type"] == "application/rdf+xml;charset=UTF-8"):
             print("Donwload RDF File: Mother Earth")
             self.logger.info("Donwload RDF File: Mother Earth")
@@ -142,7 +144,7 @@ class Geonames_RDF(Tools):
             self.nDonwload += 1
             self.stopDownload()
             #
-            resp_OK = self.download_rdf_resource(geonamesId)
+            resp_OK = self.download_rdf_resource(geonamesId,self.delay)
             if resp_OK and (resp_OK.headers["Content-Type"] == "application/rdf+xml;charset=UTF-8"):
                 print(f"===== {Continent_Name}")
                 self.logger.info(f"Donwload RDF File: {Continent_Name}")
@@ -150,8 +152,7 @@ class Geonames_RDF(Tools):
                 self.save_file(FileOutput,resp_OK.data)
             else:
                 self.logger.warning(f"Error: La notice RDF du Continent: {Continent_Name}, Geoname Id: {geonamesId} Error: {resp_OK.data}")
-            # Sleep
-            #time.sleep(2)
+            
         return True
 
     """
@@ -175,7 +176,7 @@ class Geonames_RDF(Tools):
                     self.logger.info(f"- Continent: {Continent_Name}/Pays {County_name}/Geonames Id {County_geonamesID}")
                     print(f"- Continent: {Continent_Name}/Pays {County_name}/Geonames Id {County_geonamesID}")
                 
-                    response_country_ok = self.download_rdf_resource(County_geonamesID)
+                    response_country_ok = self.download_rdf_resource(County_geonamesID,self.delay)
                     
                     self.nDonwload += 1
                     self.stopDownload()
@@ -187,10 +188,10 @@ class Geonames_RDF(Tools):
                         Countries.append((County_name,County_geonamesID))
                     else:
                         self.logger.warning(f"Error: La notice RDF du Continent: {Continent_Name}, Pays {County_name} Geoname Id: {County_geonamesID} Error: {response_country_ok.headers}")
-                    #time.sleep(3)
+                    
             else:
                 self.logger.warning(f"Error: Continent: {Continent_Name}, Geoname Id: {Continent_geonamesID} Error: {json.dumps(resp_OK.json())}")
-            #time.sleep(3)
+            
             self.__continent_countries[f"{Continent_Name}"] = Countries        
 
     """
@@ -211,7 +212,7 @@ class Geonames_RDF(Tools):
                         GeonamesId_division = self.__get_geonames_id(resp_OK.json())
                         for Division_name,Division_GeonamesId in GeonamesId_division:            
                             start_get_response_rdf = time.time()
-                            resp_Division_OK = self.download_rdf_resource(Division_GeonamesId)
+                            resp_Division_OK = self.download_rdf_resource(Division_GeonamesId,self.delay)
 
                             self.nDonwload += 1
                             self.stopDownload()
@@ -226,10 +227,10 @@ class Geonames_RDF(Tools):
                                 self.save_file(output_dir,resp_Division_OK.data)                                
                             else:
                                 self.logger.warning(f"Error: Continent: {Continent}/Country {NameOfPays}/Division {Division_name}/Error: {resp_Division_OK.data}")
-                            #time.sleep(6)
+                            
                     else:
                         self.logger.warning(f"Continent: {Continent} Pay: {NameOfPays} Geoname Id: {geonameId} Error: {json.dumps(resp_OK.json())}")
-                    #time.sleep(6)                    
+                    
                 except exceptions.HTTPError as e:
                     continue
         

@@ -7,6 +7,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--user",help="Identifier Geonames",type=Path,required=True)
     parser.add_argument("--output",help="Dosier de travail",type=Path,required=True)
+    parser.add_argument("--seconds",help="Times in seconds",type=int,required=True)
     parser.add_argument("--maxrdf",help="Nombre de rdf à télécharger",type=int,required=False)
     args = parser.parse_args()
     
@@ -14,7 +15,7 @@ def main():
         args.maxrdf = 0
 
     # Donwload all RDF Files
-    Geonames_rdf = Geonames_RDF(args.output, args.user, args.maxrdf)
+    Geonames_rdf = Geonames_RDF(args.output, args.user, args.maxrdf, args.seconds)
     Geonames_rdf.get_resources_geonames()    
     
 
