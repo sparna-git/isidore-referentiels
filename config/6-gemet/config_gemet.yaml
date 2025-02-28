@@ -17,6 +17,8 @@ report:
   # Répertoire où se trouve le fichier après de l'etape de nettoyage .
   data: 
     - output/gemet/output_clean
+  dataStatistique:
+    - data/statistics
   # Répertore pour stoker le résultat
   output: 
     - output/gemet/output_report

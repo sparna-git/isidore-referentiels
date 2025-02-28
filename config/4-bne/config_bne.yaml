@@ -18,6 +18,8 @@ report:
   # Répertoire où se trouve le fichier après de l'etape de nettoyage .
   data: 
     - output/bne/output_clean
+  dataStatistique:
+    - data/statistics
   # Répertore pour stoker le résultat
   output: 
     - output/bne/output_report

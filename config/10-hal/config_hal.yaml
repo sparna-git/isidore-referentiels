@@ -17,6 +17,8 @@ report:
   # Répertoire où se trouve le fichier après de l'etape de nettoyage .
   data: 
     - output/hal/output_clean
+  dataStatistique:
+    - data/statistics
   # Répertore pour stoker le résultat
   output: 
     - output/hal/output_report
